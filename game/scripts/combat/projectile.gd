@@ -18,6 +18,7 @@ static func spawn(scene: PackedScene, owner_f: Fighter, attack_data: AttackData,
 	p.velocity = vel
 	p.lifetime = life
 	p.color = owner_f.body_color.lightened(0.35)
+	p.add_to_group("match_cleanup")  # a revanche limpa projéteis que sobraram
 	owner_f.get_parent().add_child(p)
 	p.global_position = at
 	return p

@@ -896,7 +896,7 @@ func _keyboard_held() -> bool:
 # --- Provisório até a T16 (zonas de KO): volta ao ponto inicial ao cair da arena ---
 
 func _check_out_of_bounds() -> void:
-	if auto_respawn and absf(global_position.x) > 2200.0 or global_position.y > 1400.0 or global_position.y < -1600.0:
+	if auto_respawn and (absf(global_position.x) > 2200.0 or global_position.y > 1400.0 or global_position.y < -1600.0):
 		respawn()
 
 
@@ -914,6 +914,11 @@ func respawn() -> void:
 	fast_falling = false
 	helpless = false
 	jumps_left = air_jumps
+	_hitstun = 0.0
+	_hitstop = 0
+	_lag_frames = 0
+	_air_dodge_used = false
+	shield_hp = shield_max
 	damage_percent = 0.0
 	damage_changed.emit(damage_percent)
 

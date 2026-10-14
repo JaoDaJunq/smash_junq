@@ -38,10 +38,10 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
-| T16 | Zonas de KO e retorno com invencibilidade | Sair dos limites conta KO; o lutador reaparece no alto, invencível por 2 s | a fazer |
-| T17 | Placar até 3 KOs e morte súbita | A partida termina em 3 KOs; KO simultâneo segue a regra provisória; teste automatizado passa | a fazer |
-| T18 | Interface da luta: dano %, KOs, contagem inicial | Dano e KOs atualizam na hora e são legíveis no tamanho real | a fazer |
-| T19 | Fluxo de telas: menu, modo, personagem, resultado, revanche, pausa | Dá para jogar várias partidas seguidas sem fechar o jogo | a fazer |
+| T16 | Zonas de KO e retorno com invencibilidade | Sair dos limites conta KO; o lutador reaparece no alto, invencível por 2 s | feito: teste `match_smoke` (~85 checagens) + evidência |
+| T17 | Placar até 3 KOs e morte súbita | A partida termina em 3 KOs; KO simultâneo segue a regra provisória; teste automatizado passa | feito: teste `match_smoke` (~85 checagens) + evidência |
+| T18 | Interface da luta: dano %, KOs, contagem inicial | Dano e KOs atualizam na hora e são legíveis no tamanho real | feito: teste `match_smoke` (~85 checagens) + evidência |
+| T19 | Fluxo de telas: menu, modo, personagem, resultado, revanche, pausa | Dá para jogar várias partidas seguidas sem fechar o jogo | feito: teste `match_smoke` (~85 checagens) + evidência |
 
 ## Marco 4 — CPU
 
