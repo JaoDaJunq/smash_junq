@@ -9,18 +9,18 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
 | T01 | Medir o PC de casa (CPU, RAM, placa de vídeo, Windows) e registrar no README | Especificações anotadas; Godot 4.7.2 abre e roda o projeto vazio | a fazer |
-| T02 | Criar o projeto Godot 4.7.2 em `game/` com `.gitignore` do Godot | Projeto abre sem erros; arquivos gerados pelo editor não entram no Git | a fazer |
+| T02 | Criar o projeto Godot 4.7.2 em `game/` com `.gitignore` do Godot | Projeto abre sem erros; arquivos gerados pelo editor não entram no Git | feito (14/10, PC da agência) |
 | T03 | Instalar uma release publicada do godot-ai e conectar ao Claude Code | O Claude cria um nó numa cena, roda o jogo e devolve um screenshot | a fazer |
-| T04 | Configurar o mapa de entradas para 2 teclados e 2 gamepads | Cada ação do GDD responde nos dois esquemas de teclado e num gamepad | a fazer |
+| T04 | Configurar o mapa de entradas para 2 teclados e 2 gamepads | Cada ação do GDD responde nos dois esquemas de teclado e num gamepad | fazendo: teclados testados por simulação; falta testar gamepad real |
 
 ## Marco 1 — Movimento
 
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
-| T05 | Arena greybox: plataforma principal com bordas e duas plataformas atravessáveis | Dá para subir por baixo e descer das flutuantes; a principal é sólida | a fazer |
-| T06 | Lutador greybox com estados: parado, andar, correr, pular, pulo duplo, cair, queda rápida | Todos os estados acessíveis pelo controle; sem travar entre estados | a fazer |
-| T07 | Agarrar a borda e subir | Ao cair perto da borda, o lutador agarra; sobe com cima ou pulo | a fazer |
-| T08 | Câmera dinâmica que enquadra os dois lutadores | Os dois sempre visíveis dentro da arena; zoom limitado e suave | a fazer |
+| T05 | Arena greybox: plataforma principal com bordas e duas plataformas atravessáveis | Dá para subir por baixo e descer das flutuantes; a principal é sólida | feito: teste `movement_smoke` + evidência |
+| T06 | Lutador greybox com estados: parado, andar, correr, pular, pulo duplo, cair, queda rápida | Todos os estados acessíveis pelo controle; sem travar entre estados | feito: teste `movement_smoke` + evidência |
+| T07 | Agarrar a borda e subir | Ao cair perto da borda, o lutador agarra; sobe com cima ou pulo | feito: teste `movement_smoke` + evidência |
+| T08 | Câmera dinâmica que enquadra os dois lutadores | Os dois sempre visíveis dentro da arena; zoom limitado e suave | feito: teste `movement_smoke` + evidência |
 
 ## Marco 2 — Combate
 
