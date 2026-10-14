@@ -1,7 +1,7 @@
 extends Node
 ## Vitrine dos efeitos (pacote de efeitos e arena): dispara cada efeito numa
-## partida real e salva screenshots em evidence/etapa-3/. Precisa de renderização;
-## sem --headless os screenshots não são gerados.
+## partida real e salva screenshots em evidence/etapa-3/. Abre janela: rode só no seu PC;
+## com --headless o teste roda, mas não gera screenshots.
 ##   godot --path game res://tests/fx_showcase.tscn
 
 const MATCH_SCENE := preload("res://scenes/match.tscn")
