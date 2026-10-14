@@ -69,6 +69,14 @@ addons\gdUnit4\runtest.cmd --headless --ignoreHeadlessMode -a res://tests/unit
 
 Para calibrar a força dos golpes, `res://tests/knockback_probe.tscn` imprime até onde cada golpe lança em cada faixa de dano.
 
+**Gerar o `.exe` do Windows:** no Godot, em Editor → Gerenciar modelos de exportação, baixe os modelos da 4.7.2 (uma vez só). Depois use Projeto → Exportar → Windows Desktop, ou pela linha de comando:
+
+```bash
+godot --headless --path game --export-release "Windows Desktop" ../builds/SmashJunq.exe
+```
+
+O executável sai em `builds/` (fora do Git, porque passa de 100 MB).
+
 Se mudar o mapeamento de controles em `game/tools/configure_input_map.gd`, regrave o `project.godot` com:
 
 ```bash
