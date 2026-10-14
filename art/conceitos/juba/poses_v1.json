@@ -1,0 +1,14 @@
+{
+  "character": "Juba",
+  "asset_type": "combat_poses",
+  "status": "approved_concept",
+  "source": "Artwork generated in an earlier ChatGPT conversation and uploaded by the user.",
+  "original_uploaded_filename": "1000533081.png",
+  "original_format": "JPEG",
+  "dimensions": "1536x614",
+  "reference_only": true,
+  "game_ready": false,
+  "generation_prompt": null,
+  "generation_parameters": null,
+  "note": "Prancha de poses de combate e movimento. The exact original prompt and generation parameters were not retained with the uploaded file."
+}

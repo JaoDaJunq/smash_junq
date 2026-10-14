@@ -1,0 +1,14 @@
+{
+  "character": "Juba",
+  "asset_type": "selection_portrait_reference",
+  "status": "approved_concept",
+  "source": "Artwork generated in an earlier ChatGPT conversation and uploaded by the user.",
+  "original_uploaded_filename": "1000533083.png",
+  "original_format": "PNG",
+  "dimensions": "1024x1536",
+  "reference_only": true,
+  "game_ready": false,
+  "generation_prompt": null,
+  "generation_parameters": null,
+  "note": "Arte de apresentação do personagem para orientar o retrato de seleção. The exact original prompt and generation parameters were not retained with the uploaded file."
+}

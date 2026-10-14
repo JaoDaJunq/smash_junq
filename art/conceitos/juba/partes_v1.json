@@ -1,0 +1,14 @@
+{
+  "character": "Juba",
+  "asset_type": "cutout_parts_reference",
+  "status": "approved_concept",
+  "source": "Artwork generated in an earlier ChatGPT conversation and uploaded by the user.",
+  "original_uploaded_filename": "1000533082.png",
+  "original_format": "PNG",
+  "dimensions": "1536x1024",
+  "reference_only": true,
+  "game_ready": false,
+  "generation_prompt": null,
+  "generation_parameters": null,
+  "note": "Referência de peças separadas; não é sprite sheet pronta para jogo. The exact original prompt and generation parameters were not retained with the uploaded file."
+}
