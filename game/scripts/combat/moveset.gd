@@ -22,6 +22,12 @@ const SPECIALS := ["special_neutral", "special_side", "special_up", "special_dow
 @export var special_side: AttackData
 @export var special_up: AttackData
 @export var special_down: AttackData
+@export_group("Arremessos")
+## Ângulos relativos ao lado para onde se arremessa. Vazios usam os padrões do Fighter.
+@export var fthrow: AttackData
+@export var bthrow: AttackData
+@export var uthrow: AttackData
+@export var dthrow: AttackData
 
 
 func move(move_id: String) -> AttackData:

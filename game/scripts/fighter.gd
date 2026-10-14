@@ -9,7 +9,7 @@ extends CharacterBody2D
 
 signal damage_changed(percent: float)
 
-enum State { IDLE, WALK, RUN, AIR, LEDGE, ATTACK, LAG, HITSTUN, HELD }
+enum State { IDLE, WALK, RUN, AIR, LEDGE, ATTACK, LAG, HITSTUN, HELD, SHIELD, SHIELD_BREAK, DODGE, GRAB, HOLDING }
 
 const LAYER_STAGE := 1
 const LAYER_PLATFORM := 2
@@ -41,6 +41,28 @@ const LAYER_PLATFORM := 2
 @export_group("Borda")
 @export var ledge_reach := Vector2(70, 50)
 @export var ledge_regrab_delay := 0.6
+@export_group("Defesa")
+@export var shield_max := 50.0
+## Desgaste por segundo segurando o escudo.
+@export var shield_drain := 10.0
+@export var shield_regen := 7.0
+@export var shield_break_time := 2.5
+@export var roll_speed := 700.0
+@export var roll_frames := 24
+## Quadros (início, fim) sem poder ser atingido.
+@export var roll_invuln := Vector2i(4, 16)
+@export var air_dodge_speed := 650.0
+@export var air_dodge_frames := 30
+@export var air_dodge_invuln := Vector2i(3, 20)
+@export_group("Agarrão")
+@export var grab_reach := Vector2(52, -10)
+@export var grab_radius := 30.0
+@export var grab_startup := 6
+@export var grab_active := 2
+@export var grab_whiff_recovery := 26
+@export var pummel_damage := 1.5
+## Segundos segurando antes de o adversário se soltar sozinho (mais dano = mais tempo).
+@export var grab_hold_base := 1.0
 
 const RADIUS := 28.0
 const HEIGHT := 110.0
@@ -76,6 +98,18 @@ var invincible_time := 0.0
 ## Quando false, quem controla a partida cuida de KO e retorno (ver T16).
 var auto_respawn := true
 
+var shield_hp := 50.0
+var _shield_stun := 0
+var _break_timer := 0.0
+var _dodge_frame := 0
+var _dodge_in_air := false
+var _dodge_directional := false
+var _air_dodge_used := false
+var _grab_frame := 0
+var _grab_timer := 0.0
+var _pummel_cooldown := 0
+var _default_throws := {}
+
 var _jump_time := 0.0
 var _drop_timer := 0.0
 var _ledge: Node2D = null
@@ -93,6 +127,7 @@ func _ready() -> void:
 	floor_snap_length = 8.0
 	spawn_point = global_position
 	jumps_left = air_jumps
+	shield_hp = shield_max
 
 
 func act(action: String) -> String:
@@ -108,6 +143,8 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 		return
 	_ledge_cooldown = maxf(_ledge_cooldown - delta, 0.0)
+	if state != State.SHIELD and state != State.SHIELD_BREAK:
+		shield_hp = minf(shield_hp + shield_regen * delta, shield_max)
 	_update_drop_through(delta)
 	var dir := Input.get_axis(act("left"), act("right"))
 	var run_trigger := _detect_run_trigger(dir)
@@ -123,6 +160,16 @@ func _physics_process(delta: float) -> void:
 			_process_attack(dir, delta)
 		State.LAG:
 			_process_lag(delta)
+		State.SHIELD:
+			_process_shield(delta)
+		State.SHIELD_BREAK:
+			_process_shield_break(delta)
+		State.DODGE:
+			_process_dodge(delta)
+		State.GRAB:
+			_process_grab(delta)
+		State.HOLDING:
+			_process_holding(delta)
 		_:
 			if is_on_floor():
 				_process_ground(dir, run_trigger, delta)
@@ -142,7 +189,14 @@ func _physics_process(delta: float) -> void:
 func _process_ground(dir: float, run_trigger: bool, delta: float) -> void:
 	fast_falling = false
 	helpless = false
+	_air_dodge_used = false
 	jumps_left = air_jumps
+	if Input.is_action_just_pressed(act("grab")) or (Input.is_action_pressed(act("shield")) and Input.is_action_just_pressed(act("attack"))):
+		start_grab()
+		return
+	if Input.is_action_pressed(act("shield")):
+		_enter_shield()
+		return
 	if _try_start_action():
 		return
 	if Input.is_action_just_pressed(act("jump")):
@@ -170,6 +224,9 @@ func _process_air(dir: float, delta: float) -> void:
 	state = State.AIR
 	_jump_time += delta
 	if not helpless:
+		if Input.is_action_just_pressed(act("shield")) and not _air_dodge_used:
+			_start_air_dodge()
+			return
 		if _try_start_action():
 			return
 		if Input.is_action_just_pressed(act("jump")) and jumps_left > 0:
@@ -217,6 +274,9 @@ func _after_move(was_airborne: bool) -> void:
 		helpless = false
 	elif state == State.ATTACK and _attack_in_air and was_airborne:
 		_land_during_attack()
+	elif state == State.DODGE and _dodge_in_air and was_airborne:
+		_lag_frames = 10
+		state = State.LAG
 
 
 # --- Golpes ---
@@ -390,15 +450,26 @@ func _on_hit_landed(_target: Fighter, _move_id: String) -> void:
 
 ## Gancho para personagens: pode ser atingido agora?
 func can_be_hit() -> bool:
-	if invincible_time > 0.0:
+	if invincible_time > 0.0 or _is_intangible():
 		return false
 	return state != State.HELD or held_by == null
+
+
+func _is_intangible() -> bool:
+	if state != State.DODGE:
+		return false
+	var window := air_dodge_invuln if _dodge_in_air else roll_invuln
+	return _dodge_frame >= window.x and _dodge_frame <= window.y
 
 
 ## Aplica um golpe neste lutador. direction_sign: para que lado ele é lançado.
 ## Gancho para personagens (ex.: contra-ataque). Retorna true se o golpe entrou.
 func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> bool:
+	if state == State.SHIELD:
+		_block_hit(attacker, data, direction_sign)
+		return false
 	release_hold()
+	_air_dodge_used = false
 	if attack != null:
 		_on_attack_end(attack_id)
 	attack = null
@@ -431,6 +502,223 @@ func _process_hitstun(delta: float) -> void:
 	if _hitstun <= 0.0:
 		state = State.IDLE if is_on_floor() else State.AIR
 		jumps_left = maxi(jumps_left, 1) if air_jumps > 0 else 0
+
+
+# --- Escudo e esquivas ---
+
+func _enter_shield() -> void:
+	state = State.SHIELD
+	_shield_stun = 0
+
+
+func _process_shield(delta: float) -> void:
+	velocity.x = move_toward(velocity.x, 0.0, ground_friction * delta)
+	velocity.y = 0.0
+	if not is_on_floor():
+		state = State.AIR
+		return
+	if _shield_stun > 0:
+		_shield_stun -= 1
+		return
+	shield_hp -= shield_drain * delta
+	if shield_hp <= 0.0:
+		_break_shield()
+		return
+	if Input.is_action_just_pressed(act("jump")):
+		_jump(jump_velocity)
+		return
+	if Input.is_action_just_pressed(act("attack")) or Input.is_action_just_pressed(act("grab")):
+		start_grab()
+		return
+	if Input.is_action_just_pressed(act("left")):
+		_start_roll(-1)
+		return
+	if Input.is_action_just_pressed(act("right")):
+		_start_roll(1)
+		return
+	if not Input.is_action_pressed(act("shield")):
+		_lag_frames = 6
+		state = State.LAG
+
+
+## Golpe no escudo: sem dano %, desgasta o escudo, empurra e trava um instante.
+func _block_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> void:
+	shield_hp -= data.damage * 1.2
+	_shield_stun = int(data.damage * 0.8) + 2
+	velocity.x = direction_sign * (120.0 + data.damage * 18.0)
+	var stop := Combat.hitstop_frames(data.damage)
+	_hitstop = stop
+	if attacker is Fighter:
+		attacker._hitstop = stop
+	if shield_hp <= 0.0:
+		_break_shield()
+
+
+func _break_shield() -> void:
+	shield_hp = 0.0
+	state = State.SHIELD_BREAK
+	_break_timer = shield_break_time
+	velocity = Vector2(0, -750)
+
+
+func _process_shield_break(delta: float) -> void:
+	_break_timer -= delta
+	velocity.x = move_toward(velocity.x, 0.0, ground_friction * delta)
+	if not is_on_floor():
+		velocity.y = minf(velocity.y + gravity * delta, max_fall_speed)
+	if _break_timer <= 0.0:
+		shield_hp = shield_max * 0.4
+		state = State.IDLE if is_on_floor() else State.AIR
+
+
+func _start_roll(dir: int) -> void:
+	state = State.DODGE
+	_dodge_in_air = false
+	_dodge_frame = 0
+	velocity.x = roll_speed * dir
+
+
+func _start_air_dodge() -> void:
+	state = State.DODGE
+	_dodge_in_air = true
+	_dodge_frame = 0
+	_air_dodge_used = true
+	fast_falling = false
+	var stick := Vector2(Input.get_axis(act("left"), act("right")), Input.get_axis(act("up"), act("down")))
+	_dodge_directional = stick.length() >= STICK_THRESHOLD
+	if _dodge_directional:
+		velocity = stick.normalized() * air_dodge_speed
+	else:
+		velocity *= 0.3
+
+
+func _process_dodge(delta: float) -> void:
+	_dodge_frame += 1
+	if _dodge_in_air:
+		if _dodge_directional and _dodge_frame <= 15:
+			velocity = velocity.move_toward(Vector2.ZERO, 1400.0 * delta)
+		else:
+			_apply_gravity(delta)
+		if _dodge_frame >= air_dodge_frames:
+			state = State.AIR
+	else:
+		velocity.y = 0.0
+		if _dodge_frame > roll_frames * 0.7:
+			velocity.x = move_toward(velocity.x, 0.0, ground_friction * 2.0 * delta)
+		if not is_on_floor():
+			state = State.AIR
+		elif _dodge_frame >= roll_frames:
+			state = State.IDLE
+
+
+# --- Agarrão e arremessos ---
+
+func start_grab() -> void:
+	state = State.GRAB
+	_grab_frame = 0
+	velocity.x *= 0.4
+
+
+func _process_grab(delta: float) -> void:
+	_grab_frame += 1
+	velocity.x = move_toward(velocity.x, 0.0, ground_friction * delta)
+	if not is_on_floor():
+		_apply_gravity(delta)
+	if _grab_frame > grab_startup and _grab_frame <= grab_startup + grab_active:
+		var center := global_position + Vector2(grab_reach.x * facing, grab_reach.y)
+		for f in get_tree().get_nodes_in_group("fighters"):
+			var target := f as Fighter
+			if target != self and target.can_be_grabbed() and Combat.circle_hits_rect(center, grab_radius, target.hurtbox()):
+				_grab_connect(target)
+				return
+	if _grab_frame >= grab_startup + grab_active + grab_whiff_recovery:
+		state = State.IDLE if is_on_floor() else State.AIR
+
+
+## Gancho para personagens: pode ser agarrado agora? Agarrão passa pelo escudo.
+func can_be_grabbed() -> bool:
+	return can_be_hit() and state != State.LEDGE and state != State.HELD
+
+
+func _grab_connect(target: Fighter) -> void:
+	velocity = Vector2.ZERO
+	target.facing = -facing
+	hold(target)
+	state = State.HOLDING
+	_grab_timer = minf(grab_hold_base + target.damage_percent * 0.01, 3.0)
+	_pummel_cooldown = 0
+	_hitstop = 4
+	target._hitstop = 4
+
+
+## Chamado por quem está sendo segurado ao apertar botões.
+func shorten_grab(seconds: float) -> void:
+	if state == State.HOLDING:
+		_grab_timer -= seconds
+
+
+func _process_holding(delta: float) -> void:
+	velocity.x = move_toward(velocity.x, 0.0, ground_friction * delta)
+	if holding == null:
+		state = State.IDLE
+		return
+	_grab_timer -= delta
+	if _grab_timer <= 0.0:
+		_grab_escape()
+		return
+	_pummel_cooldown -= 1
+	if Input.is_action_just_pressed(act("attack")) and _pummel_cooldown <= 0:
+		holding.add_damage(pummel_damage)
+		holding._hitstop = 3
+		_pummel_cooldown = 18
+		return
+	if Input.is_action_just_pressed(act("left")) or Input.is_action_just_pressed(act("right")):
+		var side := -1 if Input.is_action_just_pressed(act("left")) else 1
+		_do_throw("fthrow" if side == facing else "bthrow", side)
+	elif Input.is_action_just_pressed(act("up")):
+		_do_throw("uthrow", facing)
+	elif Input.is_action_just_pressed(act("down")):
+		_do_throw("dthrow", facing)
+
+
+func _do_throw(throw_id: String, side: int) -> void:
+	facing = side
+	throw_held(throw_data(throw_id), side)
+	_lag_frames = 14
+	state = State.LAG
+
+
+func _grab_escape() -> void:
+	var target := holding
+	release_hold()
+	state = State.IDLE
+	velocity.x = -facing * 280.0
+	if target != null and is_instance_valid(target):
+		target.velocity.x = facing * 280.0
+
+
+## Arremesso do moveset ou, se não houver, um padrão razoável.
+func throw_data(throw_id: String) -> AttackData:
+	if moveset != null and moveset.move(throw_id) != null:
+		return moveset.move(throw_id)
+	if _default_throws.is_empty():
+		# [dano, ângulo, base, crescimento]
+		var table := {"fthrow": [8.0, 40.0, 380.0, 6.0], "bthrow": [10.0, 40.0, 400.0, 7.0],
+			"uthrow": [7.0, 90.0, 360.0, 6.0], "dthrow": [6.0, 75.0, 260.0, 3.0]}
+		for id in table:
+			var data := AttackData.new()
+			data.id = id
+			data.damage = table[id][0]
+			data.angle = table[id][1]
+			data.base_knockback = table[id][2]
+			data.knockback_growth = table[id][3]
+			_default_throws[id] = data
+	return _default_throws[throw_id]
+
+
+func add_damage(amount: float) -> void:
+	damage_percent += amount
+	damage_changed.emit(damage_percent)
 
 
 # --- Ser segurado (agarrão e golpes que agarram) ---
@@ -487,6 +775,12 @@ func _update_holding() -> void:
 func _process_held(_delta: float) -> void:
 	if held_by == null or not is_instance_valid(held_by):
 		release_held()
+		return
+	# Apertar botões ajuda a se soltar mais rápido do agarrão.
+	for action in ["jump", "attack", "special", "shield", "left", "right", "up", "down"]:
+		if Input.is_action_just_pressed(act(action)):
+			held_by.shorten_grab(0.08)
+			break
 
 
 # --- Plataformas atravessáveis ---
@@ -539,6 +833,7 @@ func _grab_ledge(ledge: Node2D, side: int) -> void:
 	state = State.LEDGE
 	fast_falling = false
 	helpless = false
+	_air_dodge_used = false
 	velocity = Vector2.ZERO
 	facing = -side
 	jumps_left = air_jumps
@@ -632,12 +927,24 @@ func _draw() -> void:
 		color = color.darkened(0.4)
 	if invincible_time > 0.0:
 		color.a = 0.45 if int(_clock * 12.0) % 2 == 0 else 0.8
+	elif _is_intangible():
+		color.a = 0.4
 	draw_rect(rect, color)
 	var eye := Vector2(facing * RADIUS * 0.45, -HEIGHT * 0.28)
 	draw_circle(eye, 6.0, Color.WHITE)
 	draw_circle(eye + Vector2(facing * 2.0, 0), 3.0, Color.BLACK)
 	if fast_falling:
 		draw_line(Vector2(-RADIUS, -HEIGHT * 0.5 - 8), Vector2(RADIUS, -HEIGHT * 0.5 - 8), Color.WHITE, 3.0)
+	if state == State.SHIELD:
+		var r := 30.0 + 42.0 * (shield_hp / shield_max)
+		draw_circle(Vector2.ZERO, r, Color(0.55, 0.85, 1.0, 0.35))
+		draw_arc(Vector2.ZERO, r, 0.0, TAU, 32, Color(0.75, 0.95, 1.0, 0.8), 2.0)
+	elif state == State.SHIELD_BREAK:
+		for i in 3:
+			var a := _clock * 6.0 + i * TAU / 3.0
+			draw_circle(Vector2(cos(a) * 26.0, -HEIGHT * 0.5 - 10.0 + sin(a) * 6.0), 5.0, Color(1, 0.9, 0.3))
+	elif state == State.GRAB and _grab_frame > grab_startup and _grab_frame <= grab_startup + grab_active:
+		draw_circle(Vector2(grab_reach.x * facing, grab_reach.y), grab_radius, Color(0.6, 0.3, 1.0, 0.5))
 	if attack != null and attack.is_active(attack_frame):
 		var local := Vector2(attack.hitbox_offset.x * facing, attack.hitbox_offset.y)
 		draw_circle(local, attack.hitbox_radius, Color(1, 0.2, 0.2, 0.55))
