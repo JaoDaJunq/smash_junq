@@ -4,6 +4,7 @@ extends MenuScreen
 ## No modo CPU, o Jogador 1 escolhe o próprio lutador e depois o da CPU.
 
 const START_DELAY := 0.5
+const WAITING := Color("6b7390")
 
 var choice := {"p1": 0, "p2": 1}
 var locked := {"p1": false, "p2": false}
@@ -18,19 +19,20 @@ func _ready() -> void:
 	var col := build_column("Escolha seu lutador", "2 jogadores" if versus else "Contra a CPU")
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
+	row.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	col.add_child(row)
 	for pid in PLAYERS:
 		_panels[pid] = _build_panel(pid)
 		row.add_child(_panels[pid]["root"])
-	var hint := "Esquerda/Direita escolhe  ·  Ataque ou Pulo confirma  ·  Especial desfaz  ·  Pausa volta"
+	col.add_child(make_label("Esquerda/Direita escolhe  ·  Ataque ou Pulo confirma  ·  Especial desfaz  ·  Pausa volta", "HintLabel"))
 	if not versus:
-		hint = "Você escolhe o seu lutador e depois o da CPU  ·  " + hint
-	col.add_child(make_label(hint, 18, Color(0.6, 0.66, 0.78)))
+		col.add_child(make_label("Você escolhe o seu lutador e depois o da CPU", "HintLabel"))
 	var back := Button.new()
 	back.text = "Voltar"
 	back.focus_mode = Control.FOCUS_NONE
 	back.custom_minimum_size = Vector2(260, 56)
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	setup_button_fx(back)
 	back.pressed.connect(_back)
 	col.add_child(back)
 	_refresh()
@@ -38,11 +40,11 @@ func _ready() -> void:
 
 func _build_panel(pid: String) -> Dictionary:
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(520, 0)
+	panel.custom_minimum_size = Vector2(540, 0)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	panel.add_child(v)
-	var title := make_label("", 34, Game.PLAYER_COLORS[pid])
+	var title := make_label("", "HeadingLabel", Game.PLAYER_COLORS[pid])
 	v.add_child(title)
 	# Prévia: o mesmo retângulo colorido da luta
 	var preview_box := CenterContainer.new()
@@ -51,35 +53,39 @@ func _build_panel(pid: String) -> Dictionary:
 	preview.color = Game.PLAYER_COLORS[pid]
 	preview_box.add_child(preview)
 	v.add_child(preview_box)
-	var name_label := make_label("", 44)
+	var name_label := make_label("", "HeadingLabel")
+	name_label.add_theme_font_size_override("font_size", 44)
 	v.add_child(name_label)
-	var desc := make_label("", 22, Color(0.78, 0.82, 0.92))
-	desc.custom_minimum_size = Vector2(0, 64)
+	var desc := make_label("", "HintLabel")
+	desc.add_theme_font_size_override("font_size", 24)
+	desc.custom_minimum_size = Vector2(0, 68)
 	v.add_child(desc)
-	var weight := make_label("", 22, ACCENT)
+	var weight := make_label("", "AccentLabel")
 	v.add_child(weight)
-	var status := make_label("", 24)
+	var status := make_label("")
 	v.add_child(status)
 	# Controles de mouse
 	var h := HBoxContainer.new()
 	h.alignment = BoxContainer.ALIGNMENT_CENTER
 	h.add_theme_constant_override("separation", 12)
 	v.add_child(h)
-	var prev := _mouse_button("<", func() -> void: _move(pid, -1), 70)
+	var prev := _mouse_button("«", func() -> void: _move(pid, -1), 70)
 	var confirm := _mouse_button("Confirmar", func() -> void: _toggle_lock(pid), 200)
-	var next := _mouse_button(">", func() -> void: _move(pid, 1), 70)
+	var next := _mouse_button("»", func() -> void: _move(pid, 1), 70)
 	h.add_child(prev)
 	h.add_child(confirm)
 	h.add_child(next)
 	return {"root": panel, "title": title, "name": name_label, "desc": desc, "weight": weight,
-		"status": status, "preview": preview, "confirm": confirm}
+		"status": status, "preview": preview, "preview_box": preview_box, "confirm": confirm}
 
 
 func _mouse_button(text: String, on_press: Callable, width: float) -> Button:
 	var b := Button.new()
+	b.theme_type_variation = "SmallButton"
 	b.text = text
 	b.focus_mode = Control.FOCUS_NONE
 	b.custom_minimum_size = Vector2(width, 52)
+	setup_button_fx(b)
 	b.pressed.connect(on_press)
 	return b
 
@@ -124,7 +130,11 @@ func _move(slot: String, step: int) -> void:
 	if locked[slot] or not slot_active(slot):
 		return
 	choice[slot] = posmod(choice[slot] + step, Game.CHARACTERS.size())
+	Sfx.play("ui_move")
 	_refresh()
+	var p: Dictionary = _panels[slot]
+	pop(p["name"], 1.18)
+	pop(p["preview_box"], 1.1)
 
 
 func _toggle_lock(slot: String) -> void:
@@ -134,16 +144,24 @@ func _toggle_lock(slot: String) -> void:
 		_unlock(slot)
 		return
 	locked[slot] = true
+	Sfx.play("ui_confirm")
 	_refresh()
+	var p: Dictionary = _panels[slot]
+	pop(p["status"], 1.35, 0.25)
+	pop(p["preview_box"], 1.2, 0.22)
 	if locked["p1"] and locked["p2"]:
 		_start_match()
 
 
 ## Desfaz a confirmação. No modo CPU, desfazer na vez da CPU volta ao P1.
 func _unlock(slot: String) -> void:
+	var changed: bool = locked[slot]
 	if Game.mode == "cpu" and slot == "p2" and not locked["p2"]:
 		locked["p1"] = false
+		changed = true
 	locked[slot] = false
+	if changed:
+		Sfx.play("ui_back")
 	_refresh()
 
 
@@ -159,6 +177,7 @@ func _start_match() -> void:
 func _back() -> void:
 	if _starting:
 		return
+	Sfx.play("ui_back")
 	Game.go_to(Game.MODE_SCENE)
 
 
@@ -174,15 +193,29 @@ func _refresh() -> void:
 		var status: Label = p["status"]
 		if locked[pid]:
 			status.text = "PRONTO!"
-			status.add_theme_color_override("font_color", Color(0.45, 1.0, 0.55))
+			status.add_theme_color_override("font_color", GOOD)
 		elif active:
 			status.text = "Escolhendo..."
 			status.add_theme_color_override("font_color", ACCENT)
 		else:
 			status.text = "Aguardando o Jogador 1"
-			status.add_theme_color_override("font_color", Color(0.5, 0.55, 0.65))
+			status.add_theme_color_override("font_color", WAITING)
 		var confirm: Button = p["confirm"]
 		confirm.text = "Desfazer" if locked[pid] else "Confirmar"
 		confirm.disabled = not active
 		var preview: ColorRect = p["preview"]
 		preview.modulate = Color.WHITE if active or locked[pid] else Color(1, 1, 1, 0.35)
+		# Contorno do cartão: dourado em quem está escolhendo, verde em quem confirmou
+		var border := WAITING if not active else ACCENT
+		if locked[pid]:
+			border = GOOD
+		(p["root"] as PanelContainer).add_theme_stylebox_override("panel", _card_style(border, active or locked[pid]))
+
+
+func _card_style(border: Color, highlighted: bool) -> StyleBoxFlat:
+	var style := (theme_shared().get_stylebox("panel", "PanelContainer") as StyleBoxFlat).duplicate() as StyleBoxFlat
+	style.border_color = border
+	style.set_border_width_all(4 if highlighted else 2)
+	if not highlighted:
+		style.bg_color = style.bg_color.darkened(0.2)
+	return style
