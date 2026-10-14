@@ -1,20 +1,21 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/arena.tscn" id="1_arena"]
-[ext_resource type="PackedScene" path="res://scenes/fighter.tscn" id="2_fighter"]
-[ext_resource type="Script" path="res://scripts/fight_camera.gd" id="3_camera"]
+[ext_resource type="PackedScene" path="res://scenes/characters/agil.tscn" id="2_agil"]
+[ext_resource type="PackedScene" path="res://scenes/characters/pesado.tscn" id="3_pesado"]
+[ext_resource type="Script" path="res://scripts/fight_camera.gd" id="4_camera"]
 
 [node name="Main" type="Node2D"]
 
 [node name="Arena" parent="." instance=ExtResource("1_arena")]
 
-[node name="P1" parent="." instance=ExtResource("2_fighter")]
+[node name="P1" parent="." instance=ExtResource("2_agil")]
 position = Vector2(-300, -400)
 player_id = "p1"
 body_color = Color(0.31, 0.55, 1, 1)
 facing = 1
 
-[node name="P2" parent="." instance=ExtResource("2_fighter")]
+[node name="P2" parent="." instance=ExtResource("3_pesado")]
 position = Vector2(300, -400)
 player_id = "p2"
 body_color = Color(1, 0.42, 0.35, 1)
@@ -22,4 +23,4 @@ facing = -1
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(0, -150)
-script = ExtResource("3_camera")
+script = ExtResource("4_camera")

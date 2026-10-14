@@ -1,0 +1,194 @@
+[gd_resource type="Resource" script_class="Moveset" format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1_24tt8"]
+[ext_resource type="Script" path="res://scripts/combat/moveset.gd" id="2_ilidt"]
+
+[sub_resource type="Resource" id="Resource_56h3u"]
+script = ExtResource("1_24tt8")
+id = "bair"
+startup = 7
+active = 4
+recovery = 15
+landing_lag = 10
+hitbox_offset = Vector2(-50, -5)
+hitbox_radius = 28.0
+damage = 11.0
+angle = 155.0
+base_knockback = 340.0
+knockback_growth = 7.5
+
+[sub_resource type="Resource" id="Resource_0sov3"]
+script = ExtResource("1_24tt8")
+id = "dair"
+startup = 10
+active = 4
+recovery = 18
+landing_lag = 14
+hitbox_offset = Vector2(0, 70)
+hitbox_radius = 28.0
+damage = 11.0
+angle = -80.0
+base_knockback = 280.0
+
+[sub_resource type="Resource" id="Resource_uxjf2"]
+script = ExtResource("1_24tt8")
+id = "dtilt"
+startup = 5
+recovery = 12
+landing_lag = 0
+hitbox_offset = Vector2(50, 40)
+hitbox_radius = 24.0
+damage = 6.0
+angle = 15.0
+base_knockback = 280.0
+knockback_growth = 5.5
+
+[sub_resource type="Resource" id="Resource_p7b15"]
+script = ExtResource("1_24tt8")
+id = "fair"
+startup = 6
+active = 4
+recovery = 16
+landing_lag = 10
+hitbox_offset = Vector2(50, -5)
+hitbox_radius = 28.0
+damage = 9.0
+angle = 40.0
+base_knockback = 320.0
+knockback_growth = 7.0
+
+[sub_resource type="Resource" id="Resource_yaqdf"]
+script = ExtResource("1_24tt8")
+id = "ftilt"
+startup = 6
+recovery = 16
+landing_lag = 0
+hitbox_offset = Vector2(55, -5)
+damage = 9.0
+angle = 35.0
+base_knockback = 320.0
+knockback_growth = 7.0
+
+[sub_resource type="Resource" id="Resource_a4ddq"]
+script = ExtResource("1_24tt8")
+id = "jab"
+startup = 2
+active = 2
+recovery = 8
+landing_lag = 0
+hitbox_offset = Vector2(42, -15)
+hitbox_radius = 22.0
+angle = 35.0
+base_knockback = 180.0
+knockback_growth = 1.5
+
+[sub_resource type="Resource" id="Resource_n0he7"]
+script = ExtResource("1_24tt8")
+id = "nair"
+active = 8
+recovery = 12
+landing_lag = 8
+hitbox_offset = Vector2(0, 0)
+hitbox_radius = 44.0
+damage = 7.0
+angle = 40.0
+base_knockback = 280.0
+knockback_growth = 5.5
+
+[sub_resource type="Resource" id="Resource_pqh0r"]
+script = ExtResource("1_24tt8")
+id = "special_down"
+startup = 8
+active = 6
+recovery = 22
+landing_lag = 12
+hitbox_offset = Vector2(0, 40)
+hitbox_radius = 50.0
+damage = 9.0
+angle = 60.0
+base_knockback = 320.0
+knockback_growth = 6.5
+
+[sub_resource type="Resource" id="Resource_gnyn0"]
+script = ExtResource("1_24tt8")
+id = "special_neutral"
+startup = 12
+active = 6
+recovery = 20
+landing_lag = 10
+hitbox_offset = Vector2(60, -10)
+hitbox_radius = 32.0
+damage = 10.0
+angle = 40.0
+base_knockback = 340.0
+knockback_growth = 7.0
+
+[sub_resource type="Resource" id="Resource_qm6ai"]
+script = ExtResource("1_24tt8")
+id = "special_side"
+startup = 10
+active = 8
+recovery = 20
+landing_lag = 12
+hitbox_offset = Vector2(45, -5)
+hitbox_radius = 30.0
+damage = 8.0
+angle = 30.0
+base_knockback = 320.0
+self_velocity = Vector2(700, 0)
+
+[sub_resource type="Resource" id="Resource_6x1f0"]
+script = ExtResource("1_24tt8")
+id = "special_up"
+active = 12
+recovery = 20
+landing_lag = 16
+hitbox_offset = Vector2(0, -50)
+hitbox_radius = 34.0
+damage = 6.0
+angle = 80.0
+knockback_growth = 5.0
+self_velocity = Vector2(0, -1050)
+helpless_after = true
+
+[sub_resource type="Resource" id="Resource_yso0c"]
+script = ExtResource("1_24tt8")
+id = "uair"
+startup = 5
+active = 4
+recovery = 13
+landing_lag = 8
+hitbox_offset = Vector2(5, -70)
+hitbox_radius = 30.0
+damage = 8.0
+angle = 85.0
+knockback_growth = 6.5
+
+[sub_resource type="Resource" id="Resource_nuf65"]
+script = ExtResource("1_24tt8")
+id = "utilt"
+startup = 5
+active = 4
+recovery = 14
+landing_lag = 0
+hitbox_offset = Vector2(10, -70)
+hitbox_radius = 30.0
+damage = 7.0
+angle = 90.0
+knockback_growth = 6.5
+
+[resource]
+script = ExtResource("2_ilidt")
+jab = SubResource("Resource_a4ddq")
+ftilt = SubResource("Resource_yaqdf")
+utilt = SubResource("Resource_nuf65")
+dtilt = SubResource("Resource_uxjf2")
+nair = SubResource("Resource_n0he7")
+fair = SubResource("Resource_p7b15")
+bair = SubResource("Resource_56h3u")
+uair = SubResource("Resource_yso0c")
+dair = SubResource("Resource_0sov3")
+special_neutral = SubResource("Resource_gnyn0")
+special_side = SubResource("Resource_qm6ai")
+special_up = SubResource("Resource_6x1f0")
+special_down = SubResource("Resource_pqh0r")

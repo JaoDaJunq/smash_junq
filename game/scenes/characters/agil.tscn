@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/agil.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/agil.tres" id="2_moves"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 28.0
+height = 110.0
+
+[node name="Agil" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Ágil"
+moveset = ExtResource("2_moves")
+weight = 80.0
+walk_speed = 380.0
+run_speed = 650.0
+air_speed = 470.0
+gravity = 2500.0
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")

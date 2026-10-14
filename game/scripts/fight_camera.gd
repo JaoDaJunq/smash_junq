@@ -11,13 +11,30 @@ extends Camera2D
 @export var stage_pull := 0.25
 
 
+## Tremor: lançamentos a partir desta velocidade começam a tremer a tela.
+@export var shake_threshold := 700.0
+@export var max_shake := 18.0
+
+var _trauma := 0.0
+
+
 func _ready() -> void:
+	add_to_group("fight_camera")
 	make_current()
 	_update(1.0)
 
 
 func _process(delta: float) -> void:
 	_update(1.0 - exp(-smoothing * delta))
+	_trauma = maxf(_trauma - delta * 2.5, 0.0)
+	var amount := max_shake * _trauma * _trauma
+	offset = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * amount
+
+
+## Chamado pelos lutadores ao acertar um golpe, com a velocidade do lançamento.
+func shake(launch_speed: float) -> void:
+	if launch_speed >= shake_threshold:
+		_trauma = minf(_trauma + (launch_speed - shake_threshold) / 1200.0 + 0.3, 1.0)
 
 
 func _update(weight: float) -> void:

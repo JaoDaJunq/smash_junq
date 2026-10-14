@@ -26,8 +26,8 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
-| T09 | Sistema de hitbox/hurtbox e dados de golpe em Resources | Um golpe de teste acerta, registra dano e é configurado só por dados | a fazer |
-| T10 | Dano %, fórmula de lançamento, atordoamento e pausa no impacto | Com mais dano o mesmo golpe lança mais longe; teste automatizado da fórmula passa | a fazer |
+| T09 | Sistema de hitbox/hurtbox e dados de golpe em Resources | Um golpe de teste acerta, registra dano e é configurado só por dados | feito: teste `combat_smoke` + evidência |
+| T10 | Dano %, fórmula de lançamento, atordoamento e pausa no impacto | Com mais dano o mesmo golpe lança mais longe; teste automatizado da fórmula passa | feito: teste `combat_smoke` + evidência |
 | T11 | Golpes básicos (9) do personagem A | Os 9 golpes funcionam no chão e no ar conforme a direção | a fazer |
 | T12 | Especiais (4) do personagem A | Os 4 especiais funcionam; o para cima recupera de fora da plataforma | a fazer |
 | T13 | Golpes básicos e especiais do personagem B | Idem T11 e T12, com peso e golpes diferentes do A | a fazer |
