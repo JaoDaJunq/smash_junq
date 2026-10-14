@@ -9,3 +9,6 @@ builds/
 # Sistema
 Thumbs.db
 .DS_Store
+
+# Pastas locais do Claude Code (subagentes em worktrees)
+.claude/worktrees/
