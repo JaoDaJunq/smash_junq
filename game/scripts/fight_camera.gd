@@ -33,6 +33,8 @@ func _process(delta: float) -> void:
 
 ## Chamado pelos lutadores ao acertar um golpe, com a velocidade do lançamento.
 func shake(launch_speed: float) -> void:
+	if not Settings.screen_shake:
+		return  # opção "Tremor de tela" desligada
 	if launch_speed >= shake_threshold:
 		_trauma = minf(_trauma + (launch_speed - shake_threshold) / 1200.0 + 0.3, 1.0)
 
