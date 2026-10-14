@@ -35,3 +35,6 @@ sfx_select_002,som,ver scripts/fx/sfx.gd,Kenney Interface Sounds 1.0 Audio/selec
 sfx_tick_001,som,ver scripts/fx/sfx.gd,Kenney Interface Sounds 1.0 Audio/tick_001.ogg,game/assets/sfx/tick_001.ogg,original,CC0 1.0,https://kenney.nl/assets/interface-sounds,2026-10-14,provisorio
 font_kenney_future,fonte,titulos e numeros,Kenney Fonts/Kenney Future.ttf,game/assets/fonts/kenney_future.ttf,vetorial,CC0 1.0,https://kenney.nl/assets/kenney-fonts,2026-10-14,provisorio
 font_kenney_future_narrow,fonte,textos da interface,Kenney Fonts/Kenney Future Narrow.ttf,game/assets/fonts/kenney_future_narrow.ttf,vetorial,CC0 1.0,https://kenney.nl/assets/kenney-fonts,2026-10-14,provisorio
+music_menu_sporty,musica,musica do menu,SubspaceAudio 12 Music Loops/384 [Misc Extras] bgm_menu_title_6_sporty.ogg,game/assets/music/menu_sporty.ogg,original,CC0 1.0,https://opengameart.org/node/170803,2026-10-14,provisorio
+music_luta_stage_6,musica,musica de luta,SubspaceAudio 12 Music Loops/215 [Super Action Chiptunes] bgm_stage_6.ogg,game/assets/music/luta_stage_6.ogg,original,CC0 1.0,https://opengameart.org/node/170803,2026-10-14,provisorio
+music_luta_stage_9,musica,musica de luta,SubspaceAudio 12 Music Loops/218 [Super Action Chiptunes] bgm_stage_9.ogg,game/assets/music/luta_stage_9.ogg,original,CC0 1.0,https://opengameart.org/node/170803,2026-10-14,provisorio

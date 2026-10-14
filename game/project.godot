@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 Settings="*res://scripts/settings/settings.gd"
 Game="*res://scripts/match/game_state.gd"
 Sfx="*res://scripts/fx/sfx.gd"
+Music="*res://scripts/fx/music.gd"
 
 [display]
 
