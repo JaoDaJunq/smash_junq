@@ -28,8 +28,8 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 |---|---|---|---|
 | T09 | Sistema de hitbox/hurtbox e dados de golpe em Resources | Um golpe de teste acerta, registra dano e é configurado só por dados | feito: teste `combat_smoke` + evidência |
 | T10 | Dano %, fórmula de lançamento, atordoamento e pausa no impacto | Com mais dano o mesmo golpe lança mais longe; teste automatizado da fórmula passa | feito: teste `combat_smoke` + evidência |
-| T11 | Golpes básicos (9) do personagem A | Os 9 golpes funcionam no chão e no ar conforme a direção | a fazer |
-| T12 | Especiais (4) do personagem A | Os 4 especiais funcionam; o para cima recupera de fora da plataforma | a fazer |
+| T11 | Golpes básicos (9) do personagem A | Os 9 golpes funcionam no chão e no ar conforme a direção | feito: teste `agil_smoke` (27 checagens) + evidência |
+| T12 | Especiais (4) do personagem A | Os 4 especiais funcionam; o para cima recupera de fora da plataforma | feito: teste `agil_smoke` (27 checagens) + evidência |
 | T13 | Golpes básicos e especiais do personagem B | Idem T11 e T12, com peso e golpes diferentes do A | a fazer |
 | T14 | Escudo (com desgaste e quebra) e esquiva | Escudo bloqueia, desgasta e quebra; esquiva dá invencibilidade curta | feito: teste `defense_smoke` + evidência |
 | T15 | Agarrão, golpe rápido segurando e 4 arremessos (A e B) | Agarrão vence escudo e perde para ataque; arremessos usam a fórmula de lançamento; quem é agarrado se solta com o tempo | feito: teste `defense_smoke` + evidência |

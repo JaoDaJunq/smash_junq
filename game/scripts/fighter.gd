@@ -207,8 +207,8 @@ func _process_ground(dir: float, run_trigger: bool, delta: float) -> void:
 		state = State.AIR
 		return
 	if absf(dir) > 0.0:
-		facing = signi(dir)
-		if run_trigger or (state == State.RUN and signi(dir) == signi(velocity.x)):
+		facing = int(signf(dir))
+		if run_trigger or (state == State.RUN and signf(dir) == signf(velocity.x)):
 			state = State.RUN
 		elif state != State.RUN:
 			state = State.WALK
@@ -233,7 +233,7 @@ func _process_air(dir: float, delta: float) -> void:
 			jumps_left -= 1
 			_jump(double_jump_velocity)
 			if absf(dir) > 0.0:
-				facing = signi(dir)
+				facing = int(signf(dir))
 				velocity.x = air_speed * signf(dir)
 			return
 	if Input.is_action_just_released(act("jump")) and velocity.y < 0.0 and _jump_time <= short_hop_window:
@@ -293,7 +293,7 @@ func _try_start_action() -> bool:
 			kind = stick
 		elif stick == "side":
 			kind = "side"
-			facing = signi(Input.get_axis(act("left"), act("right")))
+			facing = int(signf(Input.get_axis(act("left"), act("right"))))
 		start_special(kind)
 		return true
 	var move_id := ""
@@ -302,7 +302,7 @@ func _try_start_action() -> bool:
 			"up": move_id = "utilt"
 			"down": move_id = "dtilt"
 			"side":
-				facing = signi(Input.get_axis(act("left"), act("right")))
+				facing = int(signf(Input.get_axis(act("left"), act("right"))))
 				move_id = "ftilt"
 			_: move_id = "jab"
 	else:
@@ -310,7 +310,7 @@ func _try_start_action() -> bool:
 			"up": move_id = "uair"
 			"down": move_id = "dair"
 			"side":
-				var x := signi(Input.get_axis(act("left"), act("right")))
+				var x := int(signf(Input.get_axis(act("left"), act("right"))))
 				move_id = "fair" if x == facing else "bair"
 			_: move_id = "nair"
 	return start_attack(move_id)
@@ -375,6 +375,8 @@ func _process_attack(dir: float, delta: float) -> void:
 		return  # o gancho pode ter encerrado o golpe
 	if attack.is_active(attack_frame):
 		_check_hits()
+		if state != State.ATTACK or attack == null:
+			return  # um contra-ataque pode ter interrompido o golpe
 	if is_on_floor() and not _attack_in_air:
 		velocity.x = move_toward(velocity.x, 0.0, ground_friction * delta)
 		velocity.y = 0.0
@@ -848,7 +850,7 @@ func _process_ledge(dir: float) -> void:
 	elif Input.is_action_just_pressed(act("jump")):
 		_release_ledge(State.AIR)
 		_jump(jump_velocity)
-	elif Input.is_action_just_pressed(act("down")) or (absf(dir) > 0.0 and signi(dir) == side):
+	elif Input.is_action_just_pressed(act("down")) or (absf(dir) > 0.0 and int(signf(dir)) == side):
 		_release_ledge(State.AIR)
 
 
