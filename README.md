@@ -1,5 +1,7 @@
 # Smash Junq
 
+[![Testes](https://github.com/JaoDaJunq/smash_junq/actions/workflows/testes.yml/badge.svg)](https://github.com/JaoDaJunq/smash_junq/actions/workflows/testes.yml)
+
 Projeto de jogo de luta em plataformas 2D, criado com apoio de IA e desenvolvido em Godot.
 
 ## Estado do projeto
@@ -53,7 +55,7 @@ Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco gran
 
 Correr: toque duplo na direção (ou empurrar o analógico rápido). Descer da plataforma: para baixo. Na borda: para cima sobe, pulo salta. Segurando alguém: Ataque bate, direção arremessa.
 
-**O que já funciona:** movimento completo, golpes básicos e especiais dos dois personagens temporários (Ágil e Pesado), escudo, esquivas, agarrão e arremessos, dano %, lançamento, zonas de KO, placar até 3 KOs com morte súbita, menus, pausa, resultado e revanche, a CPU básica, efeitos e sons de luta, arena com cenário e o modo treino.
+**O que já funciona:** movimento completo, golpes básicos e especiais dos dois personagens temporários (Ágil e Pesado), escudo, esquivas, agarrão e arremessos, dano %, lançamento, zonas de KO, placar até 3 KOs com morte súbita, menus, pausa, resultado e revanche, a CPU básica, efeitos e sons de luta, música de fundo provisória, arena com cenário e o modo treino. Todos os assets de terceiros são CC0 e estão registrados em `assets/manifest.csv`.
 
 **Modo treino:** Jogar → Treino. O P2 vira um boneco (parado, pulando, com escudo ou lutando como CPU). A pausa abre o painel de treino: dano do boneco, manter esse dano, mostrar as áreas de acerto e recomeçar posições. No alto da tela aparecem o golpe, o dano, a força do lançamento e a distância.
 
@@ -78,6 +80,8 @@ addons\gdUnit4\runtest.cmd --headless --ignoreHeadlessMode -a res://tests/unit
 ```
 
 Para calibrar a força dos golpes, `res://tests/knockback_probe.tscn` imprime até onde cada golpe lança em cada faixa de dano.
+
+**No GitHub**, os mesmos testes rodam sozinhos a cada push (`.github/workflows/testes.yml`). O selo no topo deste README fica verde quando tudo passa e vermelho quando algo quebra; clique nele para ver qual teste falhou.
 
 **Gerar o `.exe` do Windows:** no Godot, em Editor → Gerenciar modelos de exportação, baixe os modelos da 4.7.2 (uma vez só). Depois use Projeto → Exportar → Windows Desktop, ou pela linha de comando:
 
