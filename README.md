@@ -4,23 +4,28 @@ Projeto de jogo de luta em plataformas 2D, criado com apoio de IA e desenvolvido
 
 ## Estado do projeto
 
-**Etapa 0 — escolha e validação do jogo.**
+**Etapa 1 — GDD e backlog.** A Etapa 0 (escolha e validação do jogo) foi concluída em 14/10/2026.
 
-A proposta aprovada é um platform fighter 2D lateral, inspirado no formato de combate de Super Smash Bros. Os golpes acumulam dano; com mais dano, o adversário tende a ser lançado mais longe. A vitória acontece ao arremessá-lo para fora dos limites da arena.
+O jogo é um platform fighter 2D lateral, inspirado no formato de combate de Super Smash Bros. Os golpes acumulam dano; com mais dano, o adversário tende a ser lançado mais longe. Cada nocaute fora da arena vale um ponto, e vence quem chegar primeiro a 3 KOs.
 
 ## Decisões já tomadas
 
-- Começar em 2D.
-- Manter aberta a possibilidade de ampliar ou mudar o formato depois do protótipo.
-- Criar personagens, nomes, visuais, sons e cenários originais.
+- Começar em 2D, mantendo aberta a possibilidade de ampliar ou mudar o formato depois do protótipo.
+- PC Windows como primeira plataforma.
+- Modos: 2 jogadores locais no mesmo computador e jogador contra a CPU.
+- Gamepad como controle-alvo, com teclado suportado durante o protótipo.
+- Partidas de 3 KOs, sem limite de tempo.
+- Personagens, nomes, visuais, sons e cenários originais.
 
-## Próximo corte proposto
+## Primeiro corte (aprovado)
 
-Uma arena, dois personagens, combate local 1 contra 1, golpes básicos e especiais, recuperação após lançamento, nocaute fora da arena e reinício rápido. **Esse escopo ainda é uma proposta; plataforma e modos não foram fechados.**
+Uma arena, dois personagens temporários, golpes básicos e especiais, dano, lançamento, recuperação, nocaute fora da arena e reinício rápido, jogável em 1 contra 1 local ou contra a CPU.
+
+Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco grande, várias arenas e itens.
 
 ## Organização
 
-- [Brief da Etapa 0 — rascunho para aprovação](design/brief-etapa-0.md)
+- [Brief da Etapa 0 — aprovado](design/brief-etapa-0.md)
 - [Arsenal, rota de produção, pesquisa e decisões](docs/arsenal-jogo-ia.md)
 - As decisões confirmadas e as propostas em validação devem ficar identificadas separadamente.
 - A rota de produção recomendada está no arsenal; o avanço de etapa depende dos critérios de saída definidos ali.
