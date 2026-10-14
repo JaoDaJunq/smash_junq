@@ -385,6 +385,8 @@ func _tap(action: String, strength := 1.0, hold := 3) -> void:
 
 
 func _shot(name: String) -> void:
+	if DisplayServer.get_name() == "headless":
+		return  # sem renderização não há screenshot
 	await RenderingServer.frame_post_draw
 	var img := get_viewport().get_texture().get_image()
 	img.save_png(evidence_dir.path_join(name + ".png"))
