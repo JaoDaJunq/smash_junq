@@ -1,6 +1,6 @@
 # Arsenal do Jogo com IA
 
-> **Versão 2.2 · revisão em 14/10/2026. Etapa atual: 1, GDD e backlog.** Etapa 0 concluída: jogo 2D de luta em plataformas, inspirado no formato de combate de Super Smash Bros., para PC Windows, com 2 jogadores locais e modo contra a CPU, partidas de 3 KOs. Detalhes no [brief aprovado](../design/brief-etapa-0.md). Nenhum jogo específico deve ser presumido a partir de projetos anteriores.
+> **Versão 2.2 · revisão em 14/10/2026. Etapa atual: 2, engine e ponte com a IA.** Etapas 0 e 1 concluídas: jogo 2D de luta em plataformas, inspirado no formato de combate de Super Smash Bros., para PC Windows, com 2 jogadores locais e modo contra a CPU, partidas de 3 KOs. Detalhes no [brief](../design/brief-etapa-0.md), no [GDD](../design/gdd.md) e no [backlog](../design/backlog.md). Nenhum jogo específico deve ser presumido a partir de projetos anteriores.
 
 ## Resumo executivo da revisão
 
@@ -29,8 +29,8 @@ Seguimos as sete etapas da rota original abaixo. O progresso só avança quando 
 | Etapa | Entrega concreta | Gate de aprovação |
 |---|---|---|
 | 0. Escolha do jogo (concluída) | Brief: fantasia central, ação repetida pelo jogador, gênero, câmera, plataforma, sessões, referências e três exclusões de escopo | Proposta 2D e mecânica central aprovadas; fechar o restante do brief antes de avançar |
-| 1. Ideia e GDD (atual) | `/brainstorm` → brief; `/map-systems` e `/design-system` só para sistemas do primeiro corte; backlog com tarefas pequenas | Loop jogável explicado em 30 segundos; condições de vitória/derrota e controles escritos |
-| 2. Engine e ponte | Projeto Godot versionado, plugin fixado, cena inicial, execução e screenshot pelo MCP | Um agente altera uma cena, roda o jogo e registra a evidência; sem erros na importação |
+| 1. Ideia e GDD (concluída) | `/brainstorm` → brief; `/map-systems` e `/design-system` só para sistemas do primeiro corte; backlog com tarefas pequenas | Loop jogável explicado em 30 segundos; condições de vitória/derrota e controles escritos |
+| 2. Engine e ponte (atual) | Projeto Godot versionado, plugin fixado, cena inicial, execução e screenshot pelo MCP | Um agente altera uma cena, roda o jogo e registra a evidência; sem erros na importação |
 | 3. Bíblia visual | Paleta, silhuetas, escala, câmera, UI, 3 a 5 referências e folha de personagem aprovada | O mesmo personagem e cenário mantêm proporções, estilo e leitura no tamanho real do jogo |
 | 4. Arte e integração | Um personagem, um inimigo/obstáculo, um cenário e um efeito; fontes + exportações + metadados | Assets entram no Godot com pivô, escala, transparência/material e animações corretos; nada depende de recorte manual não registrado |
 | 5. Rig e animação | Idle, locomoção, ação principal, impacto e derrota; estado e transições | Sem inversão cabeça/corpo, escorregamento, salto de escala ou frame residual; testar em todas as direções usadas |

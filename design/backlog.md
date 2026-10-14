@@ -1,6 +1,6 @@
 # Backlog — primeiro corte
 
-> **Versão 0.1 · rascunho para aprovação.** Tarefas pequenas, na ordem sugerida de execução. Cada uma só fecha com o critério de aceite cumprido e evidência (screenshot, vídeo curto ou teste) registrada. Base: [GDD](gdd.md).
+> **Versão 1.0 · aprovado em 14/10/2026, lista oficial de tarefas.** Tarefas pequenas, na ordem sugerida de execução. Cada uma só fecha com o critério de aceite cumprido e evidência (screenshot, vídeo curto ou teste) registrada. Base: [GDD](gdd.md).
 
 Legenda de estado: `a fazer` · `fazendo` · `feito`.
 
@@ -32,27 +32,28 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 | T12 | Especiais (4) do personagem A | Os 4 especiais funcionam; o para cima recupera de fora da plataforma | a fazer |
 | T13 | Golpes básicos e especiais do personagem B | Idem T11 e T12, com peso e golpes diferentes do A | a fazer |
 | T14 | Escudo (com desgaste e quebra) e esquiva | Escudo bloqueia, desgasta e quebra; esquiva dá invencibilidade curta | a fazer |
+| T15 | Agarrão, golpe rápido segurando e 4 arremessos (A e B) | Agarrão vence escudo e perde para ataque; arremessos usam a fórmula de lançamento; quem é agarrado se solta com o tempo | a fazer |
 
 ## Marco 3 — Partida
 
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
-| T15 | Zonas de KO e retorno com invencibilidade | Sair dos limites conta KO; o lutador reaparece no alto, invencível por 2 s | a fazer |
-| T16 | Placar até 3 KOs e morte súbita | A partida termina em 3 KOs; KO simultâneo segue a regra provisória; teste automatizado passa | a fazer |
-| T17 | Interface da luta: dano %, KOs, contagem inicial | Dano e KOs atualizam na hora e são legíveis no tamanho real | a fazer |
-| T18 | Fluxo de telas: menu, modo, personagem, resultado, revanche, pausa | Dá para jogar várias partidas seguidas sem fechar o jogo | a fazer |
+| T16 | Zonas de KO e retorno com invencibilidade | Sair dos limites conta KO; o lutador reaparece no alto, invencível por 2 s | a fazer |
+| T17 | Placar até 3 KOs e morte súbita | A partida termina em 3 KOs; KO simultâneo segue a regra provisória; teste automatizado passa | a fazer |
+| T18 | Interface da luta: dano %, KOs, contagem inicial | Dano e KOs atualizam na hora e são legíveis no tamanho real | a fazer |
+| T19 | Fluxo de telas: menu, modo, personagem, resultado, revanche, pausa | Dá para jogar várias partidas seguidas sem fechar o jogo | a fazer |
 
 ## Marco 4 — CPU
 
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
-| T19 | CPU básica com os estados do GDD | A CPU luta, marca KOs e volta para a arena na maioria das vezes; nunca fica parada | a fazer |
+| T20 | CPU básica com os estados do GDD | A CPU luta, marca KOs e volta para a arena na maioria das vezes; nunca fica parada | a fazer |
 
 ## Marco 5 — Fechamento do primeiro corte
 
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
-| T20 | Testes automatizados (GdUnit4) da fórmula de lançamento e do placar | Testes rodam pela linha de comando e passam | a fazer |
-| T21 | Exportar build Windows e fazer o primeiro playtest | O `.exe` roda no PC de casa; partida completa jogada nos dois modos; notas do playtest registradas | a fazer |
+| T21 | Testes automatizados (GdUnit4) da fórmula de lançamento e do placar | Testes rodam pela linha de comando e passam | a fazer |
+| T22 | Exportar build Windows e fazer o primeiro playtest | O `.exe` roda no PC de casa; partida completa jogada nos dois modos; notas do playtest registradas | a fazer |
 
 Arte, animação e som definitivos não estão aqui: entram nas Etapas 3 a 6, depois que o combate com formas simples estiver divertido.
