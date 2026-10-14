@@ -3,6 +3,8 @@
   "fonte": "art/conceitos/juba/partes_v1.png",
   "escala": 0.085,
   "quadril_y": 21,
+  "giro_pulo_duplo": true,
+  "secundarios": {"cauda": {"ganho": 30, "max": 35, "balanço": 4}},
   "partes": {
     "tronco": {"arquivo": "parte_03.png", "origem": [680,9], "pivo": [790,500], "ponta": [780,30], "pai": null, "repouso": -91, "z": 0, "apagar": [[780,22,20],[705,100,20],[850,105,20],[790,512,20]]},
     "cabeca": {"arquivo": "parte_02.png", "origem": [44,17], "pivo": [390,460], "ponta": [370,70], "pai": "tronco", "encaixe": [790,120], "repouso": -93, "z": 6},

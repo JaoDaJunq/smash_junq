@@ -98,6 +98,97 @@ static func erase_circles(img: Image, p: Dictionary) -> Image:
 	return out
 
 
+## Contorno convexo dos pixels visíveis da imagem (em pixels da imagem). Usado
+## para achar o ponto mais baixo do pé em qualquer ângulo e plantá-lo no chão.
+static func opaque_hull(img: Image, step := 2) -> PackedVector2Array:
+	var pts: Array[Vector2] = []
+	var w := img.get_width()
+	var h := img.get_height()
+	for x in range(0, w, step):
+		var top := -1
+		var bottom := -1
+		for y in h:
+			if img.get_pixel(x, y).a > 0.5:
+				if top < 0:
+					top = y
+				bottom = y
+		if top >= 0:
+			pts.append(Vector2(x, top))
+			pts.append(Vector2(x, bottom + 1))
+	for y in range(0, h, step):
+		var left := -1
+		var right := -1
+		for x in w:
+			if img.get_pixel(x, y).a > 0.5:
+				if left < 0:
+					left = x
+				right = x
+		if left >= 0:
+			pts.append(Vector2(left, y))
+			pts.append(Vector2(right + 1, y))
+	return convex_hull(pts)
+
+
+## Fecho convexo (cadeia monótona de Andrew).
+static func convex_hull(points: Array[Vector2]) -> PackedVector2Array:
+	var pts := points.duplicate()
+	pts.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x or (a.x == b.x and a.y < b.y))
+	if pts.size() < 3:
+		return PackedVector2Array(pts)
+	var lower: Array[Vector2] = []
+	for p in pts:
+		while lower.size() >= 2 and (lower[-1] - lower[-2]).cross(p - lower[-2]) <= 0.0:
+			lower.pop_back()
+		lower.append(p)
+	var upper: Array[Vector2] = []
+	for i in range(pts.size() - 1, -1, -1):
+		var p: Vector2 = pts[i]
+		while upper.size() >= 2 and (upper[-1] - upper[-2]).cross(p - upper[-2]) <= 0.0:
+			upper.pop_back()
+		upper.append(p)
+	lower.pop_back()
+	upper.pop_back()
+	return PackedVector2Array(lower + upper)
+
+
+## Desenha uma parte (imagem já sem as bolinhas) numa imagem, sem GPU. Usado
+## pelas ferramentas de conferência que rodam sem janela.
+static func draw_part(canvas: Image, tex: Image, region: Rect2, xf: Transform2D, clip: Rect2i) -> void:
+	var src := Rect2(Vector2.ZERO, tex.get_size()) if region.size == Vector2.ZERO else region
+	var corners := [xf * Vector2.ZERO, xf * Vector2(src.size.x, 0), xf * Vector2(0, src.size.y), xf * src.size]
+	var lo := Vector2(INF, INF)
+	var hi := Vector2(-INF, -INF)
+	for c in corners:
+		lo = lo.min(c)
+		hi = hi.max(c)
+	var x0 := maxi(int(lo.x), clip.position.x)
+	var y0 := maxi(int(lo.y), clip.position.y)
+	var x1 := mini(int(hi.x) + 1, clip.end.x)
+	var y1 := mini(int(hi.y) + 1, clip.end.y)
+	var inv := xf.affine_inverse()
+	for y in range(y0, y1):
+		for x in range(x0, x1):
+			var s: Vector2 = inv * Vector2(x + 0.5, y + 0.5)
+			if s.x < 0 or s.y < 0 or s.x >= src.size.x or s.y >= src.size.y:
+				continue
+			var c := tex.get_pixel(int(s.x + src.position.x), int(s.y + src.position.y))
+			if c.a < 0.05:
+				continue
+			canvas.set_pixel(x, y, canvas.get_pixel(x, y).blend(c))
+
+
+## Imagens das partes prontas para desenhar sem GPU (com as bolinhas apagadas).
+static func load_part_images(rig: Dictionary, rig_path: String) -> Dictionary:
+	var dir := rig_path.get_base_dir()
+	var out := {}
+	for name in rig["partes"]:
+		var p: Dictionary = rig["partes"][name]
+		var img := Image.load_from_file(ProjectSettings.globalize_path(dir.path_join(p["arquivo"])))
+		img.convert(Image.FORMAT_RGBA8)
+		out[name] = erase_circles(img, p) if p.has("apagar") else img
+	return out
+
+
 static func load_rig(path: String) -> Dictionary:
 	var text := FileAccess.get_file_as_string(path)
 	var data: Variant = JSON.parse_string(text)

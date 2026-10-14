@@ -3,6 +3,9 @@
   "fonte": "art/conceitos/seu_capivas/partes_v1.png",
   "escala": 0.12,
   "quadril_y": 16,
+  "passada": 0.75,
+  "pouso": 26,
+  "secundarios": {"toalha": {"ganho": 10, "max": 12, "balanço": 1.5}, "cauda": {"ganho": 20, "max": 20}},
   "partes": {
     "tronco": {"arquivo": "parte_01.png", "origem": [528,63], "pivo": [760,470], "ponta": [735,90], "pai": null, "repouso": -92, "z": 0, "apagar": [[625,160,30]]},
     "cabeca": {"arquivo": "parte_00.png", "origem": [98,30], "pivo": [290,365], "ponta": [255,110], "pai": "tronco", "encaixe": [735,95], "repouso": -98, "z": 2},

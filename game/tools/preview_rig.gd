@@ -17,12 +17,7 @@ func _initialize() -> void:
 	if args.size() > 2 and args[2] != "":
 		poses = Array(args[2].split(","))
 	var cell_h := int(args[3]) if args.size() > 3 else 300
-	var dir := rig_path.get_base_dir()
-	var textures := {}
-	for name in rig["partes"]:
-		var img := Image.load_from_file(ProjectSettings.globalize_path(dir.path_join(rig["partes"][name]["arquivo"])))
-		img.convert(Image.FORMAT_RGBA8)
-		textures[name] = CutoutRigMath.erase_circles(img, rig["partes"][name]) if rig["partes"][name].has("apagar") else img
+	var textures := CutoutRigMath.load_part_images(rig, rig_path)
 	# Escala do quadro: a altura do lutador no jogo (HEIGHT=110) ocupa ~45% do quadro
 	var game_scale: float = float(rig.get("escala", 0.15))
 	var zoom := cell_h * 0.45 / 110.0
@@ -40,35 +35,11 @@ func _initialize() -> void:
 		sheet.fill_rect(Rect2i(i * cell_w, feet_y, cell_w, 2), Color(1, 1, 1, 0.6))
 		_rect_outline(sheet, Rect2i(int(fighter_origin.x - 28 * zoom), int(fighter_origin.y - 55 * zoom), int(56 * zoom), int(110 * zoom)), Color(0.3, 1, 0.5, 0.8))
 		for name in CutoutRigMath.draw_order(rig["partes"]):
-			_draw_part(sheet, textures[name], CutoutRigMath.region_in_crop(rig["partes"][name]), to_canvas * xfs[name], Rect2i(i * cell_w, 0, cell_w, cell_h))
+			CutoutRigMath.draw_part(sheet, textures[name], CutoutRigMath.region_in_crop(rig["partes"][name]), to_canvas * xfs[name], Rect2i(i * cell_w, 0, cell_w, cell_h))
 		sheet.fill_rect(Rect2i(i * cell_w, 0, 2, cell_h), Color(0.1, 0.1, 0.15))
 	sheet.save_png(out_path)
 	print("OK: ", out_path)
 	quit()
-
-
-func _draw_part(canvas: Image, tex: Image, region: Rect2, xf: Transform2D, clip: Rect2i) -> void:
-	var src := Rect2(Vector2.ZERO, tex.get_size()) if region.size == Vector2.ZERO else region
-	var corners := [xf * Vector2.ZERO, xf * Vector2(src.size.x, 0), xf * Vector2(0, src.size.y), xf * src.size]
-	var lo := Vector2(INF, INF)
-	var hi := Vector2(-INF, -INF)
-	for c in corners:
-		lo = lo.min(c)
-		hi = hi.max(c)
-	var x0 := maxi(int(lo.x), clip.position.x)
-	var y0 := maxi(int(lo.y), clip.position.y)
-	var x1 := mini(int(hi.x) + 1, clip.end.x)
-	var y1 := mini(int(hi.y) + 1, clip.end.y)
-	var inv := xf.affine_inverse()
-	for y in range(y0, y1):
-		for x in range(x0, x1):
-			var s: Vector2 = inv * Vector2(x + 0.5, y + 0.5)
-			if s.x < 0 or s.y < 0 or s.x >= src.size.x or s.y >= src.size.y:
-				continue
-			var c := tex.get_pixel(int(s.x + src.position.x), int(s.y + src.position.y))
-			if c.a < 0.05:
-				continue
-			canvas.set_pixel(x, y, canvas.get_pixel(x, y).blend(c))
 
 
 func _rect_outline(img: Image, r: Rect2i, c: Color) -> void:

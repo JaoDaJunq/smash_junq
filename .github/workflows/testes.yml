@@ -37,7 +37,7 @@ jobs:
       - name: Testes de fumaça
         run: |
           status=0
-          for t in movement_smoke combat_smoke defense_smoke agil_smoke pesado_smoke match_smoke cpu_smoke training_smoke menus_smoke music_smoke rig_smoke; do
+          for t in movement_smoke combat_smoke defense_smoke agil_smoke pesado_smoke match_smoke cpu_smoke training_smoke menus_smoke music_smoke rig_smoke rig_filmstrip; do
             echo "::group::$t"
             out=$("$GODOT_BIN" --headless --path game "res://tests/$t.tscn" 2>&1 || true)
             echo "$out" | grep -E '^\[(OK|FALHA)\]|RESULTADO|SCRIPT ERROR' || true
