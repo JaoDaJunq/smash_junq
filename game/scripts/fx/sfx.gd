@@ -47,6 +47,8 @@ func _ready() -> void:
 		_streams[event] = list
 	for i in VOICES:
 		var p := AudioStreamPlayer.new()
+		if AudioServer.get_bus_index("SFX") >= 0:
+			p.bus = "SFX"  # barramento criado pelo Settings (volume de efeitos)
 		add_child(p)
 		_players.append(p)
 

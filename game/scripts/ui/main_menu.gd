@@ -1,10 +1,12 @@
 extends MenuScreen
-## Menu principal: Jogar e Sair.
+## Menu principal: Jogar, Como jogar, Opções e Sair.
 
 
 func _ready() -> void:
 	var col := build_column("SMASH JUNQ", "Platform fighter 2D", false, 96)
 	add_button(col, "Jogar", func() -> void: Game.go_to(Game.MODE_SCENE))
+	add_button(col, "Como jogar", func() -> void: Game.go_to(Game.HOW_TO_PLAY_SCENE))
+	add_button(col, "Opções", func() -> void: Game.go_to(Game.OPTIONS_SCENE))
 	add_button(col, "Sair", func() -> void: get_tree().quit(), true)
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 30)
