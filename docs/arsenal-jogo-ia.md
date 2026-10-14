@@ -1,6 +1,6 @@
 # Arsenal do Jogo com IA
 
-> **Versão 2.0 · revisão em 14/10/2026. Etapa atual: 0, definição e validação da produção.** Este documento é o mapa do projeto. O gênero, a câmera, a plataforma inicial, o público e a mecânica principal ainda não foram decididos. Nenhum jogo específico deve ser presumido a partir de projetos anteriores.
+> **Versão 2.1 · revisão em 14/10/2026. Etapa atual: 0, escolha e validação do jogo.** Proposta aprovada até aqui: um jogo 2D de luta em plataformas, inspirado no formato de combate de Super Smash Bros. O escopo da primeira versão, a plataforma, o público e os modos ainda precisam ser definidos. Nenhum jogo específico deve ser presumido a partir de projetos anteriores.
 
 ## Resumo executivo da revisão
 
@@ -18,8 +18,8 @@
 | Fechada | Claude-Code-Game-Studios organiza briefs, tarefas, papéis e revisões; começar apenas com os comandos necessários | Complexidade maior que o benefício no primeiro protótipo |
 | Fechada | `hi-godot/godot-ai` é a ponte principal; fixar uma release publicada e testar conexão com o editor | Falha reproduzível no Windows, com issue e teste de alternativa |
 | Fechada | Geração 3D pesada e animação generativa ficam na nuvem | Hardware diferente e benchmark medido |
-| Aberta | Jogo específico: gênero, câmera, 2D/3D, plataforma inicial, controles, duração e diferencial | Aprovar um brief de uma página |
-| Aberta | Rota visual principal 2D ou 3D | Fazer prova de um personagem e um cenário; comparar custo, consistência e desempenho |
+| Em andamento | Brief do jogo: gênero e câmera 2D definidos; falta fechar plataforma, público, controles, duração, diferencial e escopo da primeira versão | Aprovar um brief de uma página |
+| Fechada | Começar em 2D; expansão para 3D ou outros formatos fica para uma decisão futura | Reavaliar só depois do protótipo 2D jogável |
 | Aberta | Comercialização e distribuição | Definir antes de incorporar assets de planos gratuitos com restrições |
 
 ## Rota operacional e critérios de saída
@@ -28,7 +28,7 @@ Seguimos as sete etapas da rota original abaixo. O progresso só avança quando 
 
 | Etapa | Entrega concreta | Gate de aprovação |
 |---|---|---|
-| 0. Escolha do jogo (atual) | Brief: fantasia central, ação repetida pelo jogador, gênero, câmera, plataforma, sessões, referências e três exclusões de escopo | O criador escolhe uma proposta e aprova a mecânica central |
+| 0. Escolha do jogo (atual) | Brief: fantasia central, ação repetida pelo jogador, gênero, câmera, plataforma, sessões, referências e três exclusões de escopo | Proposta 2D e mecânica central aprovadas; fechar o restante do brief antes de avançar |
 | 1. Ideia e GDD | `/brainstorm` → brief; `/map-systems` e `/design-system` só para sistemas do primeiro corte; backlog com tarefas pequenas | Loop jogável explicado em 30 segundos; condições de vitória/derrota e controles escritos |
 | 2. Engine e ponte | Projeto Godot versionado, plugin fixado, cena inicial, execução e screenshot pelo MCP | Um agente altera uma cena, roda o jogo e registra a evidência; sem erros na importação |
 | 3. Bíblia visual | Paleta, silhuetas, escala, câmera, UI, 3 a 5 referências e folha de personagem aprovada | O mesmo personagem e cenário mantêm proporções, estilo e leitura no tamanho real do jogo |
@@ -38,6 +38,21 @@ Seguimos as sete etapas da rota original abaixo. O progresso só avança quando 
 | 7. Testar e repetir | Uma fase curta exportável, checklist visual, testes de lógica e registro de bugs | Rodar no PC alvo, revisar manualmente, fechar bugs bloqueadores e gerar build reproduzível |
 
 **Primeiro corte vertical:** uma única sessão completa de 5 a 10 minutos com menu simples, início, ação principal, resposta visual e sonora, desafio, fim e reinício. Os números são meta inicial para dimensionar escopo, não compromisso de design. Só depois expandir níveis, personagens e geração em lote.
+
+### Brief inicial do jogo (etapa 0)
+
+**Decisões confirmadas pelo criador**
+- Gênero: jogo de luta em plataformas (*platform fighter*), inspirado na estrutura de combate de Super Smash Bros.
+- Visual e câmera iniciais: 2D lateral. Pensar em expansão para 3D ou outros formatos somente depois; isso ainda não é compromisso.
+- Mecânica central: golpes acumulam dano no adversário; conforme o dano aumenta, os golpes tendem a lançá-lo mais longe. A vitória ocorre ao arremessar o oponente para fora dos limites da arena.
+- Os personagens terão habilidades próprias. Elenco, tema, estilo visual e universo ainda estão em aberto.
+
+**Proposta de escopo para validar, ainda não aprovada**
+- Primeiro protótipo: uma arena, dois personagens, combate local 1 contra 1, golpes básicos e especiais, recuperação após ser lançado, limites de nocaute e reinício rápido.
+- Adiar modos online, elenco grande, itens, múltiplas arenas e conteúdo de campanha até o combate básico ser divertido e estável.
+- Começar com personagens, nomes, visuais, sons e cenários originais. Usar Smash como referência de gênero e mecânicas, sem copiar personagens, marcas ou assets da Nintendo.
+
+**Ainda falta decidir:** plataforma inicial, perfil de jogador, controles, duração de partida e três exclusões de escopo. A recomendação inicial é validar primeiro uma partida local curta no PC, mas isso depende de aprovação e não é requisito fechado.
 
 ### Fluxo de trabalho repetível
 
@@ -79,6 +94,9 @@ Não duplicar automaticamente a estrutura inteira do Claude-Code-Game-Studios: a
 | [Godot Reversi](https://github.com/regiellis/godot-reversi) | Caso verificável | Jogo completo com fonte e execução, criado por agente no editor; README relata falhas visuais corrigidas por revisão humana | Evidência de loop agente/editor; não prova criação de um gênero novo com um único prompt |
 | [GodotIQ Crystal Keep](https://github.com/salvo10f/godotiq) | Demonstração do autor da ferramenta | Relato de tower defense 3D construído a partir de brief e kit de assets | Inspirar prova de integração; verificar build/código antes de assumir resultado independente |
 | [Godot Asset Store](https://godotengine.org/article/introducing-the-godot-asset-store/) | Fonte oficial | Nova loja integrada à linha 4.7; o catálogo antigo permanece em transição | Procurar base CC0/MIT e validar licença do item individual |
+| [PlatformFighterGodot](https://github.com/L4igi/PlatformFighterGodot) | Referência direta de mecânicas | Protótipo Godot inspirado em Smash, com estados de personagem, estágios, itens/projéteis e dados de ataque como dano e ângulo de knockback | Estudar como referência. Usa `KinematicBody`, API anterior ao Godot 4; adaptar antes de reaproveitar. README credita sprites de Mario e Link; não importar esses assets. Licença do código precisa ser confirmada antes de qualquer cópia. |
+| [Shoto Fighter Godot](https://github.com/aminRX/shoto-fighter-godot) | Referência de arquitetura | Jogo 2D tradicional, não platform fighter; separa lógica e arte, usa estados, ataques dirigidos por dados e testes automatizados. Código MIT | Aproveitar padrões e testes, não suas regras de luta como especificação do nosso jogo. Sprites incluídos têm licença não comercial; substituir por arte própria. |
+| [Godot Rollback Fighter Demo](https://github.com/blast-harbour/Godot-Rollback-Fighter-Demo) | Referência futura de multiplayer | Exemplo de luta com rollback, hitboxes/hurtboxes, estados e projéteis; baseado em Godot 4.2.2 e componentes com licenças próprias | Não adicionar ao primeiro protótipo. Reavaliar após combate local e decisão explícita de incluir jogo online. |
 
 **Lição dos casos:** o ganho está no ciclo brief → cena → execução → feedback → correção. Mesmo o caso Reversi, com regras conhecidas, precisou corrigir interface e áudio após parecer pronto. Para nossa mecânica original, reservar iteração e playtest; não prometer que uma geração resolve tudo.
 
