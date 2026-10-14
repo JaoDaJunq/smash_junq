@@ -1,6 +1,6 @@
 # Arsenal do Jogo com IA
 
-> **Versão 2.1 · revisão em 14/10/2026. Etapa atual: 0, escolha e validação do jogo.** Proposta aprovada até aqui: um jogo 2D de luta em plataformas, inspirado no formato de combate de Super Smash Bros. O escopo da primeira versão, a plataforma, o público e os modos ainda precisam ser definidos. Nenhum jogo específico deve ser presumido a partir de projetos anteriores.
+> **Versão 2.2 · revisão em 14/10/2026. Etapa atual: 1, GDD e backlog.** Etapa 0 concluída: jogo 2D de luta em plataformas, inspirado no formato de combate de Super Smash Bros., para PC Windows, com 2 jogadores locais e modo contra a CPU, partidas de 3 KOs. Detalhes no [brief aprovado](../design/brief-etapa-0.md). Nenhum jogo específico deve ser presumido a partir de projetos anteriores.
 
 ## Resumo executivo da revisão
 
@@ -18,7 +18,7 @@
 | Fechada | Claude-Code-Game-Studios organiza briefs, tarefas, papéis e revisões; começar apenas com os comandos necessários | Complexidade maior que o benefício no primeiro protótipo |
 | Fechada | `hi-godot/godot-ai` é a ponte principal; fixar uma release publicada e testar conexão com o editor | Falha reproduzível no Windows, com issue e teste de alternativa |
 | Fechada | Geração 3D pesada e animação generativa ficam na nuvem | Hardware diferente e benchmark medido |
-| Em andamento | Brief do jogo: gênero e câmera 2D definidos; falta fechar plataforma, público, controles, duração, diferencial e escopo da primeira versão | Aprovar um brief de uma página |
+| Fechada | Brief do jogo aprovado: PC Windows, 2 jogadores locais e contra a CPU, gamepad e teclado, 3 KOs, primeiro corte e exclusões definidos ([brief](../design/brief-etapa-0.md)) | Resultado do playtest do primeiro corte |
 | Fechada | Começar em 2D; expansão para 3D ou outros formatos fica para uma decisão futura | Reavaliar só depois do protótipo 2D jogável |
 | Aberta | Comercialização e distribuição | Definir antes de incorporar assets de planos gratuitos com restrições |
 
@@ -28,8 +28,8 @@ Seguimos as sete etapas da rota original abaixo. O progresso só avança quando 
 
 | Etapa | Entrega concreta | Gate de aprovação |
 |---|---|---|
-| 0. Escolha do jogo (atual) | Brief: fantasia central, ação repetida pelo jogador, gênero, câmera, plataforma, sessões, referências e três exclusões de escopo | Proposta 2D e mecânica central aprovadas; fechar o restante do brief antes de avançar |
-| 1. Ideia e GDD | `/brainstorm` → brief; `/map-systems` e `/design-system` só para sistemas do primeiro corte; backlog com tarefas pequenas | Loop jogável explicado em 30 segundos; condições de vitória/derrota e controles escritos |
+| 0. Escolha do jogo (concluída) | Brief: fantasia central, ação repetida pelo jogador, gênero, câmera, plataforma, sessões, referências e três exclusões de escopo | Proposta 2D e mecânica central aprovadas; fechar o restante do brief antes de avançar |
+| 1. Ideia e GDD (atual) | `/brainstorm` → brief; `/map-systems` e `/design-system` só para sistemas do primeiro corte; backlog com tarefas pequenas | Loop jogável explicado em 30 segundos; condições de vitória/derrota e controles escritos |
 | 2. Engine e ponte | Projeto Godot versionado, plugin fixado, cena inicial, execução e screenshot pelo MCP | Um agente altera uma cena, roda o jogo e registra a evidência; sem erros na importação |
 | 3. Bíblia visual | Paleta, silhuetas, escala, câmera, UI, 3 a 5 referências e folha de personagem aprovada | O mesmo personagem e cenário mantêm proporções, estilo e leitura no tamanho real do jogo |
 | 4. Arte e integração | Um personagem, um inimigo/obstáculo, um cenário e um efeito; fontes + exportações + metadados | Assets entram no Godot com pivô, escala, transparência/material e animações corretos; nada depende de recorte manual não registrado |
@@ -47,12 +47,12 @@ Seguimos as sete etapas da rota original abaixo. O progresso só avança quando 
 - Mecânica central: golpes acumulam dano no adversário; conforme o dano aumenta, os golpes tendem a lançá-lo mais longe. A vitória ocorre ao arremessar o oponente para fora dos limites da arena.
 - Os personagens terão habilidades próprias. Elenco, tema, estilo visual e universo ainda estão em aberto.
 
-**Proposta de escopo para validar, ainda não aprovada**
-- Primeiro protótipo: uma arena, dois personagens, combate local 1 contra 1, golpes básicos e especiais, recuperação após ser lançado, limites de nocaute e reinício rápido.
-- Adiar modos online, elenco grande, itens, múltiplas arenas e conteúdo de campanha até o combate básico ser divertido e estável.
-- Começar com personagens, nomes, visuais, sons e cenários originais. Usar Smash como referência de gênero e mecânicas, sem copiar personagens, marcas ou assets da Nintendo.
-
-**Ainda falta decidir:** plataforma inicial, perfil de jogador, controles, duração de partida e três exclusões de escopo. A recomendação inicial é validar primeiro uma partida local curta no PC, mas isso depende de aprovação e não é requisito fechado.
+**Escopo aprovado em 14/10/2026** (detalhes no [brief](../design/brief-etapa-0.md))
+- Plataforma: PC Windows. Modos: 2 jogadores locais e jogador contra a CPU. Controles: gamepad como alvo, teclado suportado no protótipo.
+- Partida: vence quem chegar primeiro a 3 KOs, sem limite de tempo. Público: amigos que gostam de luta casual e partidas rápidas.
+- Primeiro protótipo: uma arena, dois personagens temporários, golpes básicos e especiais, dano, lançamento, recuperação, nocaute e reinício rápido.
+- Fora do primeiro corte: online e rollback, campanha ou progressão, elenco grande, várias arenas e itens.
+- Personagens, nomes, visuais, sons e cenários originais. Smash é referência de gênero e mecânicas, sem copiar personagens, marcas ou assets da Nintendo.
 
 ### Fluxo de trabalho repetível
 
