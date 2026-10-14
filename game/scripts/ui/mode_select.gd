@@ -1,11 +1,12 @@
 extends MenuScreen
-## Escolha de modo: 2 jogadores ou contra a CPU.
+## Escolha de modo: 2 jogadores, contra a CPU ou treino.
 
 
 func _ready() -> void:
 	var col := build_column("Modo de jogo")
 	add_button(col, "2 jogadores", func() -> void: _choose("versus"))
 	add_button(col, "Contra a CPU", func() -> void: _choose("cpu"))
+	add_button(col, "Treino", func() -> void: _choose("training"))
 	add_button(col, "Voltar", func() -> void: Game.go_menu(), true)
 	focus_first()
 

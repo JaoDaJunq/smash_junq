@@ -28,7 +28,7 @@ const PLAYER_COLORS := {
 	"p2": Color(1.0, 0.42, 0.35),
 }
 
-## "versus" (2 jogadores) ou "cpu" (P2 controlado pela CPU, ver T20).
+## "versus" (2 jogadores), "cpu" (P2 controlado pela CPU, ver T20) ou "training" (P2 é um boneco).
 var mode := "versus"
 ## Caminho da cena do personagem de cada jogador.
 var characters := {
@@ -60,6 +60,8 @@ func set_character(player_id: String, index: int) -> void:
 
 ## Nome exibido de quem controla o lado: "Jogador 1", "Jogador 2" ou "CPU".
 func player_label(player_id: String) -> String:
+	if player_id == "p2" and mode == "training":
+		return "Boneco"
 	if player_id == "p2" and mode == "cpu":
 		return "CPU"
 	return "Jogador " + player_id.trim_prefix("p")
@@ -75,3 +77,8 @@ func go_to(path: String) -> void:
 
 func go_menu() -> void:
 	go_to(MENU_SCENE)
+
+
+## Só um jogador humano escolhe os dois lutadores (contra a CPU ou treino).
+func is_single_player() -> bool:
+	return mode == "cpu" or mode == "training"

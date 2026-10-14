@@ -40,6 +40,11 @@ var _start_positions := {}
 var _respawn_shield := {}
 var _count_time := 0.0
 var _count_index := -1
+## Modo treino (só existe quando Game.mode == "training").
+var training: TrainingMode = null
+var log_enabled := true
+var _match_time := 0.0
+var _last_hits := {}
 
 @onready var hud: Hud = $Hud
 @onready var pause_menu: PauseMenu = $UiLayer/PauseMenu
@@ -48,6 +53,7 @@ var _count_index := -1
 
 
 func _ready() -> void:
+	log_enabled = not Game.suppress_scene_changes  # testes não escrevem no registro do playtest
 	ko_target = Game.ko_target
 	_build_fighters()
 	hud.setup(fighters, ko_target)
@@ -81,6 +87,15 @@ func _build_fighters() -> void:
 	# T20: a CPU assume o P2 neste modo (o teclado/gamepad do jogador 2 deixa de valer).
 	if Game.mode == "cpu":
 		fighters["p2"].set_cpu(CpuBrain.new())
+	elif Game.mode == "training":
+		# Treino: P2 vira boneco, a pausa abre o painel de treino
+		training = TrainingMode.new()
+		training.name = "Training"
+		add_child(training)
+		training.setup(self, fighters["p1"], fighters["p2"])
+		pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
+	for pid in IDS:
+		(fighters[pid] as Fighter).hit_taken.connect(_on_fighter_hit.bind(pid))
 
 
 ## Zera o placar e os lutadores e começa a contagem. Usado na entrada e na revanche.
@@ -104,6 +119,11 @@ func start_match() -> void:
 	phase = Phase.COUNTDOWN
 	_count_time = 0.0
 	_count_index = -1
+	_match_time = 0.0
+	_last_hits.clear()
+	if training != null:
+		training.on_dummy_respawned()
+		skip_countdown()  # treino começa direto
 
 
 func restart() -> void:
@@ -147,9 +167,10 @@ func _begin_fight() -> void:
 
 # --- KO, placar e retorno ---
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if phase != Phase.FIGHT:
 		return
+	_match_time += delta
 	_update_respawn_shield()
 	var out: Array[String] = []
 	for pid in IDS:
@@ -162,6 +183,18 @@ func _physics_process(_delta: float) -> void:
 ## Resolve KOs do mesmo quadro: cada KO dá ponto ao outro jogador. Se os dois
 ## saíram juntos, os dois pontuam. Público para os testes poderem forçar KOs.
 func resolve_kos(victims: Array[String]) -> void:
+	if training != null:
+		# Treino não tem placar: só efeito, retorno e o registro do golpe
+		for victim in victims:
+			ko_scored.emit(other(victim), victim)
+			if victim == "p2":
+				training.on_dummy_ko()
+			respawn_fighter(victim)
+			if victim == "p2":
+				training.on_dummy_respawned()
+		return
+	for victim in victims:
+		_log_ko(victim)
 	var outcome := Scoring.apply_kos(kos, victims, ko_target, sudden_death)
 	kos = outcome["kos"]
 	sudden_death = outcome["sudden_death"]
@@ -180,6 +213,42 @@ func resolve_kos(victims: Array[String]) -> void:
 
 func other(pid: String) -> String:
 	return "p2" if pid == "p1" else "p1"
+
+
+# --- Registro do playtest ---
+
+func _on_fighter_hit(attacker: Node2D, data: AttackData, launch: Vector2, victim: String) -> void:
+	var move := data.id
+	if move == "" and attacker is Fighter:
+		move = (attacker as Fighter).attack_id
+	_last_hits[victim] = {"golpe": move, "lancamento": roundi(launch.length()), "tempo": _match_time,
+		"de": (attacker as Fighter).display_name if attacker is Fighter else "?"}
+
+
+func _log_ko(victim: String) -> void:
+	if not log_enabled:
+		return
+	var f: Fighter = fighters[victim]
+	var pos := f.global_position
+	var side := "baixo"
+	if pos.x < ko_zone.position.x:
+		side = "esquerda"
+	elif pos.x > ko_zone.end.x:
+		side = "direita"
+	elif pos.y < ko_zone.position.y:
+		side = "topo"
+	var entry := {
+		"evento": "ko", "modo": Game.mode, "tempo_s": snappedf(_match_time, 0.1),
+		"caiu": Game.player_label(victim), "personagem": f.display_name,
+		"dano": snappedf(f.damage_percent, 0.1), "saiu_por": side,
+	}
+	if _last_hits.has(victim):
+		var hit: Dictionary = _last_hits[victim]
+		entry["ultimo_golpe"] = hit["golpe"]
+		entry["golpe_de"] = hit["de"]
+		entry["lancamento"] = hit["lancamento"]
+		entry["s_desde_golpe"] = snappedf(_match_time - float(hit["tempo"]), 0.1)
+	PlaytestLog.append("partidas.jsonl", entry)
 
 
 func respawn_fighter(pid: String) -> void:
@@ -210,6 +279,12 @@ func end_match(winner: String) -> void:
 	for f in fighters.values():
 		f.set_physics_process(false)
 	Game.last_result = result_data(winner)
+	if log_enabled:
+		PlaytestLog.append("partidas.jsonl", {
+			"evento": "fim", "modo": Game.mode, "duracao_s": snappedf(_match_time, 0.1),
+			"vencedor": Game.player_label(winner), "placar": kos.duplicate(),
+			"personagens": Game.last_result["characters"],
+		})
 	hud.show_banner("FIM!", 0.0, Game.PLAYER_COLORS[winner])
 	match_ended.emit(winner)
 	await get_tree().create_timer(results_delay).timeout

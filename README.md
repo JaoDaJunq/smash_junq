@@ -53,15 +53,19 @@ Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco gran
 
 Correr: toque duplo na direção (ou empurrar o analógico rápido). Descer da plataforma: para baixo. Na borda: para cima sobe, pulo salta. Segurando alguém: Ataque bate, direção arremessa.
 
-**O que já funciona:** movimento completo, golpes básicos e especiais dos dois personagens temporários (Ágil e Pesado), escudo, esquivas, agarrão e arremessos, dano %, lançamento, zonas de KO, placar até 3 KOs com morte súbita, menus, pausa, resultado e revanche, e a CPU básica.
+**O que já funciona:** movimento completo, golpes básicos e especiais dos dois personagens temporários (Ágil e Pesado), escudo, esquivas, agarrão e arremessos, dano %, lançamento, zonas de KO, placar até 3 KOs com morte súbita, menus, pausa, resultado e revanche, a CPU básica, efeitos e sons de luta, arena com cenário e o modo treino.
 
-**Testes automáticos**, a partir da raiz do repositório. Cada um abre uma janela por alguns segundos, imprime `[OK]`/`[FALHA]` e salva screenshots em `evidence/etapa-2/`:
+**Modo treino:** Jogar → Treino. O P2 vira um boneco (parado, pulando, com escudo ou lutando como CPU). A pausa abre o painel de treino: dano do boneco, manter esse dano, mostrar as áreas de acerto e recomeçar posições. No alto da tela aparecem o golpe, o dano, a força do lançamento e a distância.
+
+**Registro do playtest:** o jogo grava sozinho cada KO e cada fim de partida em `partidas.jsonl`, e cada golpe do treino em `treino.jsonl`, na pasta `%APPDATA%\Godot\app_userdata\Smash Junq\playtest\`. Depois de jogar, mande esses arquivos para a IA calibrar a força dos golpes com números reais.
+
+**Testes automáticos**, a partir da raiz do repositório. Rodam sem janela (`--headless`) e imprimem `[OK]`/`[FALHA]`; sem `--headless` eles abrem uma janela e também salvam screenshots em `evidence/`:
 
 ```bash
-godot --path game res://tests/movement_smoke.tscn
+godot --headless --path game res://tests/movement_smoke.tscn
 ```
 
-Os outros seguem o mesmo formato: `combat_smoke`, `defense_smoke`, `agil_smoke`, `pesado_smoke`, `match_smoke` e `cpu_smoke`. Para simular 4 partidas completas CPU x CPU em poucos segundos (sem janela):
+Os outros seguem o mesmo formato: `combat_smoke`, `defense_smoke`, `agil_smoke`, `pesado_smoke`, `match_smoke`, `cpu_smoke` e `training_smoke`. Para simular 4 partidas completas CPU x CPU em poucos segundos (sem janela):
 
 ```bash
 godot --headless --fixed-fps 60 --path game res://tests/cpu_vs_cpu_match.tscn

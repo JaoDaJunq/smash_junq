@@ -16,7 +16,8 @@ func _ready() -> void:
 	var versus := Game.mode == "versus"
 	choice["p1"] = Game.character_index("p1")
 	choice["p2"] = Game.character_index("p2")
-	var col := build_column("Escolha seu lutador", "2 jogadores" if versus else "Contra a CPU")
+	var subtitle := "2 jogadores" if versus else ("Treino" if Game.mode == "training" else "Contra a CPU")
+	var col := build_column("Escolha seu lutador", subtitle)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
 	row.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -26,7 +27,8 @@ func _ready() -> void:
 		row.add_child(_panels[pid]["root"])
 	col.add_child(make_label("Esquerda/Direita escolhe  ·  Ataque ou Pulo confirma  ·  Especial desfaz  ·  Pausa volta", "HintLabel"))
 	if not versus:
-		col.add_child(make_label("Você escolhe o seu lutador e depois o da CPU", "HintLabel"))
+		var other := "do boneco" if Game.mode == "training" else "da CPU"
+		col.add_child(make_label("Você escolhe o seu lutador e depois o " + other, "HintLabel"))
 	var back := Button.new()
 	back.text = "Voltar"
 	back.focus_mode = Control.FOCUS_NONE
@@ -92,7 +94,7 @@ func _mouse_button(text: String, on_press: Callable, width: float) -> Button:
 
 ## Quem manda no jogador-alvo deste painel. No modo CPU, o P1 controla os dois.
 func controller_of(slot: String) -> String:
-	return "p1" if Game.mode == "cpu" else slot
+	return "p1" if Game.is_single_player() else slot
 
 
 ## No modo CPU, a CPU (p2) só escolhe depois que o P1 confirmou.
@@ -109,7 +111,7 @@ func _process(_delta: float) -> void:
 			return
 	# No modo CPU só um painel escolhe por vez (o do P1 trava quando a CPU escolhe)
 	var slots: Array = PLAYERS
-	if Game.mode == "cpu":
+	if Game.is_single_player():
 		slots = ["p2" if locked["p1"] else "p1"]
 	for slot in slots:
 		if not slot_active(slot):
@@ -156,7 +158,7 @@ func _toggle_lock(slot: String) -> void:
 ## Desfaz a confirmação. No modo CPU, desfazer na vez da CPU volta ao P1.
 func _unlock(slot: String) -> void:
 	var changed: bool = locked[slot]
-	if Game.mode == "cpu" and slot == "p2" and not locked["p2"]:
+	if Game.is_single_player() and slot == "p2" and not locked["p2"]:
 		locked["p1"] = false
 		changed = true
 	locked[slot] = false

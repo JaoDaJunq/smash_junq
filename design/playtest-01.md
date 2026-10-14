@@ -14,6 +14,8 @@
 2. **Contra a CPU, Pesado x Ágil.** Troque os lados e jogue de novo.
 3. **2 jogadores**, se tiver alguém (ou jogue os dois lados para testar controles). Uma partida inteira.
 4. Use a pausa, reinicie uma partida e use "Revanche" na tela de resultado.
+5. **Treino** (Jogar → Treino): escolha um dano para o boneco (ex.: 80%, 120%, 150%), ligue "Manter esse dano" e teste os golpes fortes. Anote em que faixa de dano cada golpe começa a tirar o boneco da arena e se isso parece cedo ou tarde.
+6. No fim, copie a pasta `%APPDATA%\Godot\app_userdata\Smash Junq\playtest\` (arquivos `partidas.jsonl` e `treino.jsonl`) para dentro do repositório em `design/playtest-01-dados/` e mande um commit, ou envie para a IA.
 
 ## O que observar
 
