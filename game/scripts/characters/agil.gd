@@ -41,7 +41,7 @@ func start_special(kind: String) -> void:
 	_countered = false
 	if kind == "up":
 		# A direção vale no instante do apertar: diagonal para cima ou reto para cima
-		var stick := Vector2(Input.get_axis(act("left"), act("right")), Input.get_axis(act("up"), act("down")))
+		var stick := Vector2(controls.axis("left", "right"), controls.axis("up", "down"))
 		_teleport_dir = stick.normalized() if stick.length() >= 0.5 else Vector2.UP
 		if absf(_teleport_dir.x) > 0.1:
 			facing = 1 if _teleport_dir.x > 0.0 else -1

@@ -8,7 +8,7 @@ extends Fighter
 ##  - para baixo: pisão que lança quem está perto (no ar, despenca e bate ao pousar)
 
 ## Arremesso do agarrão lateral (recurso na cena; ver pesado.tscn).
-@export var throw_data: AttackData
+@export var command_throw_data: AttackData
 
 ## Quadros máximos de carga da pancada (depois disso ela sai sozinha).
 const MAX_CHARGE := 60
@@ -26,7 +26,7 @@ const DIVE_WINDUP := 10
 
 var _charging := false
 var _charge := 0
-var _grab_timer := 0
+var _command_grab_timer := 0
 var _diving := false
 
 
@@ -72,7 +72,7 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 func _charge_step(frame: int) -> void:
 	if not _charging or frame < attack.startup:
 		return
-	if Input.is_action_pressed(act("special")) and _charge < MAX_CHARGE:
+	if controls.pressed("special") and _charge < MAX_CHARGE:
 		_charge += 1
 		attack_frame = attack.startup - 1  # fica no quadro de carga
 		return
@@ -92,8 +92,8 @@ func _charge_step(frame: int) -> void:
 func _grab_step(frame: int) -> void:
 	if holding != null:
 		attack_frame = attack.startup + attack.active + 1  # congela logo depois dos quadros ativos
-		_grab_timer += 1
-		if _grab_timer >= HOLD_FRAMES:
+		_command_grab_timer += 1
+		if _command_grab_timer >= HOLD_FRAMES:
 			_throw()
 		return
 	if not attack.is_active(frame):
@@ -105,12 +105,12 @@ func _grab_step(frame: int) -> void:
 			continue
 		if Combat.circle_hits_rect(center, attack.hitbox_radius, target.hurtbox()):
 			hold(target)  # a caixa do golpe não machuca: o dano vem no arremesso
-			_grab_timer = 0
+			_command_grab_timer = 0
 			return
 
 
 func _throw() -> void:
-	var data := throw_data if throw_data != null else moveset.special_side
+	var data := command_throw_data if command_throw_data != null else moveset.special_side
 	throw_held(data, facing)
 
 

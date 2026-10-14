@@ -14,11 +14,11 @@ id = "special_side_throw"
 damage = 13.0
 angle = 38.0
 base_knockback = 460.0
-knockback_growth = 9.5
+knockback_growth = 6.2
 
 [node name="Pesado" type="CharacterBody2D"]
 script = ExtResource("1_script")
-throw_data = SubResource("Resource_throw")
+command_throw_data = SubResource("Resource_throw")
 display_name = "Pesado"
 moveset = ExtResource("2_moves")
 weight = 125.0

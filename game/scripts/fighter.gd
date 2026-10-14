@@ -30,6 +30,7 @@ const LAYER_PLATFORM := 2
 @export_group("Ar")
 @export var air_speed := 420.0
 @export var air_accel := 1900.0
+@export var air_friction := 700.0
 @export var gravity := 2600.0
 @export var max_fall_speed := 1100.0
 @export var fast_fall_speed := 1750.0
@@ -41,6 +42,8 @@ const LAYER_PLATFORM := 2
 @export_group("Borda")
 @export var ledge_reach := Vector2(70, 50)
 @export var ledge_regrab_delay := 0.6
+## Segundos máximos pendurado na borda; depois solta sozinho.
+@export var ledge_max_time := 4.0
 @export_group("Defesa")
 @export var shield_max := 50.0
 ## Desgaste por segundo segurando o escudo.
@@ -89,6 +92,8 @@ var _lag_frames := 0
 
 var _hitstun := 0.0
 var _hitstop := 0
+var _launch := Vector2.ZERO  # parte do movimento que vem do golpe recebido
+var _fall := 0.0             # queda acumulada durante o atordoamento
 var held_by: Fighter = null
 ## Quem este lutador está segurando (agarrão ou golpe que agarra).
 var holding: Fighter = null
@@ -114,14 +119,22 @@ var _jump_time := 0.0
 var _drop_timer := 0.0
 var _ledge: Node2D = null
 var _ledge_cooldown := 0.0
+var _ledge_time := 0.0
 var _last_tap_dir := 0
 var _last_tap_time := -1.0
 var _low_frames := 99
 var _clock := 0.0
 
+## De onde vêm os botões: jogador (mapa p1_/p2_) ou CPU (ver set_cpu).
+var controls: FighterControls = null
+## Cérebro da CPU; null quando uma pessoa controla o lutador.
+var brain: CpuBrain = null
+
 
 func _ready() -> void:
 	add_to_group("fighters")
+	if controls == null:
+		controls = FighterControls.new(player_id)
 	collision_layer = 0
 	collision_mask = LAYER_STAGE | LAYER_PLATFORM
 	floor_snap_length = 8.0
@@ -134,8 +147,17 @@ func act(action: String) -> String:
 	return "%s_%s" % [player_id, action]
 
 
+## Passa o controle deste lutador para a CPU (T20).
+func set_cpu(new_brain: CpuBrain) -> void:
+	brain = new_brain
+	controls = CpuControls.new(player_id)
+
+
 func _physics_process(delta: float) -> void:
 	_clock += delta
+	if brain != null:
+		controls.begin_frame()
+		brain.think(self, delta)
 	invincible_time = maxf(invincible_time - delta, 0.0)
 	_update_holding()
 	if _hitstop > 0:
@@ -146,7 +168,7 @@ func _physics_process(delta: float) -> void:
 	if state != State.SHIELD and state != State.SHIELD_BREAK:
 		shield_hp = minf(shield_hp + shield_regen * delta, shield_max)
 	_update_drop_through(delta)
-	var dir := Input.get_axis(act("left"), act("right"))
+	var dir := controls.axis("left", "right")
 	var run_trigger := _detect_run_trigger(dir)
 
 	match state:
@@ -180,6 +202,7 @@ func _physics_process(delta: float) -> void:
 		var was_airborne := not is_on_floor()
 		move_and_slide()
 		_after_move(was_airborne)
+		_update_holding()  # quem está seguro acompanha a posição já atualizada
 	_check_out_of_bounds()
 	queue_redraw()
 
@@ -191,18 +214,18 @@ func _process_ground(dir: float, run_trigger: bool, delta: float) -> void:
 	helpless = false
 	_air_dodge_used = false
 	jumps_left = air_jumps
-	if Input.is_action_just_pressed(act("grab")) or (Input.is_action_pressed(act("shield")) and Input.is_action_just_pressed(act("attack"))):
+	if controls.just_pressed("grab") or (controls.pressed("shield") and controls.just_pressed("attack")):
 		start_grab()
 		return
-	if Input.is_action_pressed(act("shield")):
+	if controls.pressed("shield"):
 		_enter_shield()
 		return
 	if _try_start_action():
 		return
-	if Input.is_action_just_pressed(act("jump")):
+	if controls.just_pressed("jump"):
 		_jump(jump_velocity)
 		return
-	if Input.is_action_just_pressed(act("down")) and _on_platform():
+	if controls.just_pressed("down") and _on_platform():
 		_start_drop_through()
 		state = State.AIR
 		return
@@ -224,21 +247,21 @@ func _process_air(dir: float, delta: float) -> void:
 	state = State.AIR
 	_jump_time += delta
 	if not helpless:
-		if Input.is_action_just_pressed(act("shield")) and not _air_dodge_used:
+		if controls.just_pressed("shield") and not _air_dodge_used:
 			_start_air_dodge()
 			return
 		if _try_start_action():
 			return
-		if Input.is_action_just_pressed(act("jump")) and jumps_left > 0:
+		if controls.just_pressed("jump") and jumps_left > 0:
 			jumps_left -= 1
 			_jump(double_jump_velocity)
 			if absf(dir) > 0.0:
 				facing = int(signf(dir))
 				velocity.x = air_speed * signf(dir)
 			return
-	if Input.is_action_just_released(act("jump")) and velocity.y < 0.0 and _jump_time <= short_hop_window:
+	if controls.just_released("jump") and velocity.y < 0.0 and _jump_time <= short_hop_window:
 		velocity.y *= short_hop_factor
-	if Input.is_action_just_pressed(act("down")) and velocity.y > -150.0:
+	if controls.just_pressed("down") and velocity.y > -150.0:
 		fast_falling = true
 	_air_drift(dir, delta)
 	_apply_gravity(delta)
@@ -249,6 +272,8 @@ func _process_air(dir: float, delta: float) -> void:
 func _air_drift(dir: float, delta: float) -> void:
 	if absf(dir) > 0.0:
 		velocity.x = move_toward(velocity.x, air_speed * signf(dir), air_accel * delta)
+	else:
+		velocity.x = move_toward(velocity.x, 0.0, air_friction * delta)  # atrito do ar sem direção
 
 
 func _apply_gravity(delta: float) -> void:
@@ -283,8 +308,8 @@ func _after_move(was_airborne: bool) -> void:
 
 ## Lê Ataque/Especial e a direção e começa o golpe certo. Retorna true se começou.
 func _try_start_action() -> bool:
-	var special := Input.is_action_just_pressed(act("special"))
-	if not special and not Input.is_action_just_pressed(act("attack")):
+	var special := controls.just_pressed("special")
+	if not special and not controls.just_pressed("attack"):
 		return false
 	var stick := _stick_direction()
 	if special:
@@ -293,7 +318,7 @@ func _try_start_action() -> bool:
 			kind = stick
 		elif stick == "side":
 			kind = "side"
-			facing = int(signf(Input.get_axis(act("left"), act("right"))))
+			facing = int(signf(controls.axis("left", "right")))
 		start_special(kind)
 		return true
 	var move_id := ""
@@ -302,7 +327,7 @@ func _try_start_action() -> bool:
 			"up": move_id = "utilt"
 			"down": move_id = "dtilt"
 			"side":
-				facing = int(signf(Input.get_axis(act("left"), act("right"))))
+				facing = int(signf(controls.axis("left", "right")))
 				move_id = "ftilt"
 			_: move_id = "jab"
 	else:
@@ -310,7 +335,7 @@ func _try_start_action() -> bool:
 			"up": move_id = "uair"
 			"down": move_id = "dair"
 			"side":
-				var x := int(signf(Input.get_axis(act("left"), act("right"))))
+				var x := int(signf(controls.axis("left", "right")))
 				move_id = "fair" if x == facing else "bair"
 			_: move_id = "nair"
 	return start_attack(move_id)
@@ -318,8 +343,8 @@ func _try_start_action() -> bool:
 
 ## "up", "down", "side" ou "neutral", conforme a alavanca no momento.
 func _stick_direction() -> String:
-	var x := Input.get_axis(act("left"), act("right"))
-	var y := Input.get_axis(act("up"), act("down"))
+	var x := controls.axis("left", "right")
+	var y := controls.axis("up", "down")
 	if absf(y) >= STICK_THRESHOLD and absf(y) >= absf(x):
 		return "down" if y > 0.0 else "up"
 	if absf(x) >= STICK_THRESHOLD:
@@ -482,9 +507,11 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 	helpless = false
 	damage_percent += data.damage
 	var speed := Combat.launch_speed(data, damage_percent, weight)
-	velocity = Combat.launch_vector(data, speed, direction_sign)
-	if is_on_floor() and velocity.y > 0.0:
-		velocity.y = -velocity.y * 0.6
+	_launch = Combat.launch_vector(data, speed, direction_sign)
+	if is_on_floor() and _launch.y > 0.0:
+		_launch.y = -_launch.y * 0.6
+	_fall = 0.0
+	velocity = _launch
 	_hitstun = Combat.hitstun_time(speed)
 	state = State.HITSTUN
 	var stop := Combat.hitstop_frames(data.damage)
@@ -498,9 +525,15 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 
 func _process_hitstun(delta: float) -> void:
 	_hitstun -= delta
-	velocity.x = move_toward(velocity.x, 0.0, Combat.LAUNCH_DECAY * delta)
-	if not is_on_floor():
-		velocity.y = minf(velocity.y + gravity * delta, max_fall_speed)
+	# Lançamento e queda separados: a velocidade do golpe perde força aos poucos e
+	# a gravidade (mais fraca durante o atordoamento) puxa para baixo por conta própria.
+	_launch = _launch.move_toward(Vector2.ZERO, Combat.LAUNCH_DECAY * delta)
+	if is_on_floor():
+		_fall = 0.0
+		_launch.y = minf(_launch.y, 0.0)
+	else:
+		_fall = minf(_fall + gravity * Combat.HITSTUN_GRAVITY_SCALE * delta, max_fall_speed)
+	velocity = _launch + Vector2(0.0, _fall)
 	if _hitstun <= 0.0:
 		state = State.IDLE if is_on_floor() else State.AIR
 		jumps_left = maxi(jumps_left, 1) if air_jumps > 0 else 0
@@ -526,19 +559,19 @@ func _process_shield(delta: float) -> void:
 	if shield_hp <= 0.0:
 		_break_shield()
 		return
-	if Input.is_action_just_pressed(act("jump")):
+	if controls.just_pressed("jump"):
 		_jump(jump_velocity)
 		return
-	if Input.is_action_just_pressed(act("attack")) or Input.is_action_just_pressed(act("grab")):
+	if controls.just_pressed("attack") or controls.just_pressed("grab"):
 		start_grab()
 		return
-	if Input.is_action_just_pressed(act("left")):
+	if controls.just_pressed("left"):
 		_start_roll(-1)
 		return
-	if Input.is_action_just_pressed(act("right")):
+	if controls.just_pressed("right"):
 		_start_roll(1)
 		return
-	if not Input.is_action_pressed(act("shield")):
+	if not controls.pressed("shield"):
 		_lag_frames = 6
 		state = State.LAG
 
@@ -586,7 +619,7 @@ func _start_air_dodge() -> void:
 	_dodge_frame = 0
 	_air_dodge_used = true
 	fast_falling = false
-	var stick := Vector2(Input.get_axis(act("left"), act("right")), Input.get_axis(act("up"), act("down")))
+	var stick := Vector2(controls.axis("left", "right"), controls.axis("up", "down"))
 	_dodge_directional = stick.length() >= STICK_THRESHOLD
 	if _dodge_directional:
 		velocity = stick.normalized() * air_dodge_speed
@@ -669,17 +702,17 @@ func _process_holding(delta: float) -> void:
 		_grab_escape()
 		return
 	_pummel_cooldown -= 1
-	if Input.is_action_just_pressed(act("attack")) and _pummel_cooldown <= 0:
+	if controls.just_pressed("attack") and _pummel_cooldown <= 0:
 		holding.add_damage(pummel_damage)
 		holding._hitstop = 3
 		_pummel_cooldown = 18
 		return
-	if Input.is_action_just_pressed(act("left")) or Input.is_action_just_pressed(act("right")):
-		var side := -1 if Input.is_action_just_pressed(act("left")) else 1
+	if controls.just_pressed("left") or controls.just_pressed("right"):
+		var side := -1 if controls.just_pressed("left") else 1
 		_do_throw("fthrow" if side == facing else "bthrow", side)
-	elif Input.is_action_just_pressed(act("up")):
+	elif controls.just_pressed("up"):
 		_do_throw("uthrow", facing)
-	elif Input.is_action_just_pressed(act("down")):
+	elif controls.just_pressed("down"):
 		_do_throw("dthrow", facing)
 
 
@@ -780,7 +813,7 @@ func _process_held(_delta: float) -> void:
 		return
 	# Apertar botões ajuda a se soltar mais rápido do agarrão.
 	for action in ["jump", "attack", "special", "shield", "left", "right", "up", "down"]:
-		if Input.is_action_just_pressed(act(action)):
+		if controls.just_pressed(action):
 			held_by.shorten_grab(0.08)
 			break
 
@@ -831,6 +864,7 @@ func _ledge_taken(ledge: Node2D) -> bool:
 
 
 func _grab_ledge(ledge: Node2D, side: int) -> void:
+	_ledge_time = 0.0
 	_ledge = ledge
 	state = State.LEDGE
 	fast_falling = false
@@ -844,13 +878,17 @@ func _grab_ledge(ledge: Node2D, side: int) -> void:
 
 func _process_ledge(dir: float) -> void:
 	var side: int = _ledge.get_meta("side", 1)
-	if Input.is_action_just_pressed(act("up")):
+	_ledge_time += get_physics_process_delta_time()
+	if _ledge_time >= ledge_max_time:
+		_release_ledge(State.AIR)
+		return
+	if controls.just_pressed("up"):
 		global_position = _ledge.global_position + Vector2(-side * (RADIUS + 24.0), -HEIGHT * 0.5 - 1.0)
 		_release_ledge(State.IDLE)
-	elif Input.is_action_just_pressed(act("jump")):
+	elif controls.just_pressed("jump"):
 		_release_ledge(State.AIR)
 		_jump(jump_velocity)
-	elif Input.is_action_just_pressed(act("down")) or (absf(dir) > 0.0 and int(signf(dir)) == side):
+	elif controls.just_pressed("down") or (absf(dir) > 0.0 and int(signf(dir)) == side):
 		_release_ledge(State.AIR)
 
 
@@ -865,9 +903,9 @@ func _release_ledge(next_state: State) -> void:
 func _detect_run_trigger(dir: float) -> bool:
 	var triggered := false
 	var tap_dir := 0
-	if Input.is_action_just_pressed(act("left")):
+	if controls.just_pressed("left"):
 		tap_dir = -1
-	elif Input.is_action_just_pressed(act("right")):
+	elif controls.just_pressed("right"):
 		tap_dir = 1
 	if tap_dir != 0:
 		if tap_dir == _last_tap_dir and _clock - _last_tap_time <= RUN_DOUBLE_TAP:
@@ -880,17 +918,11 @@ func _detect_run_trigger(dir: float) -> bool:
 		_low_frames = 0
 	else:
 		_low_frames = mini(_low_frames + 1, 99)
-		if absf(dir) >= 0.9 and _low_frames <= FLICK_FRAMES and not _keyboard_held():
+		if absf(dir) >= 0.9 and _low_frames <= FLICK_FRAMES and not controls.horizontal_from_keyboard():
 			triggered = true
 	return triggered
 
 
-func _keyboard_held() -> bool:
-	for action in [act("left"), act("right")]:
-		for e in InputMap.action_get_events(action):
-			if e is InputEventKey and Input.is_physical_key_pressed(e.physical_keycode):
-				return true
-	return false
 
 
 # --- Provisório até a T16 (zonas de KO): volta ao ponto inicial ao cair da arena ---

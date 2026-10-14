@@ -4,8 +4,10 @@ extends RefCounted
 
 ## Segundos de atordoamento por pixel/segundo de lançamento.
 const HITSTUN_PER_SPEED := 0.0004
-## Desaceleração horizontal do lançamento (px/s²).
-const LAUNCH_DECAY := 900.0
+## Desaceleração da velocidade do lançamento (px/s²), separada da gravidade.
+const LAUNCH_DECAY := 320.0
+## Fração da gravidade aplicada enquanto o lutador está atordoado (voa mais reto).
+const HITSTUN_GRAVITY_SCALE := 0.35
 
 
 ## Fórmula do GDD: base + (dano % do alvo × crescimento) × (100 / peso do alvo).

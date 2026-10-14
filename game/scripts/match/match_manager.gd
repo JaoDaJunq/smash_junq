@@ -71,10 +71,9 @@ func _build_fighters() -> void:
 		f.auto_respawn = false  # a partida cuida de KO e retorno
 		add_child(f)
 		fighters[pid] = f
-	# Gancho da T20: a CPU assume o P2 neste modo. Até lá o P2 só é marcado
-	# (e ainda responde ao teclado/gamepad do jogador 2).
+	# T20: a CPU assume o P2 neste modo (o teclado/gamepad do jogador 2 deixa de valer).
 	if Game.mode == "cpu":
-		fighters["p2"].set_meta("cpu_controlled", true)
+		fighters["p2"].set_cpu(CpuBrain.new())
 
 
 ## Zera o placar e os lutadores e começa a contagem. Usado na entrada e na revanche.

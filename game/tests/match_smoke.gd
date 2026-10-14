@@ -332,7 +332,7 @@ func _test_rematch_and_pause() -> void:
 func _test_cpu_mode() -> void:
 	Game.mode = "cpu"
 	await _new_match()
-	_check("Modo CPU: P2 marcado como cpu_controlled", p2.get_meta("cpu_controlled", false) == true and not p1.has_meta("cpu_controlled"), "")
+	_check("Modo CPU: P2 controlado pela CPU", p2.brain != null and p1.brain == null, "")
 	_check("Modo CPU: HUD chama o P2 de CPU", (m.hud.panels["p2"]["name"] as Label).text.begins_with("CPU"), (m.hud.panels["p2"]["name"] as Label).text)
 	# Escolha de personagem no modo CPU: P1 escolhe os dois
 	var sel := CHAR_SELECT.instantiate()

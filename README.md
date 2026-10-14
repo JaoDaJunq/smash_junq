@@ -4,7 +4,7 @@ Projeto de jogo de luta em plataformas 2D, criado com apoio de IA e desenvolvido
 
 ## Estado do projeto
 
-**Etapa 2 — engine e ponte com a IA.** As Etapas 0 (validação do jogo) e 1 (GDD e backlog) foram concluídas em 14/10/2026. Próxima tarefa: T01 do [backlog](design/backlog.md), medir o PC de casa e instalar o Godot 4.7.2.
+**Primeiro corte jogável, em greybox (formas simples).** As Etapas 0 e 1 foram concluídas em 14/10/2026, e quase todo o [backlog](design/backlog.md) do primeiro corte está feito. Faltam: T01 (medir o PC de casa), T03 (conectar o godot-ai ao Claude no editor), T04 (testar gamepad real), T21 (testes do placar no GdUnit4) e T22 (exportar o `.exe` e fazer o primeiro playtest).
 
 O jogo é um platform fighter 2D lateral, inspirado no formato de combate de Super Smash Bros. Os golpes acumulam dano; com mais dano, o adversário tende a ser lançado mais longe. Cada nocaute fora da arena vale um ponto, e vence quem chegar primeiro a 3 KOs.
 
@@ -36,15 +36,38 @@ Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco gran
 
 1. Baixe o **Godot 4.7.2** (versão padrão, não a .NET) em [godotengine.org/download/archive](https://godotengine.org/download/archive/).
 2. No Godot, clique em **Importar** e escolha `game/project.godot`.
-3. Aperte **F5** para jogar. Jogador 1: W A S D, Espaço para pular. Jogador 2: setas, Numpad 0 para pular. Gamepads também funcionam.
+3. Aperte **F5**. O jogo abre no menu: Jogar → 2 jogadores ou Contra a CPU → escolha Ágil ou Pesado → luta até 3 KOs.
 
-O que já funciona (greybox, formas simples): andar, correr (toque duplo), pulo, pulo curto, pulo duplo, queda rápida, descer das plataformas flutuantes (para baixo), agarrar a borda e subir (para cima) e câmera que acompanha os dois lutadores. Ainda não há golpes.
+**Controles**
 
-**Teste automático do movimento**, a partir da raiz do repositório (abre uma janela por alguns segundos e salva screenshots em `evidence/etapa-2/`):
+| Ação | Jogador 1 (teclado) | Jogador 2 (teclado) | Gamepad |
+|---|---|---|---|
+| Mover | W A S D | Setas | Analógico / direcional |
+| Pular | Espaço | Numpad 0 | A |
+| Ataque | J | Numpad 1 | X |
+| Especial | K | Numpad 2 | B |
+| Escudo (no ar: esquiva) | L | Numpad 3 | RB ou LB |
+| Rolagem | L + esquerda/direita | Numpad 3 + seta | RB + direção |
+| Agarrão | L + J | Numpad 3 + Numpad 1 | RT |
+| Pausa | Esc | Numpad Enter | Start |
+
+Correr: toque duplo na direção (ou empurrar o analógico rápido). Descer da plataforma: para baixo. Na borda: para cima sobe, pulo salta. Segurando alguém: Ataque bate, direção arremessa.
+
+**O que já funciona:** movimento completo, golpes básicos e especiais dos dois personagens temporários (Ágil e Pesado), escudo, esquivas, agarrão e arremessos, dano %, lançamento, zonas de KO, placar até 3 KOs com morte súbita, menus, pausa, resultado e revanche, e a CPU básica.
+
+**Testes automáticos**, a partir da raiz do repositório. Cada um abre uma janela por alguns segundos, imprime `[OK]`/`[FALHA]` e salva screenshots em `evidence/etapa-2/`:
 
 ```bash
 godot --path game res://tests/movement_smoke.tscn
 ```
+
+Os outros seguem o mesmo formato: `combat_smoke`, `defense_smoke`, `agil_smoke`, `pesado_smoke`, `match_smoke` e `cpu_smoke`. Os testes unitários usam o GdUnit4 (no Windows, a partir de `game/`, com a variável `GODOT_BIN` apontando para o executável do Godot):
+
+```bash
+addons\gdUnit4\runtest.cmd --headless --ignoreHeadlessMode -a res://tests/unit
+```
+
+Para calibrar a força dos golpes, `res://tests/knockback_probe.tscn` imprime até onde cada golpe lança em cada faixa de dano.
 
 Se mudar o mapeamento de controles em `game/tools/configure_input_map.gd`, regrave o `project.godot` com:
 
