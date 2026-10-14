@@ -1,0 +1,64 @@
+# Roda todos os testes do jogo sem janela (headless) a cada push e pull request.
+# Se algum teste falhar, o GitHub marca o commit com um X vermelho.
+name: Testes
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GODOT_VERSION: "4.7.2"
+      GODOT_BIN: ${{ github.workspace }}/godot/Godot_v4.7.2-stable_linux.x86_64
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Baixar Godot ${{ env.GODOT_VERSION }} (conferindo o SHA-512)
+        run: |
+          mkdir -p godot && cd godot
+          base=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable
+          file=Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip
+          curl -sSL -o "$file" "$base/$file"
+          curl -sSL -o SHA512-SUMS.txt "$base/SHA512-SUMS.txt"
+          grep " $file\$" SHA512-SUMS.txt | sha512sum -c -
+          unzip -q "$file"
+          chmod +x Godot_v${GODOT_VERSION}-stable_linux.x86_64
+
+      - name: Importar o projeto
+        run: |
+          # A primeira importação às vezes encerra com erro depois de importar; repete.
+          "$GODOT_BIN" --headless --path game --import || true
+          "$GODOT_BIN" --headless --path game --import
+
+      - name: Testes de fumaça
+        run: |
+          status=0
+          for t in movement_smoke combat_smoke defense_smoke agil_smoke pesado_smoke match_smoke cpu_smoke training_smoke menus_smoke music_smoke; do
+            echo "::group::$t"
+            out=$("$GODOT_BIN" --headless --path game "res://tests/$t.tscn" 2>&1 || true)
+            echo "$out" | grep -E '^\[(OK|FALHA)\]|RESULTADO|SCRIPT ERROR' || true
+            echo "::endgroup::"
+            if echo "$out" | grep -q 'RESULTADO: OK'; then
+              echo "✔ $t"
+            else
+              echo "::error::$t falhou"
+              status=1
+            fi
+          done
+          exit $status
+
+      - name: Simulação CPU x CPU (4 partidas completas)
+        run: |
+          out=$("$GODOT_BIN" --headless --fixed-fps 60 --path game res://tests/cpu_vs_cpu_match.tscn 2>&1 || true)
+          echo "$out" | grep -E '^\[|RESULTADO'
+          echo "$out" | grep -q 'RESULTADO: OK'
+
+      - name: Testes unitários (GdUnit4)
+        run: |
+          cd game
+          chmod +x addons/gdUnit4/runtest.sh
+          addons/gdUnit4/runtest.sh --godot_binary "$GODOT_BIN" --headless --ignoreHeadlessMode -a res://tests/unit
