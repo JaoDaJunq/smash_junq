@@ -1,5 +1,7 @@
 # Seu Capivas — extras para a animação
 
+> **Substituído** pelo pacote [pedidos/seu_capivas](pedidos/seu_capivas/): mais cabeças e mãos, partes com mais articulações e referências de movimento. Use aquele.
+
 Mande na mesma conversa do Seu Capivas, anexando `art/conceitos/seu_capivas/partes_v1.png`.
 
 ## Cabeças com expressões (troca de rosto durante a luta)

@@ -125,3 +125,9 @@ Confira cada imagem:
 - [ ] Nada que lembre personagem de filme, desenho ou jogo famoso?
 
 Me mande as imagens (ou o commit) e eu faço a avaliação técnica: legibilidade no tamanho real do jogo, contraste com a arena, se as partes encaixam no esqueleto, e o que pedir para corrigir.
+
+---
+
+## Próximo pacote: material para animação
+
+Juba e Seu Capivas já estão no jogo. Para as animações ficarem fluidas, siga [pedidos/README.md](pedidos/README.md): partes com mais articulações, cabeças, mãos e pés, e referências de movimento quadro a quadro.

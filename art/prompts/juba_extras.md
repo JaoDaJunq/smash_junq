@@ -1,5 +1,7 @@
 # Juba — extras para a animação
 
+> **Substituído** pelo pacote [pedidos/juba](pedidos/juba/): mais cabeças e mãos, partes com mais articulações e referências de movimento. Use aquele.
+
 Mande na mesma conversa do Juba, anexando `art/conceitos/juba/partes_v1.png`.
 
 ## Cabeças com expressões (troca de rosto durante a luta)
