@@ -79,7 +79,7 @@ func _test_menus() -> void:
 	var menu := MAIN_MENU.instantiate()
 	add_child(menu)
 	await _frames(5)
-	_check("Menu principal tem Jogar e Sair", menu.buttons.size() == 2 and menu.buttons[0].text == "Jogar" and menu.buttons[1].text == "Sair", "")
+	_check("Menu principal tem Jogar, Como jogar, Opções e Sair", menu.buttons.size() == 4 and menu.buttons[0].text == "Jogar" and menu.buttons[3].text == "Sair", "")
 	_check("Menu: Jogar começa com foco", menu.buttons[0].has_focus(), "")
 	await _shot("match-menu")
 	await _tap("p1_down")

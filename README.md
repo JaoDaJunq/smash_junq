@@ -36,7 +36,7 @@ Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco gran
 
 1. Baixe o **Godot 4.7.2** (versão padrão, não a .NET) em [godotengine.org/download/archive](https://godotengine.org/download/archive/).
 2. No Godot, clique em **Importar** e escolha `game/project.godot`.
-3. Aperte **F5**. O jogo abre no menu: Jogar → 2 jogadores ou Contra a CPU → escolha Ágil ou Pesado → luta até 3 KOs.
+3. Aperte **F5**. O jogo abre no menu: **Jogar** (2 jogadores, Contra a CPU ou Treino), **Como jogar** (controles e regras), **Opções** (volume, tela cheia, tremor de tela; ficam salvas) e **Sair**.
 
 **Controles**
 
