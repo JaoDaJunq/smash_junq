@@ -13,6 +13,8 @@ extends Node2D
 @export_file("*.json") var rig_path := ""
 ## Suavização entre poses (maior = troca mais rápida).
 @export var blend_speed := 22.0
+## Conferência: força uma pose pelo nome (ex.: "dor", "golpe:frente:golpe"). Vazio = automático.
+var debug_pose := ""
 
 var rig := {}
 var fighter: Fighter
@@ -36,8 +38,11 @@ func _ready() -> void:
 		var s := Sprite2D.new()
 		s.name = name
 		s.texture = load(dir.path_join(p["arquivo"]))
+		if p.has("apagar"):
+			s.texture = ImageTexture.create_from_image(CutoutRigMath.erase_circles(s.texture.get_image(), p))
 		s.centered = false
-		s.z_index = int(p.get("z", 0))
+		# A ordem dos filhos (já ordenados por "z") define quem fica na frente.
+		# Não usar z_index: valores negativos jogariam a parte para trás do cenário.
 		var region := CutoutRigMath.region_in_crop(p)
 		if region.size != Vector2.ZERO:
 			s.region_enabled = true
@@ -51,7 +56,7 @@ func _process(delta: float) -> void:
 	if rig.is_empty():
 		return
 	_clock += delta
-	var target := _target_pose(delta)
+	var target := pose_offsets(rig, debug_pose) if debug_pose != "" else _target_pose(delta)
 	var w := 1.0 - exp(-blend_speed * delta)
 	if fighter != null and fighter.state == Fighter.State.ATTACK:
 		w = 1.0 - exp(-blend_speed * 2.0 * delta)  # golpes trocam de pose mais rápido

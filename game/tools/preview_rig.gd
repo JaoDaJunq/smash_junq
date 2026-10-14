@@ -22,7 +22,7 @@ func _initialize() -> void:
 	for name in rig["partes"]:
 		var img := Image.load_from_file(ProjectSettings.globalize_path(dir.path_join(rig["partes"][name]["arquivo"])))
 		img.convert(Image.FORMAT_RGBA8)
-		textures[name] = img
+		textures[name] = CutoutRigMath.erase_circles(img, rig["partes"][name]) if rig["partes"][name].has("apagar") else img
 	# Escala do quadro: a altura do lutador no jogo (HEIGHT=110) ocupa ~45% do quadro
 	var game_scale: float = float(rig.get("escala", 0.15))
 	var zoom := cell_h * 0.45 / 110.0

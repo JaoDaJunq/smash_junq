@@ -23,6 +23,11 @@ func _ready() -> void:
 		for s in rig._sprites.values():
 			all_tex = all_tex and (s as Sprite2D).texture != null
 		_check("%s: todas as partes têm textura" % tag, all_tex, "")
+		var neg := 0
+		for s in rig._sprites.values():
+			if (s as Sprite2D).z_index < 0:
+				neg += 1
+		_check("%s: nenhuma parte atrás do cenário (z_index negativo)" % tag, neg == 0, "%d parte(s)" % neg)
 	# Pose muda com o estado: golpe para frente mexe o braço/perna da frente
 	p1.global_position = Vector2(-200, -56)
 	p1.velocity = Vector2.ZERO

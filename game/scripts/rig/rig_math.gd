@@ -82,6 +82,22 @@ static func draw_order(parts: Dictionary) -> Array:
 	return names
 
 
+## Deixa transparentes círculos da parte ("apagar": [[x, y, raio], ...] em coords
+## da folha). Usado para tirar as bolinhas de junta que a IA desenhou nas pontas.
+static func erase_circles(img: Image, p: Dictionary) -> Image:
+	var out := img.duplicate() as Image
+	out.convert(Image.FORMAT_RGBA8)
+	var o := _v(p["origem"])
+	for c in p.get("apagar", []):
+		var center := Vector2(c[0], c[1]) - o
+		var r := float(c[2])
+		for y in range(maxi(0, int(center.y - r)), mini(out.get_height(), int(center.y + r) + 1)):
+			for x in range(maxi(0, int(center.x - r)), mini(out.get_width(), int(center.x + r) + 1)):
+				if Vector2(x, y).distance_to(center) <= r:
+					out.set_pixel(x, y, Color(0, 0, 0, 0))
+	return out
+
+
 static func load_rig(path: String) -> Dictionary:
 	var text := FileAccess.get_file_as_string(path)
 	var data: Variant = JSON.parse_string(text)
