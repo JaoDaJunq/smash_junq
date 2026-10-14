@@ -10,9 +10,9 @@ var match_manager: Node
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var col := build_column("Pausa", "", true)
-	add_button(col, "Continuar", close)
+	add_button(col, "Continuar", close, true)
 	add_button(col, "Reiniciar", _restart)
-	add_button(col, "Sair para o menu", _quit_to_menu)
+	add_button(col, "Sair para o menu", _quit_to_menu, true)
 	visible = false
 
 
@@ -26,6 +26,7 @@ func _process(delta: float) -> void:
 
 func toggle() -> void:
 	if visible:
+		Sfx.play("ui_back")
 		close()
 	else:
 		open()
@@ -34,6 +35,7 @@ func toggle() -> void:
 func open() -> void:
 	if match_manager != null and not match_manager.can_pause():
 		return
+	Sfx.play("ui_confirm", -3.0)
 	visible = true
 	get_tree().paused = true
 	focus_first()

@@ -13,17 +13,20 @@ var detail_label: Label
 
 func _ready() -> void:
 	var col := build_column("", "", true)
-	title_label = make_label("", 64, ACCENT)
+	title_label = make_label("", "TitleLabel")
+	title_label.add_theme_font_size_override("font_size", 64)
 	col.add_child(title_label)
-	detail_label = make_label("", 28, Color(0.8, 0.85, 0.95))
+	col.add_child(_make_rule())
+	detail_label = make_label("", "SubtitleLabel")
 	col.add_child(detail_label)
-	kos_label = make_label("", 36)
+	kos_label = make_label("", "HeadingLabel")
+	kos_label.add_theme_font_size_override("font_size", 38)
 	col.add_child(kos_label)
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 20)
 	col.add_child(gap)
 	add_button(col, "Revanche", func() -> void: rematch_requested.emit())
-	add_button(col, "Menu", func() -> void: Game.go_menu())
+	add_button(col, "Menu", func() -> void: Game.go_menu(), true)
 	visible = false
 
 
@@ -37,6 +40,8 @@ func show_result(result: Dictionary) -> void:
 	var labels: Dictionary = result["labels"]
 	kos_label.text = "%s  %d   x   %d  %s" % [labels["p1"], kos["p1"], kos["p2"], labels["p2"]]
 	visible = true
+	# O título "estoura" depois do layout, junto com a entrada da tela
+	pop.call_deferred(title_label, 1.3, 0.3)
 	# Trava curta para os botões não serem apertados sem querer por quem ainda joga
 	for b in buttons:
 		b.disabled = true
