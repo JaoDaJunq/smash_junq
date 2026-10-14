@@ -53,7 +53,7 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
-| T21 | Testes automatizados (GdUnit4) da fórmula de lançamento e do placar | Testes rodam pela linha de comando e passam | a fazer |
+| T21 | Testes automatizados (GdUnit4) da fórmula de lançamento e do placar | Testes rodam pela linha de comando e passam | fazendo: GdUnit4 6.2.2 instalado, 7 testes da fórmula passam; faltam os do placar |
 | T22 | Exportar build Windows e fazer o primeiro playtest | O `.exe` roda no PC de casa; partida completa jogada nos dois modos; notas do playtest registradas | a fazer |
 
 Arte, animação e som definitivos não estão aqui: entram nas Etapas 3 a 6, depois que o combate com formas simples estiver divertido.

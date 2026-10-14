@@ -12,3 +12,6 @@ Thumbs.db
 
 # Pastas locais do Claude Code (subagentes em worktrees)
 .claude/worktrees/
+
+# Relatórios do GdUnit4
+game/reports/
