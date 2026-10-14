@@ -18,13 +18,13 @@ Material para deixar as animações fluidas. Cada arquivo tem os prompts prontos
 | # | Pedido | Juba | Seu Capivas | Ganho para a animação |
 |---|---|---|---|---|
 | 1 | Partes v2 (mais articulações, sem bolinhas) | [01_partes_v2](juba/01_partes_v2.md) · ☐ | [01_partes_v2](seu_capivas/01_partes_v2.md) · ☐ | **O maior**: mão, pé, peito/quadril e cauda em segmentos dobram separados |
-| 2 | Cabeças com expressões | [02_cabecas](juba/02_cabecas.md) · ☐ | [02_cabecas](seu_capivas/02_cabecas.md) · ☐ | Rosto muda no golpe, na dor, no KO e na vitória |
-| 3 | Mãos e pés em posições | [03_maos](juba/03_maos.md) · ☐ | [03_maos](seu_capivas/03_maos.md) · ☐ | Soco fechado, agarrão aberto, segurar objeto |
+| 2 | Cabeças com expressões | [02_cabecas](juba/02_cabecas.md) · ☑ | [02_cabecas](seu_capivas/02_cabecas.md) · ☑ | Rosto muda no golpe, na dor, no KO e na vitória |
+| 3 | Mãos e pés em posições | [03_maos](juba/03_maos.md) · ☑ | [03_maos](seu_capivas/03_maos.md) · ☑ | Soco fechado, agarrão aberto, segurar objeto |
 | 4 | Referência de movimento: andar, correr, parado | [04_ref_locomocao](juba/04_ref_locomocao.md) · ☐ | [04_ref_locomocao](seu_capivas/04_ref_locomocao.md) · ☐ | Eu copio cada quadro para o ciclo ficar natural |
 | 5 | Referência dos golpes (3 quadros por golpe) | [05_ref_golpes](juba/05_ref_golpes.md) · ☐ | [05_ref_golpes](seu_capivas/05_ref_golpes.md) · ☐ | Antecipação, impacto e recuperação de cada golpe |
 | 6 | Efeitos de rastro (smears) | [efeitos](comum/efeitos.md) · ☐ | (mesmo arquivo) | Golpes rápidos ganham "borrão" de movimento |
 
-Marque ☐ → ☑ quando salvar. Os itens 1 e 2 já fazem uma diferença grande; os outros podem vir depois.
+Marque ☐ → ☑ quando salvar. ☑ indica arquivos criados no GitHub; aprovação visual e integração no jogo são etapas separadas. Os itens 1 e 2 já fazem uma diferença grande; os outros podem vir depois.
 
 ## Onde salvar
 
