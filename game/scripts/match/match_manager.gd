@@ -21,6 +21,8 @@ const COUNTDOWN_STEPS := ["3", "2", "1", "LUTEM!"]
 ## Altura em que o lutador reaparece depois de um KO.
 @export var respawn_height := -450.0
 @export var respawn_invincibility := 2.0
+## Segundos parado na plataforma de retorno antes de cair sozinho.
+@export var respawn_platform_time := 3.0
 ## Segundos de cada número da contagem.
 @export var countdown_step := 0.8
 ## Pausa entre o último KO e a tela de resultado.
@@ -51,6 +53,10 @@ func _ready() -> void:
 	hud.setup(fighters, ko_target)
 	pause_menu.match_manager = self
 	results.rematch_requested.connect(restart)
+	var fx := FxDirector.new()
+	fx.name = "Fx"
+	add_child(fx)
+	fx.watch_match(self)
 	start_match()
 
 
@@ -69,6 +75,7 @@ func _build_fighters() -> void:
 		f.facing = START_FACING[pid]
 		f.position = start
 		f.auto_respawn = false  # a partida cuida de KO e retorno
+		f.show_debug_label = false
 		add_child(f)
 		fighters[pid] = f
 	# T20: a CPU assume o P2 neste modo (o teclado/gamepad do jogador 2 deixa de valer).
@@ -118,6 +125,7 @@ func _process(delta: float) -> void:
 		_count_index = index
 		var last := index == COUNTDOWN_STEPS.size() - 1
 		hud.show_banner(COUNTDOWN_STEPS[index], 0.7 if last else 0.0, Color(1, 0.82, 0.25) if last else Color.WHITE)
+		Sfx.play("fight" if last else "countdown")
 		if last:
 			_begin_fight()
 
@@ -180,6 +188,7 @@ func respawn_fighter(pid: String) -> void:
 	f.spawn_point = Vector2((_start_positions[pid] as Vector2).x, respawn_height)
 	f.respawn()
 	f.invincible_time = respawn_invincibility
+	f.start_respawn_hold(respawn_platform_time)  # GDD: reaparece numa plataforma no alto
 	_respawn_shield[pid] = true
 
 

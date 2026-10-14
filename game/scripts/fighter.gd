@@ -8,8 +8,16 @@ extends CharacterBody2D
 ## Valores em pixels e segundos; ajustar no playtest.
 
 signal damage_changed(percent: float)
+## Avisos para efeitos visuais e sons (não mudam regras do jogo).
+signal hit_taken(attacker: Node2D, data: AttackData, launch: Vector2)
+signal blocked(data: AttackData)
+signal shield_broken
+signal jumped(in_air: bool)
+signal landed(fall_speed: float)
+signal dashed
+signal respawn_platform_left
 
-enum State { IDLE, WALK, RUN, AIR, LEDGE, ATTACK, LAG, HITSTUN, HELD, SHIELD, SHIELD_BREAK, DODGE, GRAB, HOLDING }
+enum State { IDLE, WALK, RUN, AIR, LEDGE, ATTACK, LAG, HITSTUN, HELD, SHIELD, SHIELD_BREAK, DODGE, GRAB, HOLDING, RESPAWN }
 
 const LAYER_STAGE := 1
 const LAYER_PLATFORM := 2
@@ -21,6 +29,8 @@ const LAYER_PLATFORM := 2
 @export var moveset: Moveset
 ## 100 = médio. Mais peso, menos lançamento com o mesmo dano.
 @export var weight := 100.0
+## Texto de depuração em cima do lutador (estado e dano). A partida real desliga.
+@export var show_debug_label := true
 
 @export_group("Chão")
 @export var walk_speed := 330.0
@@ -94,6 +104,8 @@ var _hitstun := 0.0
 var _hitstop := 0
 var _launch := Vector2.ZERO  # parte do movimento que vem do golpe recebido
 var _fall := 0.0             # queda acumulada durante o atordoamento
+var _fall_speed_before_move := 0.0
+var _respawn_timer := 0.0
 var held_by: Fighter = null
 ## Quem este lutador está segurando (agarrão ou golpe que agarra).
 var holding: Fighter = null
@@ -192,14 +204,17 @@ func _physics_process(delta: float) -> void:
 			_process_grab(delta)
 		State.HOLDING:
 			_process_holding(delta)
+		State.RESPAWN:
+			_process_respawn(delta, dir)
 		_:
 			if is_on_floor():
 				_process_ground(dir, run_trigger, delta)
 			else:
 				_process_air(dir, delta)
 
-	if state != State.LEDGE and state != State.HELD:
+	if state != State.LEDGE and state != State.HELD and state != State.RESPAWN:
 		var was_airborne := not is_on_floor()
+		_fall_speed_before_move = velocity.y
 		move_and_slide()
 		_after_move(was_airborne)
 		_update_holding()  # quem está seguro acompanha a posição já atualizada
@@ -232,6 +247,8 @@ func _process_ground(dir: float, run_trigger: bool, delta: float) -> void:
 	if absf(dir) > 0.0:
 		facing = int(signf(dir))
 		if run_trigger or (state == State.RUN and signf(dir) == signf(velocity.x)):
+			if state != State.RUN:
+				dashed.emit()
 			state = State.RUN
 		elif state != State.RUN:
 			state = State.WALK
@@ -284,6 +301,7 @@ func _apply_gravity(delta: float) -> void:
 
 
 func _jump(speed: float) -> void:
+	jumped.emit(not is_on_floor())
 	state = State.AIR
 	fast_falling = false
 	velocity.y = -speed
@@ -293,6 +311,8 @@ func _jump(speed: float) -> void:
 func _after_move(was_airborne: bool) -> void:
 	if not is_on_floor():
 		return
+	if was_airborne:
+		landed.emit(_fall_speed_before_move)
 	if state == State.AIR:
 		state = State.IDLE
 		fast_falling = false
@@ -520,6 +540,7 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 		attacker._hitstop = stop
 	get_tree().call_group("fight_camera", "shake", speed)
 	damage_changed.emit(damage_percent)
+	hit_taken.emit(attacker, data, _launch)
 	return true
 
 
@@ -537,6 +558,28 @@ func _process_hitstun(delta: float) -> void:
 	if _hitstun <= 0.0:
 		state = State.IDLE if is_on_floor() else State.AIR
 		jumps_left = maxi(jumps_left, 1) if air_jumps > 0 else 0
+
+
+# --- Plataforma de retorno (depois de um KO) ---
+
+## Segura o lutador parado numa plataforma no alto até ele agir ou o tempo acabar.
+func start_respawn_hold(max_time := 3.0) -> void:
+	state = State.RESPAWN
+	velocity = Vector2.ZERO
+	_respawn_timer = max_time
+
+
+func _process_respawn(delta: float, dir: float) -> void:
+	velocity = Vector2.ZERO
+	_respawn_timer -= delta
+	var acted := absf(dir) > 0.0
+	for action in ["jump", "attack", "special", "shield", "down", "grab"]:
+		if controls.pressed(action):
+			acted = true
+	if acted or _respawn_timer <= 0.0:
+		state = State.AIR
+		respawn_platform_left.emit()
+		_process_air(dir, delta)  # o botão que tirou da plataforma já vale neste quadro
 
 
 # --- Escudo e esquivas ---
@@ -578,6 +621,7 @@ func _process_shield(delta: float) -> void:
 
 ## Golpe no escudo: sem dano %, desgasta o escudo, empurra e trava um instante.
 func _block_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> void:
+	blocked.emit(data)
 	shield_hp -= data.damage * 1.2
 	_shield_stun = int(data.damage * 0.8) + 2
 	velocity.x = direction_sign * (120.0 + data.damage * 18.0)
@@ -590,6 +634,7 @@ func _block_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> void
 
 
 func _break_shield() -> void:
+	shield_broken.emit()
 	shield_hp = 0.0
 	state = State.SHIELD_BREAK
 	_break_timer = shield_break_time
@@ -958,6 +1003,13 @@ func respawn() -> void:
 # --- Visual greybox ---
 
 func _draw() -> void:
+	if state == State.RESPAWN:
+		# Plataforma de retorno: barra luminosa na cor do jogador, pulsando
+		var pulse := 0.75 + 0.25 * sin(_clock * 6.0)
+		var feet := HEIGHT * 0.5
+		draw_rect(Rect2(-60, feet, 120, 10), body_color.lightened(0.3) * Color(1, 1, 1, pulse))
+		draw_rect(Rect2(-48, feet + 10, 96, 6), body_color * Color(1, 1, 1, 0.5 * pulse))
+		draw_circle(Vector2(0, feet + 8), 70.0, body_color * Color(1, 1, 1, 0.12 * pulse))
 	var rect := Rect2(-RADIUS, -HEIGHT * 0.5, RADIUS * 2.0, HEIGHT)
 	var color := body_color
 	if state == State.HITSTUN and int(_clock * 20.0) % 2 == 0:
@@ -982,11 +1034,18 @@ func _draw() -> void:
 		for i in 3:
 			var a := _clock * 6.0 + i * TAU / 3.0
 			draw_circle(Vector2(cos(a) * 26.0, -HEIGHT * 0.5 - 10.0 + sin(a) * 6.0), 5.0, Color(1, 0.9, 0.3))
-	elif state == State.GRAB and _grab_frame > grab_startup and _grab_frame <= grab_startup + grab_active:
+	elif show_debug_label and state == State.GRAB and _grab_frame > grab_startup and _grab_frame <= grab_startup + grab_active:
 		draw_circle(Vector2(grab_reach.x * facing, grab_reach.y), grab_radius, Color(0.6, 0.3, 1.0, 0.5))
-	if attack != null and attack.is_active(attack_frame):
+	if show_debug_label and attack != null and attack.is_active(attack_frame):  # área de acerto (depuração)
 		var local := Vector2(attack.hitbox_offset.x * facing, attack.hitbox_offset.y)
 		draw_circle(local, attack.hitbox_radius, Color(1, 0.2, 0.2, 0.55))
 	var font := ThemeDB.fallback_font
-	var label := "%s %s %d%%" % [player_id.to_upper(), attack_id if attack else State.keys()[state], roundi(damage_percent)]
-	draw_string(font, Vector2(-RADIUS * 3.0, -HEIGHT * 0.5 - 16), label, HORIZONTAL_ALIGNMENT_CENTER, RADIUS * 6.0, 18, Color.WHITE)
+	if show_debug_label:
+		var label := "%s %s %d%%" % [player_id.to_upper(), attack_id if attack else State.keys()[state], roundi(damage_percent)]
+		draw_string(font, Vector2(-RADIUS * 3.0, -HEIGHT * 0.5 - 16), label, HORIZONTAL_ALIGNMENT_CENTER, RADIUS * 6.0, 18, Color.WHITE)
+	else:
+		# Indicador do jogador (como no gênero): seta e "P1"/"P2"/"CPU" na cor do lutador
+		var tag := "CPU" if brain != null else player_id.to_upper()
+		var top := -HEIGHT * 0.5 - 14.0
+		draw_colored_polygon(PackedVector2Array([Vector2(-9, top - 12), Vector2(9, top - 12), Vector2(0, top)]), body_color.lightened(0.25))
+		draw_string(font, Vector2(-RADIUS * 2.0, top - 18), tag, HORIZONTAL_ALIGNMENT_CENTER, RADIUS * 4.0, 22, body_color.lightened(0.35))
