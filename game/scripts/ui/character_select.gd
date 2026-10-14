@@ -1,0 +1,188 @@
+extends MenuScreen
+## Escolha de personagem. Cada jogador escolhe com esquerda/direita e confirma
+## com Ataque ou Pulo (Especial desfaz). Voltar: Pausa ou botão. Mouse também funciona.
+## No modo CPU, o Jogador 1 escolhe o próprio lutador e depois o da CPU.
+
+const START_DELAY := 0.5
+
+var choice := {"p1": 0, "p2": 1}
+var locked := {"p1": false, "p2": false}
+var _panels := {}
+var _starting := false
+
+
+func _ready() -> void:
+	var versus := Game.mode == "versus"
+	choice["p1"] = Game.character_index("p1")
+	choice["p2"] = Game.character_index("p2")
+	var col := build_column("Escolha seu lutador", "2 jogadores" if versus else "Contra a CPU")
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 40)
+	col.add_child(row)
+	for pid in PLAYERS:
+		_panels[pid] = _build_panel(pid)
+		row.add_child(_panels[pid]["root"])
+	var hint := "Esquerda/Direita escolhe  ·  Ataque ou Pulo confirma  ·  Especial desfaz  ·  Pausa volta"
+	if not versus:
+		hint = "Você escolhe o seu lutador e depois o da CPU  ·  " + hint
+	col.add_child(make_label(hint, 18, Color(0.6, 0.66, 0.78)))
+	var back := Button.new()
+	back.text = "Voltar"
+	back.focus_mode = Control.FOCUS_NONE
+	back.custom_minimum_size = Vector2(260, 56)
+	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	back.pressed.connect(_back)
+	col.add_child(back)
+	_refresh()
+
+
+func _build_panel(pid: String) -> Dictionary:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(520, 0)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	panel.add_child(v)
+	var title := make_label("", 34, Game.PLAYER_COLORS[pid])
+	v.add_child(title)
+	# Prévia: o mesmo retângulo colorido da luta
+	var preview_box := CenterContainer.new()
+	var preview := ColorRect.new()
+	preview.custom_minimum_size = Vector2(70, 120)
+	preview.color = Game.PLAYER_COLORS[pid]
+	preview_box.add_child(preview)
+	v.add_child(preview_box)
+	var name_label := make_label("", 44)
+	v.add_child(name_label)
+	var desc := make_label("", 22, Color(0.78, 0.82, 0.92))
+	desc.custom_minimum_size = Vector2(0, 64)
+	v.add_child(desc)
+	var weight := make_label("", 22, ACCENT)
+	v.add_child(weight)
+	var status := make_label("", 24)
+	v.add_child(status)
+	# Controles de mouse
+	var h := HBoxContainer.new()
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_theme_constant_override("separation", 12)
+	v.add_child(h)
+	var prev := _mouse_button("<", func() -> void: _move(pid, -1), 70)
+	var confirm := _mouse_button("Confirmar", func() -> void: _toggle_lock(pid), 200)
+	var next := _mouse_button(">", func() -> void: _move(pid, 1), 70)
+	h.add_child(prev)
+	h.add_child(confirm)
+	h.add_child(next)
+	return {"root": panel, "title": title, "name": name_label, "desc": desc, "weight": weight,
+		"status": status, "preview": preview, "confirm": confirm}
+
+
+func _mouse_button(text: String, on_press: Callable, width: float) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.focus_mode = Control.FOCUS_NONE
+	b.custom_minimum_size = Vector2(width, 52)
+	b.pressed.connect(on_press)
+	return b
+
+
+## Quem manda no jogador-alvo deste painel. No modo CPU, o P1 controla os dois.
+func controller_of(slot: String) -> String:
+	return "p1" if Game.mode == "cpu" else slot
+
+
+## No modo CPU, a CPU (p2) só escolhe depois que o P1 confirmou.
+func slot_active(slot: String) -> bool:
+	if _starting:
+		return false
+	return slot == "p1" or Game.mode == "versus" or locked["p1"]
+
+
+func _process(_delta: float) -> void:
+	for pid in PLAYERS:
+		if Input.is_action_just_pressed(pid + "_pause"):
+			_back()
+			return
+	# No modo CPU só um painel escolhe por vez (o do P1 trava quando a CPU escolhe)
+	var slots: Array = PLAYERS
+	if Game.mode == "cpu":
+		slots = ["p2" if locked["p1"] else "p1"]
+	for slot in slots:
+		if not slot_active(slot):
+			continue
+		var c := controller_of(slot)
+		if Input.is_action_just_pressed(c + "_left"):
+			_move(slot, -1)
+		if Input.is_action_just_pressed(c + "_right"):
+			_move(slot, 1)
+		if Input.is_action_just_pressed(c + "_attack") or Input.is_action_just_pressed(c + "_jump"):
+			if not locked[slot]:
+				_toggle_lock(slot)
+		elif Input.is_action_just_pressed(c + "_special"):
+			_unlock(slot)
+
+
+func _move(slot: String, step: int) -> void:
+	if locked[slot] or not slot_active(slot):
+		return
+	choice[slot] = posmod(choice[slot] + step, Game.CHARACTERS.size())
+	_refresh()
+
+
+func _toggle_lock(slot: String) -> void:
+	if not slot_active(slot):
+		return
+	if locked[slot]:
+		_unlock(slot)
+		return
+	locked[slot] = true
+	_refresh()
+	if locked["p1"] and locked["p2"]:
+		_start_match()
+
+
+## Desfaz a confirmação. No modo CPU, desfazer na vez da CPU volta ao P1.
+func _unlock(slot: String) -> void:
+	if Game.mode == "cpu" and slot == "p2" and not locked["p2"]:
+		locked["p1"] = false
+	locked[slot] = false
+	_refresh()
+
+
+func _start_match() -> void:
+	_starting = true
+	for pid in PLAYERS:
+		Game.set_character(pid, choice[pid])
+	_refresh()
+	await get_tree().create_timer(START_DELAY).timeout
+	Game.go_to(Game.MATCH_SCENE)
+
+
+func _back() -> void:
+	if _starting:
+		return
+	Game.go_to(Game.MODE_SCENE)
+
+
+func _refresh() -> void:
+	for pid in PLAYERS:
+		var p: Dictionary = _panels[pid]
+		var info: Dictionary = Game.CHARACTERS[choice[pid]]
+		p["title"].text = Game.player_label(pid).to_upper()
+		p["name"].text = info["name"]
+		p["desc"].text = info["desc"]
+		p["weight"].text = "Peso: " + info["weight"]
+		var active := slot_active(pid)
+		var status: Label = p["status"]
+		if locked[pid]:
+			status.text = "PRONTO!"
+			status.add_theme_color_override("font_color", Color(0.45, 1.0, 0.55))
+		elif active:
+			status.text = "Escolhendo..."
+			status.add_theme_color_override("font_color", ACCENT)
+		else:
+			status.text = "Aguardando o Jogador 1"
+			status.add_theme_color_override("font_color", Color(0.5, 0.55, 0.65))
+		var confirm: Button = p["confirm"]
+		confirm.text = "Desfazer" if locked[pid] else "Confirmar"
+		confirm.disabled = not active
+		var preview: ColorRect = p["preview"]
+		preview.modulate = Color.WHITE if active or locked[pid] else Color(1, 1, 1, 0.35)
