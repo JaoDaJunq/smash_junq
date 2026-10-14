@@ -48,11 +48,12 @@ func _build_panel(pid: String) -> Dictionary:
 	panel.add_child(v)
 	var title := make_label("", "HeadingLabel", Game.PLAYER_COLORS[pid])
 	v.add_child(title)
-	# Prévia: o mesmo retângulo colorido da luta
+	# Prévia: retrato do personagem (arte em assets/characters/<id>/retrato.png)
 	var preview_box := CenterContainer.new()
-	var preview := ColorRect.new()
-	preview.custom_minimum_size = Vector2(70, 120)
-	preview.color = Game.PLAYER_COLORS[pid]
+	var preview := TextureRect.new()
+	preview.custom_minimum_size = Vector2(240, 260)
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	preview_box.add_child(preview)
 	v.add_child(preview_box)
 	var name_label := make_label("", "HeadingLabel")
@@ -205,7 +206,10 @@ func _refresh() -> void:
 		var confirm: Button = p["confirm"]
 		confirm.text = "Desfazer" if locked[pid] else "Confirmar"
 		confirm.disabled = not active
-		var preview: ColorRect = p["preview"]
+		var preview: TextureRect = p["preview"]
+		if info.has("retrato") and ResourceLoader.exists(info["retrato"]):
+			preview.texture = load(info["retrato"])
+		preview.flip_h = pid == "p2"  # os dois retratos se olham
 		preview.modulate = Color.WHITE if active or locked[pid] else Color(1, 1, 1, 0.35)
 		# Contorno do cartão: dourado em quem está escolhendo, verde em quem confirmou
 		var border := WAITING if not active else ACCENT

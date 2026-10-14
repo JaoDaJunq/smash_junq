@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/characters/agil.gd" id="1_script"]
 [ext_resource type="Resource" path="res://data/movesets/agil.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/rig/cutout_rig.gd" id="9_rig"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 28.0
@@ -19,3 +20,7 @@ gravity = 2500.0
 
 [node name="Body" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_body")
+
+[node name="Rig" type="Node2D" parent="."]
+script = ExtResource("9_rig")
+rig_path = "res://assets/characters/juba/rig.json"

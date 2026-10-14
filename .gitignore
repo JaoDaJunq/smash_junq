@@ -15,3 +15,6 @@ Thumbs.db
 
 # Relatórios do GdUnit4
 game/reports/
+
+# Recortes intermediários (as cópias usadas no jogo ficam em game/assets/characters)
+art/cortes/*/parte_*.png

@@ -1,0 +1,44 @@
+{
+  "nome": "Juba",
+  "fonte": "art/conceitos/juba/partes_v1.png",
+  "escala": 0.085,
+  "quadril_y": 21,
+  "partes": {
+    "tronco":           {"arquivo": "parte_03.png", "origem": [680, 9],    "pivo": [790, 500],  "ponta": [780, 30],   "pai": null,           "repouso": -91, "z": 0},
+    "cabeca":           {"arquivo": "parte_02.png", "origem": [44, 17],    "pivo": [390, 460],  "ponta": [370, 70],   "pai": "tronco",       "encaixe": [780, 40],  "repouso": -93, "z": 2},
+    "cauda":            {"arquivo": "parte_07.png", "origem": [128, 517],  "pivo": [600, 912],  "ponta": [440, 840],  "pai": "tronco",       "encaixe": [720, 470], "repouso": -156, "z": -7},
+    "braco_tras":       {"arquivo": "parte_01.png", "origem": [1251, 8],   "pivo": [1330, 28],  "ponta": [1352, 280], "pai": "tronco",       "encaixe": [710, 100], "repouso": 100, "z": -5},
+    "antebraco_tras":   {"arquivo": "parte_05.png", "origem": [1217, 300], "pivo": [1365, 322], "ponta": [1270, 505], "pai": "braco_tras",   "encaixe": [1352, 280], "repouso": 85, "z": -6},
+    "coxa_tras":        {"arquivo": "parte_06.png", "origem": [703, 526],  "pivo": [738, 548],  "ponta": [780, 750],  "pai": "tronco",       "encaixe": [775, 480], "repouso": 90,  "z": -3},
+    "canela_tras":      {"arquivo": "parte_09.png", "origem": [662, 765],  "pivo": [760, 790],  "ponta": [765, 920],  "pai": "coxa_tras",    "encaixe": [780, 750], "repouso": 90,  "z": -4},
+    "coxa_frente":      {"arquivo": "parte_06.png", "origem": [703, 526],  "pivo": [738, 548],  "ponta": [780, 750],  "pai": "tronco",       "encaixe": [800, 480], "repouso": 90,  "z": -1},
+    "canela_frente":    {"arquivo": "parte_09.png", "origem": [662, 765],  "pivo": [760, 790],  "ponta": [765, 920],  "pai": "coxa_frente",  "encaixe": [780, 750], "repouso": 90,  "z": -2},
+    "braco_frente":     {"arquivo": "parte_00.png", "origem": [969, 7],    "pivo": [1068, 28],  "ponta": [1068, 280], "pai": "tronco",       "encaixe": [845, 105], "repouso": 95,  "z": 4},
+    "antebraco_frente": {"arquivo": "parte_04.png", "origem": [1019, 301], "pivo": [1063, 322], "ponta": [1130, 500], "pai": "braco_frente", "encaixe": [1068, 280], "repouso": 80, "z": 3}
+  },
+  "poses": {
+    "parado":  {"tronco": 6, "cabeca": -4, "braco_frente": -35, "antebraco_frente": -60, "braco_tras": -20, "antebraco_tras": -50, "coxa_frente": -25, "canela_frente": 30, "coxa_tras": 15, "canela_tras": 20},
+    "andar":   {"tronco": 6},
+    "correr":  {"tronco": 18, "cabeca": -10, "cauda": 15},
+    "pulo":    {"coxa_frente": -60, "canela_frente": 80, "coxa_tras": -30, "canela_tras": 60, "braco_frente": -110, "braco_tras": -90, "cauda": 20},
+    "queda":   {"coxa_frente": -25, "canela_frente": 30, "braco_frente": -140, "braco_tras": -120, "cauda": -15},
+    "dor":     {"tronco": -20, "cabeca": -20, "braco_frente": -70, "braco_tras": -50, "coxa_frente": -30, "canela_frente": 30, "cauda": 25},
+    "borda":   {"braco_frente": -175, "braco_tras": -165, "coxa_frente": 15, "coxa_tras": 30},
+    "defesa":  {"tronco": 15, "cabeca": 5, "braco_frente": -80, "antebraco_frente": -80, "coxa_frente": -40, "canela_frente": 60, "coxa_tras": -10, "canela_tras": 40},
+    "esquiva": {"tronco": 35, "braco_frente": -30, "braco_tras": -20, "coxa_frente": -40, "canela_frente": 60},
+    "agarrar": {"braco_frente": -85, "antebraco_frente": -10, "braco_tras": -70, "tronco": 10},
+    "agachar": {"coxa_frente": -45, "canela_frente": 70, "coxa_tras": -30, "canela_tras": 55, "_sobe": 5},
+    "tonto":   {"cabeca": 20, "tronco": 12, "braco_frente": 20, "braco_tras": 15, "cauda": -20}
+  },
+  "golpes": {
+    "frente": {"preparo": {"coxa_frente": -30, "canela_frente": 60, "tronco": -10}, "golpe": {"coxa_frente": -100, "canela_frente": 0, "tronco": -20, "braco_frente": -40, "braco_tras": 40}},
+    "cima":   {"preparo": {"braco_frente": 30, "tronco": -5}, "golpe": {"braco_frente": -175, "antebraco_frente": -10, "tronco": -10, "coxa_frente": -20}},
+    "baixo":  {"preparo": {"tronco": 15}, "golpe": {"coxa_frente": -65, "canela_frente": -20, "tronco": 30, "braco_tras": -60, "_sobe": 10}},
+    "tras":   {"preparo": {"coxa_tras": -20}, "golpe": {"coxa_tras": 75, "canela_tras": 0, "tronco": 15}},
+    "giro":   {"preparo": {"tronco": -10}, "golpe": {"coxa_frente": -90, "coxa_tras": 60, "braco_frente": -90, "braco_tras": 90}},
+    "special_neutral": {"preparo": {"braco_frente": 50, "tronco": -10}, "golpe": {"braco_frente": -100, "antebraco_frente": 0, "tronco": 10}},
+    "special_side":    {"preparo": {"tronco": 30}, "golpe": {"tronco": 75, "coxa_frente": -60, "canela_frente": 90, "coxa_tras": -40, "canela_tras": 80}},
+    "special_up":      {"preparo": {"coxa_frente": -40, "canela_frente": 60}, "golpe": {"braco_frente": -170, "braco_tras": -160, "coxa_frente": -20, "cauda": 30}},
+    "special_down":    {"preparo": {"tronco": 25}, "golpe": {"tronco": 35, "coxa_frente": -85, "canela_frente": 110, "coxa_tras": -40, "canela_tras": 80, "_sobe": 14}}
+  }
+}

@@ -116,6 +116,8 @@ var invincible_time := 0.0
 var auto_respawn := true
 
 var shield_hp := 50.0
+## true quando um CutoutRig (arte do personagem) está desenhando o corpo.
+var has_art := false
 var _shield_stun := 0
 var _break_timer := 0.0
 var _dodge_frame := 0
@@ -1020,11 +1022,12 @@ func _draw() -> void:
 		color.a = 0.45 if int(_clock * 12.0) % 2 == 0 else 0.8
 	elif _is_intangible():
 		color.a = 0.4
-	draw_rect(rect, color)
-	var eye := Vector2(facing * RADIUS * 0.45, -HEIGHT * 0.28)
-	draw_circle(eye, 6.0, Color.WHITE)
-	draw_circle(eye + Vector2(facing * 2.0, 0), 3.0, Color.BLACK)
-	if fast_falling:
+	if not has_art:  # sem arte: corpo greybox (retângulo com olho)
+		draw_rect(rect, color)
+		var eye := Vector2(facing * RADIUS * 0.45, -HEIGHT * 0.28)
+		draw_circle(eye, 6.0, Color.WHITE)
+		draw_circle(eye + Vector2(facing * 2.0, 0), 3.0, Color.BLACK)
+	if fast_falling and not has_art:
 		draw_line(Vector2(-RADIUS, -HEIGHT * 0.5 - 8), Vector2(RADIUS, -HEIGHT * 0.5 - 8), Color.WHITE, 3.0)
 	if state == State.SHIELD:
 		var r := 30.0 + 42.0 * (shield_hp / shield_max)

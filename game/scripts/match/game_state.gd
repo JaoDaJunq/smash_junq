@@ -14,12 +14,14 @@ const CHARACTERS: Array[Dictionary] = [
 	{
 		"name": "Juba",
 		"scene": "res://scenes/characters/agil.tscn",
+		"retrato": "res://assets/characters/juba/retrato.png",
 		"desc": "Mico-leão-dourado capoeirista. Rápido e leve:\ncombos e volta fácil, mas voa mais cedo.",
 		"weight": "Leve",
 	},
 	{
 		"name": "Seu Capivas",
 		"scene": "res://scenes/characters/pesado.tscn",
+		"retrato": "res://assets/characters/seu_capivas/retrato.png",
 		"desc": "Capivara tiozão de clube. Lento e pesado:\naguenta muito dano e um acerto lança longe.",
 		"weight": "Pesado",
 	},
