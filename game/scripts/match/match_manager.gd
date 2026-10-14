@@ -154,22 +154,18 @@ func _physics_process(_delta: float) -> void:
 ## Resolve KOs do mesmo quadro: cada KO dá ponto ao outro jogador. Se os dois
 ## saíram juntos, os dois pontuam. Público para os testes poderem forçar KOs.
 func resolve_kos(victims: Array[String]) -> void:
+	var outcome := Scoring.apply_kos(kos, victims, ko_target, sudden_death)
+	kos = outcome["kos"]
+	sudden_death = outcome["sudden_death"]
 	for victim in victims:
-		var scorer := other(victim)
-		kos[scorer] += 1
-		ko_scored.emit(scorer, victim)
+		ko_scored.emit(other(victim), victim)
 	for victim in victims:
 		respawn_fighter(victim)
 	hud.set_kos(kos)
-	var a: int = kos["p1"]
-	var b: int = kos["p2"]
-	if maxi(a, b) < ko_target:
-		return
-	if a != b:
-		end_match("p1" if a > b else "p2")
-	elif not sudden_death:
+	if outcome["winner"] != "":
+		end_match(outcome["winner"])
+	elif outcome["sudden_death_started"]:
 		# Empatados na meta: o próximo KO decide (regra provisória do GDD)
-		sudden_death = true
 		hud.show_banner("MORTE SÚBITA", 2.0, Color(0.95, 0.2, 0.15))
 		sudden_death_started.emit()
 
