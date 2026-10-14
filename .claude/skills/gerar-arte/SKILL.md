@@ -1,42 +1,27 @@
 ---
 name: gerar-arte
-description: Gera arte do Smash Junq (folhas de personagem, conceitos, partes para animação, cenários) com a API de imagens da OpenAI (gpt-image-2), seguindo a bíblia visual. Use quando pedirem para gerar, criar ou desenhar personagens, conceitos, model sheets, partes de personagem, arenas ou qualquer imagem do jogo.
+description: Fluxo de arte do Smash Junq (folhas de personagem, poses, partes para animação, retratos, cenários). Por padrão o criador gera as imagens no ChatGPT com os prompts do roteiro e o Claude prepara prompts, avalia e integra. Use quando pedirem para criar, gerar, desenhar ou avaliar personagens, conceitos, model sheets, partes de personagem, arenas ou qualquer imagem do jogo.
 ---
 
-# Gerar arte do Smash Junq
+# Arte do Smash Junq
 
-Gera imagens com `game/tools/gerar_imagem.gd`, um script do Godot que roda **sem janela** e chama a API de imagens da OpenAI. Cada imagem sai com um `.json` ao lado (prompt e parâmetros) e uma linha em `assets/manifest.csv`.
+## Fluxo padrão (sem custo extra): ChatGPT manual
 
-## Regras
+O criador não quer pagar serviços extras. Ele gera as imagens no ChatGPT da conta dele; o Claude prepara e avalia.
 
-1. **Nunca abrir janelas.** Rodar o Godot sempre com `--headless`.
-2. **Ler antes de gerar:** `design/identidade.md` (estilo, cores, personagens, prompts-modelo). Toda geração segue essa bíblia.
-3. **Custo:** perguntar ao criador antes de lotes com mais de 6 imagens ou de qualquer imagem em qualidade `high`. Começar explorando em `low` ou `medium`.
-4. **Chave:** nunca pedir, ler, imprimir ou gravar a chave. O script lê `OPENAI_API_KEY` do ambiente. Se faltar, explicar ao criador como configurar (abaixo).
-5. **Consistência:** depois que uma folha for aprovada, usar essa imagem como `--ref` em todas as gerações seguintes do mesmo personagem.
-6. **Aprovação:** imagem gerada é `conceito`. Só vira arte do jogo quando o criador aprovar; atualizar o estado em `assets/manifest.csv`.
+1. **Ler antes:** `design/identidade.md` (bíblia visual) e `art/prompts/ROTEIRO_CHATGPT.md` (roteiro passo a passo).
+2. **Preparar prompts:** para pedidos novos, escrever prompts no mesmo formato do roteiro (bloco de texto pronto para colar, em português, citando o guia de estilo e pedindo para anexar a folha aprovada), e acrescentar ao roteiro ou a um arquivo em `art/prompts/`.
+3. **Receber imagens:** o criador salva em `art/conceitos/<personagem>/` com o nome indicado (`folha_v1.png`, `poses_v1.png`, `partes_v1.png`, `retrato_v1.png`) e faz commit ou avisa.
+4. **Avaliar:** abrir as imagens com a ferramenta de leitura de arquivos (Read) e conferir contra a bíblia: silhueta, cores e roupa iguais à folha aprovada, contorno grosso cor vinho, 2 tons de sombra, proporção (cabeça ~1/3), sem texto ou logotipo, nada parecido com personagem famoso. Avaliar também legibilidade no tamanho do jogo (cerca de 110 px de altura) e contraste com a arena roxa/laranja.
+5. **Pedir correções:** escrever a frase exata para o criador mandar ao ChatGPT.
+6. **Registrar:** cada imagem usada entra em `assets/manifest.csv` (origem "ChatGPT (gerado pelo criador)", estado `conceito` ou `aprovado`).
+7. **Integrar:** só depois da aprovação, recortar partes e montar o esqueleto no Godot (sempre `--headless` nesta máquina; nunca abrir janelas).
 
-## Como gerar
+## Fluxo opcional: API da OpenAI (pago à parte)
 
-A partir da raiz do repositório:
+Só se o criador decidir configurar uma chave de API. `game/tools/gerar_imagem.gd` gera direto pela API (`gpt-image-2`), lendo a chave da variável `OPENAI_API_KEY`. Nunca pedir, ler ou gravar a chave. Uso:
 
 ```bash
 godot --headless --path game --script res://tools/gerar_imagem.gd -- \
-  --prompt-arquivo art/prompts/juba_folha.txt \
-  --saida art/conceitos/juba/folha_v1.png \
-  --qualidade medium --tamanho 1536x1024
+  --prompt-arquivo art/prompts/juba_folha.txt --saida art/conceitos/juba/folha_v1.png --qualidade medium --tamanho 1536x1024
 ```
-
-Opções: `--prompt "texto"` (em vez de arquivo), `--qualidade low|medium|high`, `--tamanho 1024x1024|1536x1024|1024x1536`, `--fundo opaque|transparent`, `--ref imagem.png` (pode repetir), `--modelo gpt-image-2`.
-
-- Folhas de personagem: `1536x1024`, fundo opaco.
-- Partes para animação (cabeça, braços, cauda separados): `--fundo transparent` e `--ref` da folha aprovada.
-- Organização: `art/prompts/` (prompts), `art/conceitos/<personagem>/` (resultados). Versões numeradas: `folha_v1`, `folha_v2`...
-
-Depois de gerar, abrir a imagem com a ferramenta de leitura de arquivos (Read) para avaliar contra a bíblia: silhueta, cores, contorno, proporção, legibilidade. Mostrar ao criador e anotar a decisão.
-
-## Configurar a chave (o criador faz)
-
-1. Criar a chave em https://platform.openai.com/api-keys e colocar créditos (Billing). A assinatura do ChatGPT não vale para a API.
-2. No Windows, abrir o PowerShell e rodar `setx OPENAI_API_KEY "sua-chave"` (a chave fica só no seu computador).
-3. Fechar e abrir de novo o Claude/terminal para a variável valer.

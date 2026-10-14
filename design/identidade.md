@@ -88,7 +88,7 @@ Tatu-bola (rola como bola de boliche), Arara (golpes aéreos e grito sônico), B
 
 ## Produção com IA — Proposta de fluxo
 
-1. **Folha do personagem (model sheet):** gerar o personagem de frente, perfil e 3/4, com paleta fixa e expressões. **Ferramenta escolhida: GPT Image (`gpt-image-2`) pela API da OpenAI**, com o script `game/tools/gerar_imagem.gd` e a skill `gerar-arte` (`.claude/skills/gerar-arte/SKILL.md`). Prompts prontos em `art/prompts/`. Depois da primeira folha aprovada, ela vira referência (`--ref`) de toda geração seguinte.
+1. **Folha do personagem (model sheet):** gerar o personagem de frente, perfil e 3/4, com paleta fixa e expressões. **Ferramenta escolhida: ChatGPT (gerado pelo criador, sem custo extra)**, seguindo o roteiro `art/prompts/ROTEIRO_CHATGPT.md`; a skill `gerar-arte` orienta o Claude a preparar prompts, avaliar e integrar. A geração direta pela API da OpenAI (`game/tools/gerar_imagem.gd`) fica como opção paga. Depois da primeira folha aprovada, ela vira referência (`--ref`) de toda geração seguinte.
 2. **Folha de partes:** gerar o personagem "desmontado" em partes separadas, em pose neutra, sobre fundo transparente.
 3. **Montagem no Godot:** importar as partes, montar o esqueleto e conferir no tamanho real do jogo.
 4. **Animação:** criar as poses-chave de cada golpe seguindo os quadros do moveset; a IA (Claude via godot-ai) monta as animações no editor.
