@@ -93,7 +93,7 @@ func _test_menus() -> void:
 	var sel := CHAR_SELECT.instantiate()
 	add_child(sel)
 	await _frames(5)
-	_check("Seleção começa com Ágil e Pesado", sel.choice["p1"] == 0 and sel.choice["p2"] == 1, str(sel.choice))
+	_check("Seleção começa com Juba e Seu Capivas", sel.choice["p1"] == 0 and sel.choice["p2"] == 1, str(sel.choice))
 	await _tap("p1_right")
 	_check("p1_right troca o personagem do P1", sel.choice["p1"] == 1, str(sel.choice))
 	await _tap("p2_left")
@@ -131,7 +131,7 @@ func _test_countdown_and_ko() -> void:
 
 	# HUD: dano e cores
 	_check("HUD: dano começa em 0%", _damage_text("p1") == "0%" and _damage_text("p2") == "0%", _damage_text("p2"))
-	_check("HUD: nomes dos lutadores", (m.hud.panels["p1"]["name"] as Label).text.contains("Ágil") and (m.hud.panels["p2"]["name"] as Label).text.contains("Pesado"), (m.hud.panels["p1"]["name"] as Label).text)
+	_check("HUD: nomes dos lutadores", (m.hud.panels["p1"]["name"] as Label).text.contains("Juba") and (m.hud.panels["p2"]["name"] as Label).text.contains("Seu Capivas"), (m.hud.panels["p1"]["name"] as Label).text)
 	_check("Cor do dano: 0% branco", Hud.damage_color(0).is_equal_approx(Color.WHITE), "")
 	var c50 := Hud.damage_color(50)
 	var c100 := Hud.damage_color(100)
@@ -288,7 +288,7 @@ func _test_rematch_and_pause() -> void:
 	await _frames(3)
 	_check("Revanche: placar 0 x 0", m.kos["p1"] == 0 and m.kos["p2"] == 0 and _hud_kos("p1") == 0 and _hud_kos("p2") == 0, str(m.kos))
 	_check("Revanche: resultado some e contagem recomeça", not m.results.visible and m.phase == MatchManager.Phase.COUNTDOWN, "")
-	_check("Revanche: mesmos personagens e dano zerado", p1.display_name == "Ágil" and p2.display_name == "Pesado" and p2.damage_percent == 0.0 and _damage_text("p2") == "0%", "")
+	_check("Revanche: mesmos personagens e dano zerado", p1.display_name == "Juba" and p2.display_name == "Seu Capivas" and p2.damage_percent == 0.0 and _damage_text("p2") == "0%", "")
 	_check("Revanche: lutadores nas posições iniciais", p1.global_position.distance_to(Vector2(-300, -400)) < 5.0 and p2.global_position.distance_to(Vector2(300, -400)) < 5.0, str(p2.global_position))
 	await _start_fight()
 	# Uma segunda partida completa

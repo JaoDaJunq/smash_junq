@@ -9,7 +9,7 @@ height = 110.0
 
 [node name="Agil" type="CharacterBody2D"]
 script = ExtResource("1_script")
-display_name = "Ágil"
+display_name = "Juba"
 moveset = ExtResource("2_moves")
 weight = 80.0
 walk_speed = 380.0

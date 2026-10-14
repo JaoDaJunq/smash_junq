@@ -93,6 +93,8 @@ força_do_lançamento = base_do_golpe + (dano_% do alvo × crescimento_do_golpe)
 
 Dois personagens com formas simples (cápsulas ou bonecos geométricos coloridos). A arte original entra nas Etapas 3 e 4, depois de o combate ser divertido.
 
+**Identidade (14/10/2026):** o Ágil é **Juba**, mico-leão-dourado capoeirista, e o Pesado é **Seu Capivas**, capivara tiozão de clube. Detalhes em [identidade.md](identidade.md). No código os nomes internos continuam `agil` e `pesado`.
+
 | | Personagem A: "Ágil" | Personagem B: "Pesado" |
 |---|---|---|
 | Ideia | Rápido, leve, combos | Lento, pesado, golpes que lançam longe |

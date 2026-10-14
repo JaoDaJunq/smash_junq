@@ -12,15 +12,15 @@ const MATCH_SCENE := "res://scenes/match.tscn"
 ## Elenco do primeiro corte. A ordem define a ordem na tela de escolha.
 const CHARACTERS: Array[Dictionary] = [
 	{
-		"name": "Ágil",
+		"name": "Juba",
 		"scene": "res://scenes/characters/agil.tscn",
-		"desc": "Rápido e leve. Combos e recuperação fácil,\nmas voa mais cedo.",
+		"desc": "Mico-leão-dourado capoeirista. Rápido e leve:\ncombos e volta fácil, mas voa mais cedo.",
 		"weight": "Leve",
 	},
 	{
-		"name": "Pesado",
+		"name": "Seu Capivas",
 		"scene": "res://scenes/characters/pesado.tscn",
-		"desc": "Lento e pesado. Aguenta mais dano e um\nacerto lança longe.",
+		"desc": "Capivara tiozão de clube. Lento e pesado:\naguenta muito dano e um acerto lança longe.",
 		"weight": "Pesado",
 	},
 ]

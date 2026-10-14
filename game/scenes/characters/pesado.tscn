@@ -19,7 +19,7 @@ knockback_growth = 6.2
 [node name="Pesado" type="CharacterBody2D"]
 script = ExtResource("1_script")
 command_throw_data = SubResource("Resource_throw")
-display_name = "Pesado"
+display_name = "Seu Capivas"
 moveset = ExtResource("2_moves")
 weight = 125.0
 walk_speed = 270.0

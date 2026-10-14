@@ -30,6 +30,7 @@ Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco gran
 - [Brief da Etapa 0 — aprovado](design/brief-etapa-0.md)
 - [GDD — aprovado](design/gdd.md)
 - [Backlog do primeiro corte — lista oficial de tarefas](design/backlog.md)
+- [Identidade — mundo, personagens e bíblia visual (rascunho)](design/identidade.md)
 - [Arsenal, rota de produção, pesquisa e decisões](docs/arsenal-jogo-ia.md)
 - As decisões confirmadas e as propostas em validação devem ficar identificadas separadamente.
 - A rota de produção recomendada está no arsenal; o avanço de etapa depende dos critérios de saída definidos ali.

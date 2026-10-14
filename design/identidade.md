@@ -1,6 +1,6 @@
 # Identidade — Smash Junq
 
-> **Versão 0.1 · Etapa 3 (bíblia visual) · rascunho para aprovação**  
+> **Versão 0.2 · Etapa 3 (bíblia visual) · rascunho para aprovação**  
 > Itens marcados **Aprovado** foram escolhidos pelo criador em 14/10/2026. Itens marcados **Proposta** são sugestões e só viram decisão com aprovação. A arte definitiva dos personagens continua esperando o playtest do combate; este documento define a **direção**.
 
 ## Decisões aprovadas
@@ -11,14 +11,21 @@
 | Estilo visual | Cartoon 2D vetorial, personagens desenhados em partes e animados por esqueleto |
 | Tom | Divertido e caótico: expressões exageradas, humor, cores vivas, partidas com amigos |
 | Abertura para o futuro | Outros direcionamentos (outros mundos ou arenas temáticas) podem entrar depois; a fauna brasileira é o ponto de partida |
+| Torneio | **Torneio de capoeira e várzea**: roda de capoeira, berimbau, arquibancada de bichos e clima de campeonato de bairro |
+| Ágil | **Juba**, mico-leão-dourado capoeirista |
+| Pesado | **Seu Capivas**, capivara tiozão de clube |
+| Nome do mundo | Fica para depois |
 
 ## O mundo — Proposta
 
-**Pindorama Suspensa.** Pedaços de cada bioma brasileiro flutuam no céu do entardecer: Mata Atlântica, Pantanal, Caatinga, Amazônia, Cerrado e Pampa. Os bichos de cada ilha se enfrentam num torneio amistoso e barulhento.
+Pedaços de cada bioma brasileiro flutuam no céu do entardecer: Mata Atlântica, Pantanal, Caatinga, Amazônia, Cerrado e Pampa. O nome do mundo fica para depois (uma ideia guardada: *Pindorama Suspensa*, do nome tupi do Brasil).
 
-**O torneio: Arraiá do Junq.** Uma festa junina que acontece no céu: bandeirinhas entre as ilhas, fogueira, quadrilha, pipoca e um locutor animado. Cair da ilha não machuca ninguém: o lutador cai numa rede de festa e volta pela plataforma de retorno. Isso explica o "Junq" do nome, dá cor e humor de sobra e é bem brasileiro.
+**O torneio (aprovado): capoeira e várzea.** Os bichos de cada ilha se enfrentam num campeonato de bairro barulhento: roda de capoeira com berimbau e pandeiro marcando o ritmo, arquibancada de bichos torcendo, faixas de time, alambrado, traves de várzea e um locutor de rádio empolgado.
 
-Alternativa, se não quiser festa junina: um **torneio de capoeira e várzea** nas ilhas, com roda, berimbau e arquibancada de bichos.
+**Propostas para dar cara ao torneio:**
+- **KO na rede do gol:** quem sai da arena cai numa rede de gol de várzea esticada lá embaixo e volta pela plataforma de retorno. Explica o retorno sem ninguém se machucar.
+- **Locutor de várzea:** frases curtas e engraçadas no KO e no fim da partida ("É DA CAPIVARA!", "Foi pra rede!").
+- **Ritmo de berimbau** na música das lutas e no menu.
 
 ## Pilares visuais
 
@@ -40,11 +47,11 @@ Alternativa, se não quiser festa junina: um **torneio de capoeira e várzea** n
 
 Os dois personagens temporários ganham identidade. As mecânicas continuam as mesmas; muda o "figurino" de cada golpe.
 
-### Ágil → Mico-leão-dourado
+### Juba — o Ágil (mico-leão-dourado)
 
 | | Proposta |
 |---|---|
-| Nomes possíveis | **Juba**, Tufo, Dourado |
+| Nome | **Juba** (aprovado) |
 | Personalidade | Elétrico, exibido, provocador. Não para quieto, faz piada até apanhando |
 | Estilo de luta | **Capoeira**: ginga, giros, rasteiras, golpes de pé |
 | Visual | Juba laranja-dourada enorme, corpo pequeno, cauda longa. Calça de abadá branca com cordão colorido, faixa na testa |
@@ -52,14 +59,14 @@ Os dois personagens temporários ganham identidade. As mecânicas continuam as m
 | Especiais (mesma mecânica) | Neutro: arremessa uma castanha. Lateral: rolê de capoeira atravessando o palco. Para cima: se balança num cipó que aparece do nada. Para baixo: "negativa" da capoeira que esquiva e contra-ataca |
 | Animação de vitória | Faz ginga e mostra a língua |
 
-### Pesado → Capivara
+### Seu Capivas — o Pesado (capivara)
 
 | | Proposta |
 |---|---|
-| Nomes possíveis | **Dona Capi**, Capitão, Seu Capivas |
-| Personalidade | Zen e tranquila, nada a tira do sério... até levar um tapa. Aí é avalanche |
+| Nome | **Seu Capivas** (aprovado) |
+| Personalidade | Tiozão de clube, zen e bonachão; nada o tira do sério... até levar um tapa. Aí é avalanche. Comenta tudo como se estivesse na beira da piscina |
 | Estilo de luta | Peso e paciência, meio sumô: barrigadas, abraços e pisões |
-| Visual | Corpo redondo e baixo, cara serena de olhos semicerrados, laranjinha na cabeça (meme clássico de capivara), toalha no pescoço, bermuda florida |
+| Visual | Corpo redondo e baixo, cara serena de olhos semicerrados, laranjinha na cabeça (meme clássico de capivara), toalha no ombro, bermuda florida, chinelo de dedo, pochete |
 | Cores | Marrom-caramelo · laranja · azul-piscina |
 | Especiais (mesma mecânica) | Neutro: barrigada carregada (quanto mais medita, mais forte). Lateral: abraço de capivara que agarra e arremessa. Para cima: pulo de "bomba" na piscina. Para baixo: senta com tudo no chão e faz onda de choque |
 | Animação de vitória | Toma um gole de água de coco, impassível |
@@ -70,7 +77,7 @@ Tatu-bola (rola como bola de boliche), Arara (golpes aéreos e grito sônico), B
 
 ## Arenas — Proposta
 
-- **Arena 1 (atual), Ruínas da Mata:** mantém o céu de entardecer e as ilhas, troca as ruínas genéricas por ruínas de pedra cobertas de cipó e bromélias, com bandeirinhas de festa junina entre as ilhas ao fundo.
+- **Arena 1 (atual), Ruínas da Mata:** mantém o céu de entardecer e as ilhas, troca as ruínas genéricas por ruínas de pedra cobertas de cipó e bromélias; ao fundo, uma arquibancada de bichos e faixas de time penduradas entre as ilhas; embaixo, a rede de gol que pega quem cai.
 - **Depois:** Pantanal (plataformas de vitória-régia que afundam), Caatinga (sol forte, mandacaru, chão rachado), Amazônia (copas altas, chuva), Pampa (vento que empurra), Cerrado (ipês floridos).
 
 ## Animação
@@ -89,7 +96,9 @@ Tatu-bola (rola como bola de boliche), Arara (golpes aéreos e grito sônico), B
 
 **Modelo de prompt para a folha do personagem** (ajustar nome, cores e roupa):
 
-> Character model sheet for a 2D fighting game, original character, anthropomorphic golden lion tamarin from Brazil, energetic capoeira fighter, huge golden-orange mane, small body, long tail, white capoeira pants with colorful cord, green headband. Cartoon vector style, thick dark burgundy outlines, 2-tone cel shading, big head (1/3 of height), big hands and feet, expressive eyes. Front view, side view, 3/4 view, plus 4 facial expressions (confident, angry, hurt, laughing). Flat light gray background, no text, no logos. Palette: golden orange, white, leaf green.
+> **Juba:** Character model sheet for a 2D fighting game, original character, anthropomorphic golden lion tamarin from Brazil, energetic capoeira fighter, huge golden-orange mane, small body, long tail, white capoeira pants with colorful cord, green headband. Cartoon vector style, thick dark burgundy outlines, 2-tone cel shading, big head (1/3 of height), big hands and feet, expressive eyes. Front view, side view, 3/4 view, plus 4 facial expressions (confident, angry, hurt, laughing). Flat light gray background, no text, no logos. Palette: golden orange, white, leaf green.
+
+> **Seu Capivas:** Character model sheet for a 2D fighting game, original character, anthropomorphic capybara from Brazil, laid-back middle-aged "club uncle", round heavy body, short legs, calm half-closed eyes, a small orange balanced on his head, towel over one shoulder, floral board shorts, flip-flops, belly bag. Cartoon vector style, thick dark burgundy outlines, 2-tone cel shading, big head (1/3 of height), big hands and feet, expressive face. Front view, side view, 3/4 view, plus 4 facial expressions (zen, furious, hurt, smug). Flat light gray background, no text, no logos. Palette: caramel brown, orange, pool blue.
 
 ## Regras de originalidade
 
@@ -98,8 +107,6 @@ Tatu-bola (rola como bola de boliche), Arara (golpes aéreos e grito sônico), B
 
 ## Decisões em aberto
 
-1. Nome do Mico e da Capivara.
-2. Tema do torneio: Arraiá do Junq (festa junina) ou torneio de capoeira e várzea.
-3. Nome do mundo: Pindorama Suspensa ou outro.
-4. Roupa e estilo de luta de cada um (capoeira para o Mico, sumô e piscina para a Capivara).
-5. Gênero dos personagens (a proposta usa "Dona Capi", mas pode ser outro).
+1. Nome do mundo.
+2. Rede de gol no KO, locutor de várzea e berimbau na música (propostas acima).
+3. Roupa e detalhes finais de cada personagem, definidos na folha do personagem (model sheet).
