@@ -54,6 +54,6 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 | ID | Tarefa | Critério de aceite | Estado |
 |---|---|---|---|
 | T21 | Testes automatizados (GdUnit4) da fórmula de lançamento e do placar | Testes rodam pela linha de comando e passam | feito: 15 testes unitários (fórmula e placar) passam |
-| T22 | Exportar build Windows e fazer o primeiro playtest | O `.exe` roda no PC de casa; partida completa jogada nos dois modos; notas do playtest registradas | a fazer |
+| T22 | Exportar build Windows e fazer o primeiro playtest | O `.exe` roda no PC de casa; partida completa jogada nos dois modos; notas do playtest registradas | fazendo: build `.exe` exportado e abre sem erros; 4 partidas CPU x CPU completas (3:34–4:20); falta o playtest humano ([roteiro](playtest-01.md)) |
 
 Arte, animação e som definitivos não estão aqui: entram nas Etapas 3 a 6, depois que o combate com formas simples estiver divertido.

@@ -1,0 +1,24 @@
+  KO t= 63.4s P1 caiu (Ágil, 122%, estado AIR, sem pulo=true, pos (648.0, 905.0))
+  KO t= 76.0s P2 caiu (Pesado, 211%, estado AIR, sem pulo=true, pos (-632.0, 915.0))
+  KO t=137.3s P2 caiu (Pesado, 206%, estado AIR, sem pulo=true, pos (628.0, 907.0))
+  KO t=223.6s P1 caiu (Ágil, 181%, estado HITSTUN, sem pulo=false, pos (1400.0, -822.0))
+  KO t=231.6s P2 caiu (Pesado, 291%, estado AIR, sem pulo=false, pos (385.0, -1204.0))
+  KO t= 75.9s P1 caiu (Pesado, 242%, estado AIR, sem pulo=true, pos (-631.0, 915.0))
+  KO t=170.5s P2 caiu (Ágil, 192%, estado AIR, sem pulo=false, pos (-546.0, -1202.0))
+  KO t=172.8s P1 caiu (Pesado, 285%, estado AIR, sem pulo=false, pos (-1415.0, -555.0))
+  KO t=254.9s P1 caiu (Pesado, 267%, estado AIR, sem pulo=true, pos (621.0, 913.0))
+  KO t= 66.5s P1 caiu (Ágil, 124%, estado AIR, sem pulo=true, pos (647.0, 908.0))
+  KO t= 92.3s P2 caiu (Ágil, 190%, estado HITSTUN, sem pulo=false, pos (-197.0, -1201.0))
+  KO t=167.9s P2 caiu (Ágil, 176%, estado AIR, sem pulo=false, pos (-217.0, -1202.0))
+  KO t=183.9s P1 caiu (Ágil, 174%, estado AIR, sem pulo=false, pos (-1413.0, -553.0))
+  KO t=260.1s P1 caiu (Ágil, 196%, estado AIR, sem pulo=false, pos (598.0, -1201.0))
+  KO t= 56.3s P1 caiu (Pesado, 205%, estado AIR, sem pulo=true, pos (614.0, 903.0))
+  KO t= 84.5s P2 caiu (Pesado, 240%, estado AIR, sem pulo=true, pos (632.0, 907.0))
+  KO t=127.2s P1 caiu (Pesado, 197%, estado AIR, sem pulo=true, pos (599.0, 910.0))
+  KO t=144.7s P2 caiu (Pesado, 234%, estado HITSTUN, sem pulo=false, pos (-1402.0, -340.0))
+  KO t=214.2s P2 caiu (Pesado, 214%, estado AIR, sem pulo=true, pos (-592.0, 908.0))
+[OK] Ágil x Pesado — venceu P1 em 3:51, placar 3 x 2
+[OK] Pesado x Ágil — venceu P2 em 4:14, placar 1 x 3
+[OK] Ágil x Ágil — venceu P2 em 4:20, placar 2 x 3
+[OK] Pesado x Pesado — venceu P1 em 3:34, placar 3 x 2
+RESULTADO: OK (0 falha(s))

@@ -61,7 +61,13 @@ Correr: toque duplo na direção (ou empurrar o analógico rápido). Descer da p
 godot --path game res://tests/movement_smoke.tscn
 ```
 
-Os outros seguem o mesmo formato: `combat_smoke`, `defense_smoke`, `agil_smoke`, `pesado_smoke`, `match_smoke` e `cpu_smoke`. Os testes unitários usam o GdUnit4 (no Windows, a partir de `game/`, com a variável `GODOT_BIN` apontando para o executável do Godot):
+Os outros seguem o mesmo formato: `combat_smoke`, `defense_smoke`, `agil_smoke`, `pesado_smoke`, `match_smoke` e `cpu_smoke`. Para simular 4 partidas completas CPU x CPU em poucos segundos (sem janela):
+
+```bash
+godot --headless --fixed-fps 60 --path game res://tests/cpu_vs_cpu_match.tscn
+```
+
+O roteiro do playtest humano está em [design/playtest-01.md](design/playtest-01.md). Os testes unitários usam o GdUnit4 (no Windows, a partir de `game/`, com a variável `GODOT_BIN` apontando para o executável do Godot):
 
 ```bash
 addons\gdUnit4\runtest.cmd --headless --ignoreHeadlessMode -a res://tests/unit

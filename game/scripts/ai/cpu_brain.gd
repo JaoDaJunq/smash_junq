@@ -172,12 +172,22 @@ func _defend(me: Fighter, foe: Fighter) -> void:
 
 func _recover(me: Fighter, c: CpuControls) -> void:
 	var edge := _stage_edge_x()
-	var toward := "right" if me.global_position.x < 0.0 else "left"
-	c.press(toward)
+	var x := me.global_position.x
+	var side := 1.0 if x >= 0.0 else -1.0
+	# Embaixo do palco: primeiro sai para fora da borda, senão bate por baixo e cai.
+	var under := absf(x) < edge + 40.0 and me.global_position.y > 20.0
+	if under:
+		c.press("right" if side > 0.0 else "left")
+	else:
+		c.press("left" if side > 0.0 else "right")
 	if me.helpless or me.state == Fighter.State.ATTACK:
 		return
+	if under:
+		if me.velocity.y > 0.0 and me.jumps_left > 0 and me.global_position.y > 250.0:
+			c.press("jump")  # ganha altura enquanto vai para o lado
+		return
 	var below_stage := me.global_position.y > -20.0
-	var far := absf(me.global_position.x) > edge + 220.0
+	var far := absf(x) > edge + 220.0
 	if me.velocity.y > 0.0 and me.jumps_left > 0 and (below_stage or far):
 		c.press("jump")  # tap: o controle virtual só "aperta" se não estava apertado
 		return
