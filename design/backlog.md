@@ -10,7 +10,7 @@ Legenda de estado: `a fazer` · `fazendo` · `feito`.
 |---|---|---|---|
 | T01 | Medir o PC de casa (CPU, RAM, placa de vídeo, Windows) e registrar no README | Especificações anotadas; Godot 4.7.2 abre e roda o projeto vazio | a fazer |
 | T02 | Criar o projeto Godot 4.7.2 em `game/` com `.gitignore` do Godot | Projeto abre sem erros; arquivos gerados pelo editor não entram no Git | feito (14/10, PC da agência) |
-| T03 | Instalar uma release publicada do godot-ai e conectar ao Claude Code | O Claude cria um nó numa cena, roda o jogo e devolve um screenshot | a fazer |
+| T03 | Instalar uma release publicada do godot-ai e conectar ao Claude Code | O Claude cria um nó numa cena, roda o jogo e devolve um screenshot | fazendo: plugin v4.3.0 instalado em `game/addons` e ativado (SHA-256 conferido); falta abrir o editor e clicar em Configure para o Claude |
 | T04 | Configurar o mapa de entradas para 2 teclados e 2 gamepads | Cada ação do GDD responde nos dois esquemas de teclado e num gamepad | fazendo: teclados testados por simulação; falta testar gamepad real |
 
 ## Marco 1 — Movimento
