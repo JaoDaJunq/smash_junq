@@ -20,6 +20,7 @@ Uma arena, dois personagens, combate local 1 contra 1, golpes básicos e especia
 
 ## Organização
 
+- [Brief da Etapa 0 — rascunho para aprovação](design/brief-etapa-0.md)
 - [Arsenal, rota de produção, pesquisa e decisões](docs/arsenal-jogo-ia.md)
 - As decisões confirmadas e as propostas em validação devem ficar identificadas separadamente.
 - A rota de produção recomendada está no arsenal; o avanço de etapa depende dos critérios de saída definidos ali.
