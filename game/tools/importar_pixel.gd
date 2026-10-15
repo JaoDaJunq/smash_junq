@@ -14,9 +14,7 @@ extends SceneTree
 const NATIVE := 64
 const BASELINE := 59
 ## personagem -> animação -> índices dos quadros aproveitáveis (na ordem da grade)
-const SELECAO := {
-	"seu_capivas": {"dor": [0, 2]},  # a folha veio fora da grade: só o 1º e o último quadro estão inteiros
-}
+const SELECAO := {}
 
 
 func _initialize() -> void:

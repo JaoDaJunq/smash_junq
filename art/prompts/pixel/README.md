@@ -79,10 +79,4 @@ Pode subir tudo junto num commit (de preferência direto na `main`) e me avisar.
 
 **No jogo:** as 23 animações do Juba e as 23 do Seu Capivas foram importadas (`game/tools/importar_pixel.gd`) e já aparecem na luta.
 
-**Refazer:**
-
-| Arquivo | Problema | O que mandar (anexe o sprite base) |
-|---|---|---|
-| `seu_capivas/dor.png` | Os 4 quadros vieram numa linha só, atravessando as células da grade; os do meio foram cortados. No jogo estão só o 1º e o 4º | `Refaça a folha "dor" do Seu Capivas respeitando a grade 3x2: UM quadro inteiro dentro de cada célula de 512x512, sem invadir a vizinha. Quadros: 1) tranco para trás, bochecha amassada · 2) laranjinha saindo do lugar · 3) lançado de costas no ar · 4) lançado girando. As duas células da segunda linha ficam vazias.` |
-
-Depois de salvar a folha nova, me avise: eu tiro o ajuste especial do importador e importo de novo.
+**Refeito:** `seu_capivas/dor.png` chegou certo (4 quadros dentro da grade) e já está no jogo. Nada pendente para refazer.
