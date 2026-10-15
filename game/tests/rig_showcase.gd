@@ -3,7 +3,7 @@ extends Node
 ## personagem, força cada pose e salva screenshots em evidence/etapa-3/rig/.
 ## Também fotografa uma partida no zoom normal.
 ##   godot --path game res://tests/rig_showcase.tscn
-##   (em movimento: -- --zoom 5 --ao-vivo)
+##   (em movimento: -- --zoom 5 --ao-vivo · CPU x CPU: -- --zoom 1.6 --cpu)
 
 const MAIN := preload("res://scenes/main.tscn")
 const POSES := ["neutra", "parado", "pulo", "queda", "dor", "defesa", "borda", "agarrar", "agachar",
@@ -26,6 +26,11 @@ func _ready() -> void:
 	# Partida no zoom normal
 	await _shot("00-luta-normal")
 	cam.set_process(false)
+	if "--cpu" in OS.get_cmdline_user_args():
+		await _cpu_fight(p1, p2, cam)
+		print("Screenshots em ", dir)
+		get_tree().quit()
+		return
 	if "--ao-vivo" in OS.get_cmdline_user_args():
 		await _live(p1, p2, cam, "juba")
 		await _live(p2, p1, cam, "capivas")
@@ -158,3 +163,16 @@ func _live_frames(n: int, follow: Callable) -> void:
 		await get_tree().physics_frame
 		follow.call()
 	await get_tree().process_frame
+
+
+## CPU contra CPU com a câmera de perto seguindo a dupla: um print a cada 0,4 s.
+func _cpu_fight(p1: Fighter, p2: Fighter, cam: Camera2D) -> void:
+	p1.set_cpu(CpuBrain.new())
+	p2.set_cpu(CpuBrain.new())
+	cam.zoom = Vector2(_zoom, _zoom)
+	for i in 30:
+		for k in 24:
+			await get_tree().physics_frame
+			cam.global_position = (p1.global_position + p2.global_position) * 0.5 + Vector2(0, -20)
+		await get_tree().process_frame
+		await _shot("cpu-%02d" % i)
