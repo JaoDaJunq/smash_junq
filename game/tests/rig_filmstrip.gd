@@ -41,11 +41,12 @@ func _film(f: Fighter, other: Fighter, pid: String, file: String) -> void:
 		_check("%s tem boneco" % f.display_name, false, "script do boneco não carregou")
 		return
 	var rows := {}
-	var worst := {"gap": 0.0, "where": ""}
+	var worst := {"gap": 0.0, "where": "", "seen": {}}
 	other.global_position = Vector2(480, -56)
 	other.velocity = Vector2.ZERO
 	# Parado
 	await _reset(f)
+	rig._blink = 0.3  # garante uma piscada durante a gravação
 	rows["parado"] = await _record(f, rig, 48, 6, worst, "parado")
 	# Andar (inclinação parcial)
 	await _reset(f)
@@ -71,6 +72,10 @@ func _film(f: Fighter, other: Fighter, pid: String, file: String) -> void:
 			rows[move] = await _record(f, rig, total + 4, maxi(1, int(ceil(total / 10.0))), worst, move)
 	_check("%s: pés no chão em todos os quadros no chão" % f.display_name, worst["gap"] < 1.5,
 		"maior diferença %.2f px (%s)" % [worst["gap"], worst["where"]])
+	var seen: Dictionary = worst["seen"]
+	_check("%s: rosto grita no golpe" % f.display_name, seen.has("ftilt:grito"), ", ".join(seen.keys()))
+	_check("%s: rosto pisca de vez em quando" % f.display_name, seen.keys().any(func(k: String) -> bool: return k.ends_with(":piscar")), "")
+	_check("%s: golpe para a frente deixa rastro" % f.display_name, seen.has("ftilt:rastro"), "")
 	_render(rig, rows, out_dir.path_join(file + ".png"))
 
 
@@ -95,6 +100,7 @@ func _reset(f: Fighter) -> void:
 
 ## Guarda o boneco a cada `step` quadros e mede a distância pé-chão.
 func _record(f: Fighter, rig: CutoutRig, frames: int, step: int, worst: Dictionary, tag: String) -> Array:
+	var faces_seen: Dictionary = worst["seen"]
 	var shots := []
 	for i in frames:
 		await get_tree().physics_frame
@@ -108,7 +114,15 @@ func _record(f: Fighter, rig: CutoutRig, frames: int, step: int, worst: Dictiona
 			var parts := {}
 			for name in rig._sprites:
 				parts[name] = (rig._sprites[name] as Sprite2D).transform
-			shots.append({"rig": rig.transform, "parts": parts, "floor": -f.global_position.y})
+			var trail := PackedVector2Array()
+			for q in rig._trail.points:
+				trail.append(q - f.global_position)
+			shots.append({"rig": rig.transform, "parts": parts, "floor": -f.global_position.y,
+				"face": rig.expression, "trail": trail, "width": rig._trail.width})
+		if rig.expression != "":
+			faces_seen[tag + ":" + rig.expression] = true
+		if rig._trail.points.size() > 2:
+			faces_seen[tag + ":rastro"] = true
 	return shots
 
 
@@ -132,8 +146,13 @@ func _render(rig: CutoutRig, rows: Dictionary, path: String) -> void:
 				sheet.fill_rect(Rect2i(clip.position.x, floor_y, CELL.x, 1), Color(1, 1, 1, 0.8))
 			var to_canvas := Transform2D(0.0, Vector2(ZOOM, ZOOM), 0.0, origin) * (shot["rig"] as Transform2D)
 			for name in order:
-				CutoutRigMath.draw_part(sheet, images[name], CutoutRigMath.region_in_crop(rig.rig["partes"][name]),
-					to_canvas * (shot["parts"][name] as Transform2D), clip)
+				var tex: Image = images[name]
+				var region := CutoutRigMath.region_in_crop(rig.rig["partes"][name])
+				if name == "cabeca" and shot["face"] != "":
+					tex = images["rosto:" + shot["face"]]
+					region = Rect2()
+				CutoutRigMath.draw_part(sheet, tex, region, to_canvas * (shot["parts"][name] as Transform2D), clip)
+			_draw_trail(sheet, shot, origin, clip)
 			sheet.fill_rect(Rect2i(clip.position.x, clip.position.y, 1, CELL.y), Color(0.1, 0.1, 0.15))
 			x += 1
 		sheet.fill_rect(Rect2i(0, y * CELL.y, sheet.get_width(), 1), Color(0.1, 0.1, 0.15))
@@ -151,3 +170,16 @@ func _check(name: String, ok: bool, detail: Variant = "") -> void:
 func _frames(n: int) -> void:
 	for i in n:
 		await get_tree().physics_frame
+
+
+## Rastro do golpe: discos que afinam do mais novo para o mais velho.
+func _draw_trail(sheet: Image, shot: Dictionary, origin: Vector2, clip: Rect2i) -> void:
+	var pts: PackedVector2Array = shot["trail"]
+	for i in pts.size():
+		var t := float(i + 1) / pts.size()
+		var c := origin + pts[i] * ZOOM
+		var r := maxf(1.0, float(shot["width"]) * 0.5 * t * ZOOM)
+		for y in range(int(c.y - r), int(c.y + r) + 1):
+			for x in range(int(c.x - r), int(c.x + r) + 1):
+				if clip.has_point(Vector2i(x, y)) and Vector2(x, y).distance_to(c) <= r:
+					sheet.set_pixel(x, y, sheet.get_pixel(x, y).blend(Color(1, 0.95, 0.8, 0.55 * t)))

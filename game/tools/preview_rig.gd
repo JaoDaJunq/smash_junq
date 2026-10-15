@@ -26,7 +26,10 @@ func _initialize() -> void:
 	sheet.fill(BG)
 	for i in poses.size():
 		var offsets: Dictionary = CutoutRig.pose_offsets(rig, poses[i])
-		var xfs := CutoutRigMath.part_transforms(rig, offsets)
+		var variants := {}
+		if rig.has("expressoes"):
+			variants["cabeca"] = rig["expressoes"].values()[0]
+		var xfs := CutoutRigMath.part_transforms(rig, offsets, variants)
 		var hip: Vector2 = Vector2(0, float(rig.get("quadril_y", 0.0)))
 		var fighter_origin := Vector2(i * cell_w + cell_w * 0.5, cell_h * 0.55)
 		var to_canvas := Transform2D(0.0, Vector2(zoom * game_scale, zoom * game_scale), 0.0, fighter_origin + hip * zoom)
@@ -35,7 +38,12 @@ func _initialize() -> void:
 		sheet.fill_rect(Rect2i(i * cell_w, feet_y, cell_w, 2), Color(1, 1, 1, 0.6))
 		_rect_outline(sheet, Rect2i(int(fighter_origin.x - 28 * zoom), int(fighter_origin.y - 55 * zoom), int(56 * zoom), int(110 * zoom)), Color(0.3, 1, 0.5, 0.8))
 		for name in CutoutRigMath.draw_order(rig["partes"]):
-			CutoutRigMath.draw_part(sheet, textures[name], CutoutRigMath.region_in_crop(rig["partes"][name]), to_canvas * xfs[name], Rect2i(i * cell_w, 0, cell_w, cell_h))
+			var tex: Image = textures[name]
+			var region := CutoutRigMath.region_in_crop(rig["partes"][name])
+			if name == "cabeca" and not variants.is_empty():
+				tex = textures["rosto:" + rig["expressoes"].keys()[0]]
+				region = Rect2()
+			CutoutRigMath.draw_part(sheet, tex, region, to_canvas * xfs[name], Rect2i(i * cell_w, 0, cell_w, cell_h))
 		sheet.fill_rect(Rect2i(i * cell_w, 0, 2, cell_h), Color(0.1, 0.1, 0.15))
 	sheet.save_png(out_path)
 	print("OK: ", out_path)

@@ -96,6 +96,7 @@ func _build_fighters() -> void:
 		pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	for pid in IDS:
 		(fighters[pid] as Fighter).hit_taken.connect(_on_fighter_hit.bind(pid))
+	ko_scored.connect(func(scorer: String, _victim: String) -> void: _set_mood(scorer, "vitoria", 1.6))
 
 
 ## Zera o placar e os lutadores e começa a contagem. Usado na entrada e na revanche.
@@ -286,6 +287,8 @@ func end_match(winner: String) -> void:
 			"personagens": Game.last_result["characters"],
 		})
 	hud.show_banner("FIM!", 0.0, Game.PLAYER_COLORS[winner])
+	for pid in IDS:
+		_set_mood(pid, "vitoria" if pid == winner else "dor", 999.0)
 	match_ended.emit(winner)
 	await get_tree().create_timer(results_delay).timeout
 	if phase != Phase.ENDED:
@@ -301,3 +304,12 @@ func result_data(winner: String) -> Dictionary:
 		labels[pid] = Game.player_label(pid)
 		names[pid] = (fighters[pid] as Fighter).display_name
 	return {"winner": winner, "kos": kos.duplicate(), "labels": labels, "characters": names}
+
+
+## Muda o rosto do boneco de um jogador por um tempo (se ele tiver expressões).
+func _set_mood(pid: String, face: String, seconds: float) -> void:
+	if not fighters.has(pid):
+		return
+	var rig := (fighters[pid] as Node).get_node_or_null("Rig") as CutoutRig
+	if rig != null:
+		rig.set_mood(face, seconds)

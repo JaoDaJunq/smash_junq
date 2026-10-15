@@ -21,7 +21,10 @@ extends RefCounted
 ## Calcula, para cada parte, a transformação que leva um pixel do recorte (ou da
 ## região) às coordenadas do boneco (antes da escala e do espelhamento).
 ## offsets: nome -> graus somados à pose neutra (poses e animação).
-static func part_transforms(rig: Dictionary, offsets: Dictionary) -> Dictionary:
+## variants: nome -> outra imagem para a parte (ex.: rosto com expressão), com
+## "origem", "pivo", "ponta" nas coordenadas dela e "escala" relativa. O osso não
+## muda; só a imagem é encaixada no mesmo pivô e na mesma direção.
+static func part_transforms(rig: Dictionary, offsets: Dictionary, variants := {}) -> Dictionary:
 	var parts: Dictionary = rig["partes"]
 	var bone_xf := {}
 	var out := {}
@@ -43,6 +46,13 @@ static func part_transforms(rig: Dictionary, offsets: Dictionary) -> Dictionary:
 			var local := world_rest - p_rest + deg_to_rad(float(offsets.get(name, 0.0)))
 			xf = bone_xf[parent_name] * Transform2D(0.0, attach) * Transform2D(local, Vector2.ZERO)
 		bone_xf[name] = xf
+		if variants.has(name):
+			var v: Dictionary = variants[name]
+			var v_pivot := _v(v["pivo"])
+			var v_dir := (_v(v["ponta"]) - v_pivot).angle()
+			var k := float(v.get("escala", 1.0))
+			out[name] = xf * Transform2D(-v_dir, Vector2(k, k), 0.0, Vector2.ZERO) * Transform2D(0.0, _v(v["origem"]) - v_pivot)
+			continue
 		var top_left := _v(p["origem"])
 		if p.has("regiao"):
 			top_left = Vector2(p["regiao"][0], p["regiao"][1])
@@ -178,6 +188,7 @@ static func draw_part(canvas: Image, tex: Image, region: Rect2, xf: Transform2D,
 
 
 ## Imagens das partes prontas para desenhar sem GPU (com as bolinhas apagadas).
+## Os rostos com expressão entram como "rosto:<nome>".
 static func load_part_images(rig: Dictionary, rig_path: String) -> Dictionary:
 	var dir := rig_path.get_base_dir()
 	var out := {}
@@ -186,6 +197,10 @@ static func load_part_images(rig: Dictionary, rig_path: String) -> Dictionary:
 		var img := Image.load_from_file(ProjectSettings.globalize_path(dir.path_join(p["arquivo"])))
 		img.convert(Image.FORMAT_RGBA8)
 		out[name] = erase_circles(img, p) if p.has("apagar") else img
+	for face in rig.get("expressoes", {}):
+		var fimg := Image.load_from_file(ProjectSettings.globalize_path(dir.path_join(rig["expressoes"][face]["arquivo"])))
+		fimg.convert(Image.FORMAT_RGBA8)
+		out["rosto:" + face] = fimg
 	return out
 
 
