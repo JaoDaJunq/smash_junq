@@ -131,3 +131,9 @@ Me mande as imagens (ou o commit) e eu faço a avaliação técnica: legibilidad
 ## Próximo pacote: material para animação
 
 Juba e Seu Capivas já estão no jogo. Para as animações ficarem fluidas, siga [pedidos/README.md](pedidos/README.md): partes com mais articulações, cabeças, mãos e pés, e referências de movimento quadro a quadro.
+
+---
+
+## Teste atual: pixel art
+
+Os personagens estão sendo refeitos em pixel art, quadro a quadro. Siga [pixel/README.md](pixel/README.md): mensagem de regras, sprite base e depois as animações por lote.

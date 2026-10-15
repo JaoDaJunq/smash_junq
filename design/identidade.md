@@ -9,6 +9,7 @@
 |---|---|
 | Mundo | Fauna brasileira **humanizada**: bichos que andam, falam, se vestem e lutam como gente. Clima de Kung Fu Panda e Zootopia, só como referência de tom, sem copiar nada |
 | Estilo visual | Cartoon 2D vetorial, personagens desenhados em partes e animados por esqueleto |
+| Estilo em teste (15/10/2026) | **Pixel art** quadro a quadro (sprites de 64×64, ampliados 2× no jogo). Pedidos em `art/prompts/pixel/`. Se aprovado, substitui o recorte |
 | Tom | Divertido e caótico: expressões exageradas, humor, cores vivas, partidas com amigos |
 | Abertura para o futuro | Outros direcionamentos (outros mundos ou arenas temáticas) podem entrar depois; a fauna brasileira é o ponto de partida |
 | Torneio | **Torneio de capoeira e várzea**: roda de capoeira, berimbau, arquibancada de bichos e clima de campeonato de bairro |
