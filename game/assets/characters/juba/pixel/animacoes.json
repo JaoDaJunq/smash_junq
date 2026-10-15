@@ -1,8 +1,8 @@
 {
   "aereo_baixo": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "aereo_cima": {
     "quadros": 9,
@@ -10,14 +10,14 @@
     "impacto": 4
   },
   "aereo_frente": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "aereo_neutro": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "aereo_tras": {
     "quadros": 9,
@@ -45,9 +45,9 @@
     "impacto": 6
   },
   "correr": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
+    "quadros": 12,
+    "fator": 2,
+    "impacto": 6
   },
   "defesa_esquiva": {
     "quadros": 6,
@@ -65,9 +65,9 @@
     "impacto": 6
   },
   "especial_cima": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 6
   },
   "especial_lado": {
     "quadros": 11,
@@ -85,19 +85,19 @@
     "impacto": 1
   },
   "golpe_baixo": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "golpe_cima": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "golpe_frente": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "jab": {
     "quadros": 3,

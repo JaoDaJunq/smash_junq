@@ -83,9 +83,7 @@ Quadros:
 
 ### Juba
 
-**No jogo:** intermediários de `parado`, `andar`, `pulo`, `dor`, `aereo_tras`, `aereo_cima`, `especial_neutro`, `especial_lado`, `especial_baixo`, `borda` e `vitoria`, e as 4 transições (virar, arrancar, frear, pousar).
-
-**Refeitas e prontas para importar (15/10/2026):** `correr_meio.png` (6/6 quadros), `golpe_frente_meio.png`, `golpe_cima_meio.png`, `golpe_baixo_meio.png`, `aereo_neutro_meio.png`, `aereo_frente_meio.png`, `aereo_baixo_meio.png` (4/4 cada) e `especial_cima_meio.png` (5/5). As folhas seguem a grade 3x2 de 1536x1024, paleta do Juba e fundo magenta exato; conferidas em quantidade de quadros e tolerância de escala do importador.
+**No jogo:** intermediários de todas as 19 animações da tabela e as 4 transições (virar, arrancar, frear, pousar). As 8 folhas refeitas (corrida completa e golpes, aéreos e especial para cima na escala certa) passaram na conferência de quantidade, escala e visual. Nada pendente.
 
 ### Seu Capivas
 
