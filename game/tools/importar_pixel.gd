@@ -22,6 +22,11 @@ const NATIVE := 64
 const BASELINE := 59
 ## personagem -> animação -> índices dos quadros aproveitáveis (na ordem da grade)
 const SELECAO := {}
+## Intermediários errados (pose que não está entre os vizinhos): personagem ->
+## animação -> índices (0 = entre o 1º e o 2º quadro). Viram cópia do quadro anterior.
+const MEIO_REPETIR := {
+	"seu_capivas": {"dor": [2]},  # veio em pé entre "lançado de costas" e "girando"
+}
 ## Animações em loop (recebem também o intermediário entre o último e o primeiro).
 const LOOPS := ["parado", "andar", "correr", "vitoria", "tonto"]
 ## Folhas com mais de uma animação: folha -> {animação: quadros}.
@@ -75,6 +80,9 @@ func _initialize() -> void:
 				for i in frames.size():
 					mixed.append(frames[i])
 					if i < mids.size():
+						if i in MEIO_REPETIR.get(who, {}).get(anim, []):
+							mixed.append(frames[i].duplicate())
+							continue
 						var fixed := _between(frames[i], frames[(i + 1) % frames.size()], mids[i])
 						worst = worst.max(fixed[1].abs())
 						mixed.append(fixed[0])

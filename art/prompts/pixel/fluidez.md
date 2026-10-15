@@ -106,4 +106,4 @@ O importador agora recusa sozinho folhas incompletas ou fora de escala (a anima�
 
 ### Seu Capivas
 
-**No jogo:** intermediários das 21 animações da tabela (incluindo `tonto`) e as 4 transições (`virar`, `arrancar`, `frear` e `pouso`). As folhas foram importadas e passaram pela validação de quantidade e escala do importador.
+**No jogo:** intermediários de todas as 20 animações da tabela (incluindo `jab` e `tonto`) e as 4 transições (`virar`, `arrancar`, `frear` e `pouso`). Tudo passou na conferência de quantidade e escala. Único ajuste: no `dor`, o intermediário entre "lançado de costas" e "girando" veio com o Capivas em pé; no jogo ele virou repetição do quadro anterior (`MEIO_REPETIR` no importador). Se quiser, dá para pedir só esse quadro de novo.
