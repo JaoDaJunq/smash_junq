@@ -9,6 +9,8 @@ description: Fluxo de arte do Smash Junq (folhas de personagem, poses, partes pa
 
 O criador não quer pagar serviços extras. Ele gera as imagens no ChatGPT da conta dele; o Claude prepara e avalia.
 
+**Pelo Hermes:** quando o pedido chega pelo Hermes, quem gera é o Codex, com a geração de imagens dele (login do ChatGPT, sem custo extra). O pedido do passo 2 vai para o Codex, e não para o criador, com o prompt, a folha aprovada para anexar como referência e o caminho exato de saída. Os passos 4 a 7 continuam iguais.
+
 1. **Ler antes:** `design/identidade.md` (bíblia visual) e `art/prompts/ROTEIRO_CHATGPT.md` (roteiro passo a passo).
 2. **Preparar prompts:** para pedidos novos, escrever prompts no mesmo formato do roteiro (bloco de texto pronto para colar, em português, citando o guia de estilo e pedindo para anexar a folha aprovada), e acrescentar ao roteiro ou a um arquivo em `art/prompts/`.
 3. **Receber imagens:** o criador salva em `art/conceitos/<personagem>/` com o nome indicado (`folha_v1.png`, `poses_v1.png`, `partes_v1.png`, `retrato_v1.png`) e faz commit ou avisa.
