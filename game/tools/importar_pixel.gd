@@ -14,6 +14,8 @@ extends SceneTree
 ##   "quadros", "fator" (2 se intercalada) e "impacto" (quadro do golpe).
 ##   godot --headless --path game --script res://tools/importar_pixel.gd -- <personagem>
 ##
+## Folhas _meio incompletas ou com o personagem fora de escala são recusadas
+## (aviso no console) e a animação fica só com os quadros originais.
 ## Ajustes por folha (quadros a usar, quando a IA errou a grade) ficam em SELECAO.
 
 const NATIVE := 64
@@ -42,33 +44,43 @@ func _initialize() -> void:
 		if old.ends_with(".png"):
 			DirAccess.remove_absolute(dst.path_join(old))
 	var meta := {}
+	var rejected: Array[String] = []
 	for file in DirAccess.get_files_at(src):
 		var anim := file.get_basename()
 		if not file.ends_with(".png") or anim == "base" or anim.ends_with("_meio"):
 			continue
-		var frames := _read(src.path_join(file), SELECAO.get(who, {}).get(anim, []))
+		var frames := _align(_read(src.path_join(file), SELECAO.get(who, {}).get(anim, [])))
 		if DIVIDIR.has(anim):
 			for part in DIVIDIR[anim]:
 				var sub: Array[Image] = []
 				for i in DIVIDIR[anim][part]:
 					if i < frames.size():
 						sub.append(frames[i])
-				_save(dst, part, sub, 1, meta, who)
+				_save(dst, part, _align(sub), 1, meta, who)  # cada parte no próprio chão
 			continue
 		var factor := 1
 		var mid_path := src.path_join(anim + "_meio.png")
 		if FileAccess.file_exists(mid_path):
 			var mids := _read(mid_path, [])
 			var want := frames.size() if anim in LOOPS else frames.size() - 1
+			var scale_off := _scale_drift(frames, mids)
 			if mids.size() != want:
-				push_warning("%s_meio: %d quadros, esperava %d (uso os que couberem)" % [anim, mids.size(), want])
-			var mixed: Array[Image] = []
-			for i in frames.size():
-				mixed.append(frames[i])
-				if i < mids.size() and (i < frames.size() - 1 or anim in LOOPS):
-					mixed.append(mids[i])
-			frames = mixed
-			factor = 2
+				push_warning("%s_meio: %d quadros, esperava %d: folha ignorada até vir completa" % [anim, mids.size(), want])
+			elif scale_off != "":
+				push_warning("%s_meio: personagem fora de escala (%s): folha ignorada, pedir de novo" % [anim, scale_off])
+				rejected.append(anim)
+			else:
+				var mixed: Array[Image] = []
+				var worst := Vector2i.ZERO
+				for i in frames.size():
+					mixed.append(frames[i])
+					if i < mids.size():
+						var fixed := _between(frames[i], frames[(i + 1) % frames.size()], mids[i])
+						worst = worst.max(fixed[1].abs())
+						mixed.append(fixed[0])
+				frames = mixed
+				factor = 2
+				print("%s_meio: intermediários ajustados até %d px na horizontal e %d na vertical" % [anim, worst.x, worst.y])
 		_save(dst, anim, frames, factor, meta, who)
 	var keys := meta.keys()
 	keys.sort()
@@ -80,11 +92,13 @@ func _initialize() -> void:
 		if old.ends_with(".png.import") and not meta.has(old.trim_suffix(".png.import")):
 			DirAccess.remove_absolute(dst.path_join(old))
 	FileAccess.open(dst.path_join("animacoes.json"), FileAccess.WRITE).store_string(JSON.stringify(ordered, "  ", false) + "\n")
+	if not rejected.is_empty():
+		print("RECUSADAS (escala): ", ", ".join(rejected))
 	print("OK: ", dst)
 	quit()
 
 
-## Quadros nativos de uma folha, já alinhados pela linha dos pés.
+## Quadros nativos de uma folha (sem alinhar).
 func _read(path: String, pick: Array) -> Array[Image]:
 	var sheet := Image.load_from_file(path)
 	sheet.convert(Image.FORMAT_RGBA8)
@@ -100,18 +114,48 @@ func _read(path: String, pick: Array) -> Array[Image]:
 		for i in pick:
 			chosen.append(_widest_block(frames[i]))
 		frames = chosen
-	# Alinha a folha inteira pela linha dos pés (mantém pulos e quedas relativos)
+	return frames
+
+
+## Alinha um grupo de quadros pela linha dos pés (o pé mais baixo do grupo na
+## linha 59), mantendo pulos e quedas relativos entre eles.
+func _align(frames: Array[Image]) -> Array[Image]:
 	var lowest := 0
 	for f in frames:
 		lowest = maxi(lowest, _bottom(f))
-	var shift := BASELINE - lowest
 	var out: Array[Image] = []
 	for f in frames:
-		var moved := Image.create(NATIVE, NATIVE, false, Image.FORMAT_RGBA8)
-		moved.blit_rect(f, Rect2i(0, 0, NATIVE, NATIVE), Vector2i(0, shift))
-		out.append(moved)
+		out.append(_moved(f, Vector2i(0, BASELINE - lowest)))
 	return out
 
+
+## Posiciona um quadro intermediário no meio do caminho entre os vizinhos (pelo
+## centro do desenho); se os dois vizinhos estão no chão, ele também fica.
+## Devolve [quadro, deslocamento aplicado].
+func _between(a: Image, b: Image, mid: Image) -> Array:
+	var target := (_centroid(a) + _centroid(b)) * 0.5
+	var mc := _centroid(mid)
+	var d := Vector2i(roundi(target.x - mc.x), roundi(target.y - mc.y))
+	if _bottom(a) == BASELINE and _bottom(b) == BASELINE:
+		d.y = BASELINE - _bottom(mid)
+	return [_moved(mid, d), d]
+
+
+func _moved(f: Image, d: Vector2i) -> Image:
+	var out := Image.create(NATIVE, NATIVE, false, Image.FORMAT_RGBA8)
+	out.blit_rect(f, Rect2i(0, 0, NATIVE, NATIVE), d)
+	return out
+
+
+func _centroid(img: Image) -> Vector2:
+	var sum := Vector2.ZERO
+	var n := 0
+	for y in NATIVE:
+		for x in NATIVE:
+			if img.get_pixel(x, y).a > 0.5:
+				sum += Vector2(x, y)
+				n += 1
+	return sum / maxf(1.0, n)
 
 func _save(dst: String, anim: String, frames: Array[Image], factor: int, meta: Dictionary, who: String) -> void:
 	if frames.is_empty():
@@ -172,3 +216,25 @@ func _bottom(img: Image) -> int:
 			if img.get_pixel(x, y).a > 0.5:
 				return y
 	return 0
+
+
+## Intermediários desenhados em outra escala fazem o personagem "pulsar" de
+## tamanho. Compara a área visível de cada intermediário com a média dos
+## vizinhos; devolve "" se está tudo dentro de -25%..+15%.
+func _scale_drift(frames: Array[Image], mids: Array[Image]) -> String:
+	for i in mini(mids.size(), frames.size()):
+		var a := _area(frames[i])
+		var b := _area(frames[(i + 1) % frames.size()])
+		var r := float(_area(mids[i])) / maxf(1.0, (a + b) * 0.5)
+		if r > 1.15 or r < 0.75:
+			return "intermediário %d com %d%% da área dos vizinhos" % [i + 1, roundi(r * 100.0)]
+	return ""
+
+
+func _area(img: Image) -> int:
+	var n := 0
+	for y in NATIVE:
+		for x in NATIVE:
+			if img.get_pixel(x, y).a > 0.5:
+				n += 1
+	return n
