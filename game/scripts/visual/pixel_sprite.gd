@@ -8,11 +8,19 @@ extends Node2D
 ## em volta dos pés, que continuam no chão. Os golpes seguem os quadros do
 ## moveset: quadros de preparo durante o início, o quadro de impacto nos quadros
 ## ativos e o resto na recuperação.
+##
+## Animações intercaladas (fator 2, com quadros intermediários) funcionam sem
+## mudar nada aqui: os índices "da folha original" passam por _at() e _span().
+## Transições opcionais, usadas quando existem: virar, arrancar, frear, pouso.
 
 const NATIVE := 64
 const BASELINE := 59           # linha dos pés dentro do quadro de 64
 const FEET_Y := Fighter.HEIGHT * 0.5
 const TUMBLE_SPEED := 1100.0
+const TURN_TIME := 0.12
+const DASH_TIME := 0.15
+const BRAKE_TIME := 0.18
+const LAND_TIME := 0.15
 
 ## Golpe do moveset -> animação.
 const ATTACK_ANIM := {
@@ -21,10 +29,6 @@ const ATTACK_ANIM := {
 	"uair": "aereo_cima", "dair": "aereo_baixo",
 	"special_neutral": "especial_neutro", "special_side": "especial_lado",
 	"special_up": "especial_cima", "special_down": "especial_baixo",
-}
-## Quadro de impacto quando a animação foge do padrão (3 quadros -> 1, 5 -> 2, 6 -> 3).
-const IMPACT_OVERRIDE := {
-	"seu_capivas": {"especial_neutro": 4, "especial_lado": 2, "especial_baixo": 2},
 }
 
 @export_dir var folder := ""
@@ -39,6 +43,7 @@ var frame := 0
 var _sprite: Sprite2D
 var _textures := {}
 var _counts := {}
+var _factor := {}
 var _impact := {}
 var _clock := 0.0
 var _anim_time := 0.0
@@ -51,17 +56,27 @@ var _hit_time := 0.0
 var _mood := ""
 var _mood_time := 0.0
 var _last_state := -1
+var _last_facing := 0
+var _turn := 9.0         # tempo desde a última virada no chão
+var _dash := 9.0         # tempo desde a arrancada
+var _brake := 9.0        # tempo desde que parou de correr
+var _land := 9.0         # tempo desde o pouso
 
 
 func _ready() -> void:
 	fighter = get_parent() as Fighter
 	var meta: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(folder.path_join("animacoes.json")))
-	var who := folder.trim_suffix("/").get_base_dir().get_file()
 	for a in meta:
 		_textures[a] = load(folder.path_join(a + ".png"))
-		_counts[a] = int(meta[a])
-		var n := int(meta[a])
-		_impact[a] = IMPACT_OVERRIDE.get(who, {}).get(a, 1 if n <= 3 else (2 if n <= 5 else 3))
+		var m = meta[a]
+		if typeof(m) == TYPE_DICTIONARY:
+			_counts[a] = int(m["quadros"])
+			_factor[a] = int(m.get("fator", 1))
+			_impact[a] = int(m.get("impacto", 0))
+		else:  # formato antigo: só a contagem
+			_counts[a] = int(m)
+			_factor[a] = 1
+			_impact[a] = 1 if int(m) <= 3 else (2 if int(m) <= 5 else 3)
 	_sprite = Sprite2D.new()
 	_sprite.name = "Quadro"
 	_sprite.centered = false
@@ -74,9 +89,12 @@ func _ready() -> void:
 	add_child(_sprite)
 	if fighter != null:
 		fighter.has_art = true
+		_last_facing = fighter.facing
 		fighter.landed.connect(_on_landed)
 		fighter.jumped.connect(_on_jumped)
-		fighter.dashed.connect(func() -> void: _kick(0.06))
+		fighter.dashed.connect(func() -> void:
+			_kick(0.06)
+			_dash = 0.0)
 		fighter.hit_taken.connect(func(_a: Node2D, _d: AttackData, _l: Vector2) -> void:
 			_kick(0.12)
 			_hit_time = 0.0)
@@ -89,22 +107,32 @@ func _process(delta: float) -> void:
 	_anim_time += delta
 	_since_jump += delta
 	_hit_time += delta
+	_turn += delta
+	_dash += delta
+	_brake += delta
+	_land += delta
 	_mood_time = maxf(0.0, _mood_time - delta)
 	_throw = maxf(0.0, _throw - delta)
 	if fighter == null:
 		return
+	var S := Fighter.State
 	if fighter.state != _last_state:
-		if _last_state == Fighter.State.HOLDING and fighter.state not in [Fighter.State.HITSTUN, Fighter.State.HELD]:
+		if _last_state == S.HOLDING and fighter.state not in [S.HITSTUN, S.HELD]:
 			_throw = 0.25
+		if _last_state == S.RUN and fighter.state in [S.IDLE, S.WALK]:
+			_brake = 0.0
 		_last_state = fighter.state
 		_anim_time = 0.0
+	if fighter.facing != _last_facing:
+		_last_facing = fighter.facing
+		if fighter.state in [S.IDLE, S.WALK, S.RUN]:
+			_turn = 0.0
 	var pick := _pick()
 	_show(pick[0], pick[1])
 	_update_squash(delta)
-	var facing := fighter.facing
-	scale = Vector2(pixel_scale * facing * (1.0 + _squash), pixel_scale * (1.0 - _squash))
+	scale = Vector2(pixel_scale * fighter.facing * (1.0 + _squash), pixel_scale * (1.0 - _squash))
 	var c := Color.WHITE
-	if fighter.state == Fighter.State.HITSTUN and int(_clock * 20.0) % 2 == 0:
+	if fighter.state == S.HITSTUN and int(_clock * 20.0) % 2 == 0:
 		c = Color(1.7, 1.7, 1.7)
 	if fighter.invincible_time > 0.0:
 		c.a = 0.45 if int(_clock * 12.0) % 2 == 0 else 0.8
@@ -135,54 +163,88 @@ func _show(a: String, f: int) -> void:
 	_sprite.frame = f
 
 
+## Índice na tira de um quadro da folha original (conta os intermediários).
+func _at(a: String, i: int) -> int:
+	return mini(i * int(_factor.get(a, 1)), int(_counts.get(a, 1)) - 1)
+
+
+## Quadros da folha original de a até b, com os intermediários entre eles.
+func _span(a: String, from: int, to: int) -> Array:
+	return range(_at(a, from), _at(a, to) + 1)
+
+
+## Loop no ritmo da folha original (intercalada toca o dobro de quadros por segundo).
 func _loop(a: String, fps: float, frames: Array = []) -> Array:
 	var list: Array = frames if not frames.is_empty() else range(int(_counts.get(a, 1)))
-	return [a, list[int(_anim_time * fps) % list.size()]]
+	return [a, list[int(_anim_time * fps * float(_factor.get(a, 1))) % list.size()]]
+
+
+## Toca a animação inteira uma vez em `time` segundos, a partir de `elapsed`.
+func _once(a: String, elapsed: float, time: float) -> Array:
+	var n := int(_counts.get(a, 1))
+	return [a, mini(n - 1, int(elapsed / time * n))]
 
 
 # --- Escolha da animação ---
 
 func _pick() -> Array:
 	var S := Fighter.State
+	var grounded := fighter.state in [S.IDLE, S.WALK, S.RUN]
+	if grounded and _turn < TURN_TIME and has_anim("virar"):
+		return _once("virar", _turn, TURN_TIME)
 	match fighter.state:
 		S.IDLE:
 			if _mood == "vitoria" and _mood_time > 0.0 and has_anim("vitoria"):
 				return _loop("vitoria", 8.0)
 			if _throw > 0.0 and has_anim("agarrar"):
-				return ["agarrar", 2]
+				return ["agarrar", _at("agarrar", 2)]
+			if _brake < BRAKE_TIME and has_anim("frear"):
+				return _once("frear", _brake, BRAKE_TIME)
+			if _land < LAND_TIME and has_anim("pouso"):
+				return _once("pouso", _land, LAND_TIME)
 			return _loop("parado", 6.0)
 		S.WALK:
+			if _brake < BRAKE_TIME and has_anim("frear"):
+				return _once("frear", _brake, BRAKE_TIME)
 			var pace := clampf(absf(fighter.velocity.x) / maxf(1.0, fighter.walk_speed), 0.5, 1.3)
-			return [ "andar", int(_clock * 10.0 * pace) % int(_counts.get("andar", 1))]
+			var n := int(_counts.get("andar", 1))
+			return ["andar", int(_clock * 10.0 * pace * float(_factor.get("andar", 1))) % n]
 		S.RUN:
-			return ["correr", int(_clock * 13.0) % int(_counts.get("correr", 1))]
+			if _dash < DASH_TIME and has_anim("arrancar"):
+				return _once("arrancar", _dash, DASH_TIME)
+			var n := int(_counts.get("correr", 1))
+			return ["correr", int(_clock * 13.0 * float(_factor.get("correr", 1))) % n]
 		S.AIR, S.RESPAWN:
 			return _air()
 		S.LAG:
-			return ["pulo", 5]
+			if has_anim("pouso"):
+				return _once("pouso", _land, LAND_TIME)
+			return ["pulo", _at("pulo", 5)]
 		S.ATTACK:
 			return _attack()
 		S.HITSTUN, S.HELD:
-			var n := int(_counts.get("dor", 1))
+			var n0 := (int(_counts.get("dor", 1)) + int(_factor.get("dor", 1)) - 1) / int(_factor.get("dor", 1))
 			var tumbling := fighter.state == S.HITSTUN and not fighter.is_on_floor() and fighter.velocity.length() > TUMBLE_SPEED
 			if tumbling:
-				return _loop("dor", 10.0, [n - 2, n - 1] if n >= 4 else [n - 1])
-			return ["dor", 0 if _hit_time < 0.12 or n < 4 else 1]
+				return _loop("dor", 10.0, _span("dor", n0 - 2, n0 - 1) if n0 >= 4 else [_at("dor", n0 - 1)])
+			var hit: Array = _span("dor", 0, 1) if n0 >= 4 else [0]
+			return ["dor", hit[mini(hit.size() - 1, int(_hit_time / 0.15 * hit.size()))]]
 		S.LEDGE:
-			return _loop("borda", 3.0, [0, 1])
+			return _loop("borda", 3.0, _span("borda", 0, 1))
 		S.SHIELD:
-			return _loop("defesa_esquiva", 8.0, [0, 1])
+			return _loop("defesa_esquiva", 8.0, _span("defesa_esquiva", 0, 1))
 		S.SHIELD_BREAK:
 			if has_anim("tonto"):
 				return _loop("tonto", 6.0)
-			return _loop("tonto_pulo_duplo", 5.0, [0, 1])
+			return _loop("tonto_pulo_duplo", 5.0, _span("tonto_pulo_duplo", 0, 1))
 		S.DODGE:
 			var t := clampf(_anim_time / (fighter.roll_frames / 60.0), 0.0, 0.999)
-			return ["defesa_esquiva", 2 + int(t * 4.0)]
+			var roll := _span("defesa_esquiva", 2, 5)
+			return ["defesa_esquiva", roll[int(t * roll.size())]]
 		S.GRAB:
 			return ["agarrar", 0]
 		S.HOLDING:
-			return ["agarrar", 1]
+			return ["agarrar", _at("agarrar", 1)]
 	return _loop("parado", 6.0)
 
 
@@ -191,18 +253,17 @@ func _air() -> Array:
 	if _flip >= 0.0:
 		_flip += get_process_delta_time() / 0.3
 		if _flip < 1.0 and has_anim("tonto_pulo_duplo"):
-			return ["tonto_pulo_duplo", 2 + int(_flip * 4.0)]
+			var spin := _span("tonto_pulo_duplo", 2, 5)
+			return ["tonto_pulo_duplo", spin[int(_flip * spin.size())]]
 		_flip = -1.0
 	if fighter.state == Fighter.State.RESPAWN:
-		return ["pulo", 3]
-	var vy := fighter.velocity.y
+		return ["pulo", _at("pulo", 3)]
 	if _since_jump < 0.08:
-		return ["pulo", 1]
-	if vy < -250.0:
-		return ["pulo", 2]
-	if vy < 150.0:
-		return ["pulo", 3]
-	return ["pulo", 4]
+		return ["pulo", _at("pulo", 1)]
+	# Subida, topo e queda escolhidos pela velocidade vertical (passa pelos intermediários)
+	var arc := _span("pulo", 2, 4)
+	var t := clampf(inverse_lerp(-600.0, 500.0, fighter.velocity.y), 0.0, 0.999)
+	return ["pulo", arc[int(t * arc.size())]]
 
 
 ## Golpe: quadros de preparo ao longo do início, o de impacto nos ativos e os
@@ -237,6 +298,7 @@ func _update_squash(delta: float) -> void:
 
 func _on_landed(fall_speed: float) -> void:
 	_flip = -1.0
+	_land = 0.0
 	_kick(0.05 + 0.1 * clampf(fall_speed / 900.0, 0.0, 1.0))
 
 

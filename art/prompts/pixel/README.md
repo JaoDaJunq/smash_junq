@@ -33,6 +33,8 @@ No jogo, o sprite aparece **ampliado 2×** (64 px viram 128), do tamanho atual d
 
 Arquivos dos personagens: [juba.md](juba.md) · [seu_capivas.md](seu_capivas.md)
 
+**Próximo passo (mais fluidez):** [fluidez.md](fluidez.md): quadros intermediários para as animações que já existem e as transições (virar, arrancar, frear e pousar).
+
 ## Mensagem de regras (a primeira de cada conversa)
 
 ```text

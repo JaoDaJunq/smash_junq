@@ -4,9 +4,14 @@ extends SceneTree
 ##   64x64 ampliados 8x, fundo magenta);
 ## - reduz para o tamanho nativo (1 pixel por bloco de 8x8), troca o magenta por
 ##   transparente, descarta células vazias;
-## - alinha a folha pela linha dos pés (pé mais baixo na linha 59);
+## - alinha cada folha pela linha dos pés (pé mais baixo na linha 59);
+## - <animacao>_meio.png (quadros intermediários) é intercalado com a folha
+##   principal: 1, 1½, 2, 2½... Em animações em loop há também o quadro entre o
+##   último e o primeiro;
+## - folhas com várias animações (DIVIDIR) viram uma tira para cada uma;
 ## - grava uma tira por animação em game/assets/characters/<personagem>/pixel/
-##   (<animacao>.png, quadros lado a lado) e um animacoes.json com a contagem.
+##   (<animacao>.png, quadros lado a lado) e animacoes.json com, por animação,
+##   "quadros", "fator" (2 se intercalada) e "impacto" (quadro do golpe).
 ##   godot --headless --path game --script res://tools/importar_pixel.gd -- <personagem>
 ##
 ## Ajustes por folha (quadros a usar, quando a IA errou a grade) ficam em SELECAO.
@@ -15,6 +20,17 @@ const NATIVE := 64
 const BASELINE := 59
 ## personagem -> animação -> índices dos quadros aproveitáveis (na ordem da grade)
 const SELECAO := {}
+## Animações em loop (recebem também o intermediário entre o último e o primeiro).
+const LOOPS := ["parado", "andar", "correr", "vitoria", "tonto"]
+## Folhas com mais de uma animação: folha -> {animação: quadros}.
+const DIVIDIR := {
+	"transicoes_a": {"virar": [0, 1, 2], "arrancar": [3, 4, 5]},
+	"transicoes_b": {"frear": [0, 1, 2], "pouso": [3, 4, 5]},
+}
+## Quadro de impacto (na folha principal) quando foge do padrão 3->1, 5->2, 6->3.
+const IMPACTO := {
+	"seu_capivas": {"especial_neutro": 4, "especial_lado": 2, "especial_baixo": 2},
+}
 
 
 func _initialize() -> void:
@@ -22,45 +38,92 @@ func _initialize() -> void:
 	var src := ProjectSettings.globalize_path("res://").path_join("../art/pixel").path_join(who)
 	var dst := ProjectSettings.globalize_path("res://assets/characters").path_join(who).path_join("pixel")
 	DirAccess.make_dir_recursive_absolute(dst)
+	for old in DirAccess.get_files_at(dst):
+		if old.ends_with(".png"):
+			DirAccess.remove_absolute(dst.path_join(old))
 	var meta := {}
 	for file in DirAccess.get_files_at(src):
-		if not file.ends_with(".png") or file == "base.png":
-			continue
 		var anim := file.get_basename()
-		var sheet := Image.load_from_file(src.path_join(file))
-		sheet.convert(Image.FORMAT_RGBA8)
-		var scale := sheet.get_width() / (NATIVE * 3)
-		var frames: Array[Image] = []
-		for r in sheet.get_height() / (NATIVE * scale):
-			for c in 3:
-				var f := _cell(sheet, c, r, scale)
-				if f != null:
-					frames.append(f)
-		var pick: Array = SELECAO.get(who, {}).get(anim, [])
-		if not pick.is_empty():
-			var chosen: Array[Image] = []
-			for i in pick:
-				chosen.append(_widest_block(frames[i]))
-			frames = chosen
-		# Alinha a folha inteira pela linha dos pés (mantém pulos e quedas relativos)
-		var lowest := 0
-		for f in frames:
-			lowest = maxi(lowest, _bottom(f))
-		var shift := BASELINE - lowest
-		var strip := Image.create(NATIVE * frames.size(), NATIVE, false, Image.FORMAT_RGBA8)
-		for i in frames.size():
-			strip.blit_rect(frames[i], Rect2i(0, 0, NATIVE, NATIVE), Vector2i(i * NATIVE, shift))
-		strip.save_png(dst.path_join(anim + ".png"))
-		meta[anim] = frames.size()
-		print("%s: %d quadros (pés deslocados %d px)" % [anim, frames.size(), shift])
+		if not file.ends_with(".png") or anim == "base" or anim.ends_with("_meio"):
+			continue
+		var frames := _read(src.path_join(file), SELECAO.get(who, {}).get(anim, []))
+		if DIVIDIR.has(anim):
+			for part in DIVIDIR[anim]:
+				var sub: Array[Image] = []
+				for i in DIVIDIR[anim][part]:
+					if i < frames.size():
+						sub.append(frames[i])
+				_save(dst, part, sub, 1, meta, who)
+			continue
+		var factor := 1
+		var mid_path := src.path_join(anim + "_meio.png")
+		if FileAccess.file_exists(mid_path):
+			var mids := _read(mid_path, [])
+			var want := frames.size() if anim in LOOPS else frames.size() - 1
+			if mids.size() != want:
+				push_warning("%s_meio: %d quadros, esperava %d (uso os que couberem)" % [anim, mids.size(), want])
+			var mixed: Array[Image] = []
+			for i in frames.size():
+				mixed.append(frames[i])
+				if i < mids.size() and (i < frames.size() - 1 or anim in LOOPS):
+					mixed.append(mids[i])
+			frames = mixed
+			factor = 2
+		_save(dst, anim, frames, factor, meta, who)
 	var keys := meta.keys()
 	keys.sort()
 	var ordered := {}
 	for k in keys:
 		ordered[k] = meta[k]
+	# .import de tiras que não existem mais
+	for old in DirAccess.get_files_at(dst):
+		if old.ends_with(".png.import") and not meta.has(old.trim_suffix(".png.import")):
+			DirAccess.remove_absolute(dst.path_join(old))
 	FileAccess.open(dst.path_join("animacoes.json"), FileAccess.WRITE).store_string(JSON.stringify(ordered, "  ", false) + "\n")
 	print("OK: ", dst)
 	quit()
+
+
+## Quadros nativos de uma folha, já alinhados pela linha dos pés.
+func _read(path: String, pick: Array) -> Array[Image]:
+	var sheet := Image.load_from_file(path)
+	sheet.convert(Image.FORMAT_RGBA8)
+	var scale := sheet.get_width() / (NATIVE * 3)
+	var frames: Array[Image] = []
+	for r in sheet.get_height() / (NATIVE * scale):
+		for c in 3:
+			var f := _cell(sheet, c, r, scale)
+			if f != null:
+				frames.append(f)
+	if not pick.is_empty():
+		var chosen: Array[Image] = []
+		for i in pick:
+			chosen.append(_widest_block(frames[i]))
+		frames = chosen
+	# Alinha a folha inteira pela linha dos pés (mantém pulos e quedas relativos)
+	var lowest := 0
+	for f in frames:
+		lowest = maxi(lowest, _bottom(f))
+	var shift := BASELINE - lowest
+	var out: Array[Image] = []
+	for f in frames:
+		var moved := Image.create(NATIVE, NATIVE, false, Image.FORMAT_RGBA8)
+		moved.blit_rect(f, Rect2i(0, 0, NATIVE, NATIVE), Vector2i(0, shift))
+		out.append(moved)
+	return out
+
+
+func _save(dst: String, anim: String, frames: Array[Image], factor: int, meta: Dictionary, who: String) -> void:
+	if frames.is_empty():
+		return
+	var strip := Image.create(NATIVE * frames.size(), NATIVE, false, Image.FORMAT_RGBA8)
+	for i in frames.size():
+		strip.blit_rect(frames[i], Rect2i(0, 0, NATIVE, NATIVE), Vector2i(i * NATIVE, 0))
+	strip.save_png(dst.path_join(anim + ".png"))
+	var n0 := frames.size() if factor == 1 else (frames.size() + 1) / 2
+	var impact: int = IMPACTO.get(who, {}).get(anim, 1 if n0 <= 3 else (2 if n0 <= 5 else 3))
+	meta[anim] = {"quadros": frames.size(), "fator": factor, "impacto": impact * factor}
+	print("%s: %d quadros%s" % [anim, frames.size(), " (intercalada)" if factor == 2 else ""])
 
 
 ## Folha fora da grade: fica só com o maior bloco de colunas ocupadas do quadro

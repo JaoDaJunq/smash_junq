@@ -1,25 +1,117 @@
 {
-  "aereo_baixo": 5,
-  "aereo_cima": 5,
-  "aereo_frente": 5,
-  "aereo_neutro": 5,
-  "aereo_tras": 5,
-  "agarrar": 6,
-  "andar": 6,
-  "borda": 6,
-  "correr": 6,
-  "defesa_esquiva": 6,
-  "dor": 4,
-  "especial_baixo": 6,
-  "especial_cima": 6,
-  "especial_lado": 6,
-  "especial_neutro": 6,
-  "golpe_baixo": 5,
-  "golpe_cima": 5,
-  "golpe_frente": 5,
-  "jab": 3,
-  "parado": 4,
-  "pulo": 6,
-  "tonto_pulo_duplo": 6,
-  "vitoria": 6
+  "aereo_baixo": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "aereo_cima": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "aereo_frente": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "aereo_neutro": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "aereo_tras": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "agarrar": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "andar": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "borda": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "correr": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "defesa_esquiva": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "dor": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "especial_baixo": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "especial_cima": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "especial_lado": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "especial_neutro": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "golpe_baixo": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "golpe_cima": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "golpe_frente": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "jab": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
+  },
+  "parado": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "pulo": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "tonto_pulo_duplo": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "vitoria": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  }
 }
