@@ -85,24 +85,7 @@ Quadros:
 
 **No jogo:** intermediários de `parado`, `andar`, `pulo`, `dor`, `aereo_tras`, `aereo_cima`, `especial_neutro`, `especial_lado`, `especial_baixo`, `borda` e `vitoria`, e as 4 transições (virar, arrancar, frear, pousar).
 
-**Pedir de novo:**
-
-| Arquivo | Problema |
-|---|---|
-| `correr_meio.png` | Veio com 4 quadros; precisa de **6** (é loop) |
-| `golpe_frente_meio.png`, `golpe_cima_meio.png`, `golpe_baixo_meio.png` | Juba desenhado **maior** que nos quadros originais (até 49% a mais) |
-| `aereo_neutro_meio.png`, `aereo_frente_meio.png`, `aereo_baixo_meio.png` | Juba **maior** que nos originais (18% a 26% a mais) |
-| `especial_cima_meio.png` | Juba **maior** que nos originais (35% a mais) |
-
-Mensagem para os de escala (anexe o sprite base e a folha original da animação):
-
-```text
-Refaça os quadros intermediários da folha "<ANIMACAO>" anexada. O problema da versão anterior: o Juba ficou MAIOR que nos quadros originais.
-Os intermediários têm que ter EXATAMENTE o mesmo tamanho dos quadros da folha anexada: a cabeça, a juba e o corpo com a mesma quantidade de pixels, como se fossem desenhados por cima de uma cópia do quadro anterior e só a pose mudasse.
-<QTD> quadros, em ordem, um por célula (entre o 1 e o 2, entre o 2 e o 3...). Mesmas regras: grade 3x2 de 1536x1024, quadros de 64x64 ampliados 8x, fundo magenta #FF00FF, perfil para a direita, pés na mesma linha da folha anexada.
-```
-
-O importador agora recusa sozinho folhas incompletas ou fora de escala (a animação continua com os quadros originais), então dá para mandar sem medo.
+**Refeitas e prontas para importar (15/10/2026):** `correr_meio.png` (6/6 quadros), `golpe_frente_meio.png`, `golpe_cima_meio.png`, `golpe_baixo_meio.png`, `aereo_neutro_meio.png`, `aereo_frente_meio.png`, `aereo_baixo_meio.png` (4/4 cada) e `especial_cima_meio.png` (5/5). As folhas seguem a grade 3x2 de 1536x1024, paleta do Juba e fundo magenta exato; conferidas em quantidade de quadros e tolerância de escala do importador.
 
 ### Seu Capivas
 
