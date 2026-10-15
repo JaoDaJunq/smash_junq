@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yxq2l1h2sjdn"
-path="res://.godot/imported/parte_01.png-9803414ae10139fa6e92c42cf70397c4.ctex"
+uid="uid://036yuiabp1fx"
+path="res://.godot/imported/mao.png-e539940bf2e551239d1a3df00c58e431.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/seu_capivas/parte_01.png"
-dest_files=["res://.godot/imported/parte_01.png-9803414ae10139fa6e92c42cf70397c4.ctex"]
+source_file="res://assets/characters/seu_capivas/mao.png"
+dest_files=["res://.godot/imported/mao.png-e539940bf2e551239d1a3df00c58e431.ctex"]
 
 [params]
 

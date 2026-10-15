@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmnms5s4i87kb"
-path="res://.godot/imported/parte_00.png-c871fbac32bfa9be681b754833177738.ctex"
+uid="uid://cblmafm8utsv8"
+path="res://.godot/imported/toalha_dobra.png-405bf7ea723d6890b2dcb8708832e4d1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/seu_capivas/parte_00.png"
-dest_files=["res://.godot/imported/parte_00.png-c871fbac32bfa9be681b754833177738.ctex"]
+source_file="res://assets/characters/seu_capivas/toalha_dobra.png"
+dest_files=["res://.godot/imported/toalha_dobra.png-405bf7ea723d6890b2dcb8708832e4d1.ctex"]
 
 [params]
 

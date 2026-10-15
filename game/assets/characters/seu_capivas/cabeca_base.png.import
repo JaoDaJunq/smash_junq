@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcnk42larrlp5"
-path="res://.godot/imported/parte_04.png-603a54144ef177c0ce11772a0cbb4169.ctex"
+uid="uid://cudxs6idit32y"
+path="res://.godot/imported/cabeca_base.png-6fbf82f3aaeabd3daffaf308295e8db6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/seu_capivas/parte_04.png"
-dest_files=["res://.godot/imported/parte_04.png-603a54144ef177c0ce11772a0cbb4169.ctex"]
+source_file="res://assets/characters/seu_capivas/cabeca_base.png"
+dest_files=["res://.godot/imported/cabeca_base.png-6fbf82f3aaeabd3daffaf308295e8db6.ctex"]
 
 [params]
 

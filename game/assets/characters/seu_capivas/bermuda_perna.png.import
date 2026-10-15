@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfrpwj4sg3jby"
-path="res://.godot/imported/parte_07.png-ed7118cdad3545d18a771eefc4819e99.ctex"
+uid="uid://ddki0pxmfp1fi"
+path="res://.godot/imported/bermuda_perna.png-c4e2bb922de9fbc39f3b14f267a48c2b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/seu_capivas/parte_07.png"
-dest_files=["res://.godot/imported/parte_07.png-ed7118cdad3545d18a771eefc4819e99.ctex"]
+source_file="res://assets/characters/seu_capivas/bermuda_perna.png"
+dest_files=["res://.godot/imported/bermuda_perna.png-c4e2bb922de9fbc39f3b14f267a48c2b.ctex"]
 
 [params]
 

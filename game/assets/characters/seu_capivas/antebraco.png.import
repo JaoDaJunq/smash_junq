@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bfglikqfkaxxx"
-path="res://.godot/imported/parte_08.png-1181d60c8af3c97bfa34dd880d1cf212.ctex"
+uid="uid://dvscvkbvb0fyk"
+path="res://.godot/imported/antebraco.png-6e2c1c6a944a550079f78685f4991d69.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/seu_capivas/parte_08.png"
-dest_files=["res://.godot/imported/parte_08.png-1181d60c8af3c97bfa34dd880d1cf212.ctex"]
+source_file="res://assets/characters/seu_capivas/antebraco.png"
+dest_files=["res://.godot/imported/antebraco.png-6e2c1c6a944a550079f78685f4991d69.ctex"]
 
 [params]
 

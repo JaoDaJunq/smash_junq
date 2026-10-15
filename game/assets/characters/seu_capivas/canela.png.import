@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dj5lbiyj8ef4q"
-path="res://.godot/imported/parte_02.png-51d50bb6d5d6433eb56ac3fd736616d0.ctex"
+uid="uid://dojua4enbgvrs"
+path="res://.godot/imported/canela.png-4afe85a24e147f31f7fe274dcd14f858.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/seu_capivas/parte_02.png"
-dest_files=["res://.godot/imported/parte_02.png-51d50bb6d5d6433eb56ac3fd736616d0.ctex"]
+source_file="res://assets/characters/seu_capivas/canela.png"
+dest_files=["res://.godot/imported/canela.png-4afe85a24e147f31f7fe274dcd14f858.ctex"]
 
 [params]
 

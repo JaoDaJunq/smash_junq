@@ -1,25 +1,30 @@
 {
   "nome": "Seu Capivas",
-  "fonte": "art/conceitos/seu_capivas/partes_v1.png",
-  "escala": 0.12,
-  "quadril_y": 16.0,
+  "fonte": "art/conceitos/seu_capivas/partes_v2.png",
+  "escala": 0.105,
+  "quadril_y": 10.0,
   "passada": 0.75,
   "pouso": 26.0,
   "cor_rastro": [0.75,0.95,1.0],
-  "secundarios": {"toalha":{"ganho":10.0,"max":12.0,"balanço":1.5},"cauda":{"ganho":20.0,"max":20.0}},
+  "secundarios": {"toalha_ponta":{"ganho":14.0,"max":14.0,"balanço":2.0},"cauda":{"ganho":20.0,"max":20.0}},
   "partes": {
-    "tronco": {"arquivo":"parte_01.png","origem":[528.0,63.0],"pivo":[760.0,470.0],"ponta":[735.0,90.0],"pai":null,"repouso":-92.0,"z":0.0,"apagar":[[625.0,160.0,30.0]]},
-    "cabeca": {"arquivo":"parte_00.png","origem":[98.0,30.0],"pivo":[290.0,365.0],"ponta":[255.0,110.0],"pai":"tronco","encaixe":[755.0,195.0],"repouso":-98.0,"z":2.0},
-    "toalha": {"arquivo":"parte_02.png","origem":[1084.0,99.0],"pivo":[1180.0,120.0],"ponta":[1260.0,340.0],"pai":"tronco","encaixe":[700.0,120.0],"repouso":75.0,"z":5.0,"apagar":[[1112.0,192.0,24.0]]},
-    "cauda": {"arquivo":"parte_04.png","origem":[1357.0,356.0],"pivo":[1385.0,375.0],"ponta":[1430.0,465.0],"pai":"tronco","encaixe":[565.0,430.0],"repouso":120.0,"z":-7.0},
-    "braco_tras": {"arquivo":"parte_07.png","origem":[874.0,514.0],"pivo":[1065.0,560.0],"ponta":[930.0,710.0],"pai":"tronco","encaixe":[640.0,165.0],"repouso":100.0,"z":-5.0,"apagar":[[1065.0,560.0,30.0]]},
-    "antebraco_tras": {"arquivo":"parte_08.png","origem":[1166.0,523.0],"pivo":[1205.0,570.0],"ponta":[1360.0,660.0],"pai":"braco_tras","encaixe":[930.0,710.0],"repouso":85.0,"z":-6.0,"apagar":[[1203.0,570.0,28.0]]},
-    "coxa_tras": {"arquivo":"parte_11.png","origem":[848.0,746.0],"pivo":[990.0,790.0],"ponta":[950.0,945.0],"pai":"tronco","encaixe":[700.0,425.0],"repouso":90.0,"z":-3.0},
-    "canela_tras": {"apagar":[[1265.0,795.0,26.0]],"arquivo":"parte_12.png","origem":[1188.0,769.0],"pivo":[1265.0,795.0],"ponta":[1265.0,930.0],"pai":"coxa_tras","encaixe":[950.0,940.0],"repouso":90.0,"z":-4.0},
-    "coxa_frente": {"arquivo":"parte_09.png","origem":[123.0,753.0],"pivo":[255.0,790.0],"ponta":[230.0,945.0],"pai":"tronco","encaixe":[800.0,425.0],"repouso":90.0,"z":-1.0},
-    "canela_frente": {"apagar":[[560.0,795.0,26.0]],"arquivo":"parte_10.png","origem":[476.0,760.0],"pivo":[560.0,795.0],"ponta":[560.0,930.0],"pai":"coxa_frente","encaixe":[230.0,940.0],"repouso":90.0,"z":-2.0},
-    "braco_frente": {"arquivo":"parte_05.png","origem":[131.0,498.0],"pivo":[345.0,555.0],"ponta":[210.0,712.0],"pai":"tronco","encaixe":[830.0,170.0],"repouso":95.0,"z":4.0,"apagar":[[345.0,555.0,30.0]]},
-    "antebraco_frente": {"arquivo":"parte_06.png","origem":[424.0,539.0],"pivo":[462.0,585.0],"ponta":[630.0,670.0],"pai":"braco_frente","encaixe":[210.0,712.0],"repouso":80.0,"z":3.0,"apagar":[[458.0,585.0,28.0]]}
+    "tronco": {"arquivo":"tronco.png","origem":[63.0,49.0],"pivo":[370.0,540.0],"ponta":[470.0,90.0],"pai":null,"z":0.0,"repouso":-77.5},
+    "cabeca": {"arquivo":"cabeca_base.png","origem":[98.0,30.0],"pivo":[290.0,365.0],"ponta":[255.0,110.0],"pai":"tronco","encaixe":[480.0,150.0],"repouso":-98.0,"z":2.0},
+    "cauda": {"arquivo":"cauda.png","origem":[1158.0,819.0],"pivo":[1250.0,845.0],"ponta":[1190.0,940.0],"pai":"tronco","encaixe":[95.0,470.0],"z":-13.0,"repouso":122.3},
+    "braco_tras": {"arquivo":"braco.png","origem":[719.0,99.0],"pivo":[845.0,175.0],"ponta":[940.0,510.0],"pai":"tronco","encaixe":[300.0,140.0],"z":-12.0,"repouso":74.2},
+    "antebraco_tras": {"arquivo":"antebraco.png","origem":[1034.0,170.0],"pivo":[1120.0,220.0],"ponta":[1170.0,505.0],"pai":"braco_tras","encaixe":[920.0,420.0],"z":-11.0,"repouso":80.0},
+    "mao_tras": {"arquivo":"mao.png","origem":[1291.0,300.0],"pivo":[1340.0,340.0],"ponta":[1420.0,470.0],"pai":"antebraco_tras","encaixe":[1160.0,430.0],"z":-10.0,"repouso":58.4},
+    "coxa_tras": {"arquivo":"bermuda_perna.png","origem":[99.0,637.0],"pivo":[235.0,680.0],"ponta":[245.0,860.0],"pai":"tronco","encaixe":[330.0,455.0],"z":-6.0,"repouso":86.8},
+    "canela_tras": {"arquivo":"canela.png","origem":[438.0,670.0],"pivo":[535.0,710.0],"ponta":[555.0,935.0],"pai":"coxa_tras","encaixe":[240.0,830.0],"z":-8.0,"repouso":84.9},
+    "pe_tras": {"arquivo":"pe.png","origem":[720.0,795.0],"pivo":[835.0,830.0],"ponta":[990.0,900.0],"pai":"canela_tras","encaixe":[550.0,930.0],"z":-7.0,"repouso":24.3},
+    "coxa_frente": {"arquivo":"bermuda_perna.png","origem":[99.0,637.0],"pivo":[235.0,680.0],"ponta":[245.0,860.0],"pai":"tronco","encaixe":[445.0,470.0],"z":-2.0,"repouso":86.8},
+    "canela_frente": {"arquivo":"canela.png","origem":[438.0,670.0],"pivo":[535.0,710.0],"ponta":[555.0,935.0],"pai":"coxa_frente","encaixe":[240.0,830.0],"z":-4.0,"repouso":84.9},
+    "pe_frente": {"arquivo":"pe.png","origem":[720.0,795.0],"pivo":[835.0,830.0],"ponta":[990.0,900.0],"pai":"canela_frente","encaixe":[550.0,930.0],"z":-3.0,"repouso":24.3},
+    "braco_frente": {"arquivo":"braco.png","origem":[719.0,99.0],"pivo":[845.0,175.0],"ponta":[940.0,510.0],"pai":"tronco","encaixe":[350.0,140.0],"z":4.0,"repouso":74.2},
+    "antebraco_frente": {"arquivo":"antebraco.png","origem":[1034.0,170.0],"pivo":[1120.0,220.0],"ponta":[1170.0,505.0],"pai":"braco_frente","encaixe":[920.0,420.0],"z":5.0,"repouso":80.0},
+    "mao_frente": {"arquivo":"mao.png","origem":[1291.0,300.0],"pivo":[1340.0,340.0],"ponta":[1420.0,470.0],"pai":"antebraco_frente","encaixe":[1160.0,430.0],"z":6.0,"repouso":58.4},
+    "toalha": {"arquivo":"toalha_dobra.png","origem":[980.0,544.0],"pivo":[1135.0,575.0],"ponta":[1135.0,760.0],"pai":"tronco","encaixe":[320.0,110.0],"z":8.0,"repouso":90.0},
+    "toalha_ponta": {"arquivo":"toalha_ponta.png","origem":[1344.0,544.0],"pivo":[1395.0,565.0],"ponta":[1420.0,850.0],"pai":"toalha","encaixe":[1265.0,760.0],"z":7.0,"repouso":85.0}
   },
   "poses": {
     "parado": {"braco_frente":-10.0,"antebraco_frente":-20.0,"braco_tras":10.0,"coxa_frente":-6.0,"coxa_tras":6.0},
@@ -46,13 +51,15 @@
     "special_down": {"preparo":{"coxa_frente":-20.0,"coxa_tras":-20.0},"golpe":{"coxa_frente":-80.0,"canela_frente":80.0,"coxa_tras":-80.0,"canela_tras":80.0,"_sobe":15.0}}
   },
   "expressoes": {
-    "neutro": {"arquivo":"rosto_00.png","origem":[0,0],"pivo":[250.4,353.3],"ponta":[214.4,91.1],"escala":0.9724},
-    "piscar": {"arquivo":"rosto_01.png","origem":[0,0],"pivo":[246.9,349.8],"ponta":[210.9,87.6],"escala":0.9724},
-    "bravo": {"arquivo":"rosto_02.png","origem":[0,0],"pivo":[239.8,356.8],"ponta":[203.8,94.6],"escala":0.9724},
-    "grito": {"arquivo":"rosto_03.png","origem":[0,0],"pivo":[250.4,353.3],"ponta":[214.4,91.1],"escala":0.9724},
-    "dor": {"arquivo":"rosto_04.png","origem":[0,0],"pivo":[250.4,363.9],"ponta":[214.4,101.7],"escala":0.9724},
-    "nocaute": {"arquivo":"rosto_05.png","origem":[0,0],"pivo":[239.8,349.8],"ponta":[203.8,87.6],"escala":0.9724},
-    "susto": {"arquivo":"rosto_06.png","origem":[0,0],"pivo":[231.6,353.3],"ponta":[195.6,91.1],"escala":0.9724},
-    "vitoria": {"arquivo":"rosto_07.png","origem":[0,0],"pivo":[225.7,346.3],"ponta":[189.7,84.0],"escala":0.9724}
-  }
+    "neutro": {"arquivo":"rosto_00.png","origem":[0.0,0.0],"pivo":[250.4,353.3],"ponta":[214.4,91.1],"escala":0.9724},
+    "piscar": {"arquivo":"rosto_01.png","origem":[0.0,0.0],"pivo":[246.9,349.8],"ponta":[210.9,87.6],"escala":0.9724},
+    "bravo": {"arquivo":"rosto_02.png","origem":[0.0,0.0],"pivo":[239.8,356.8],"ponta":[203.8,94.6],"escala":0.9724},
+    "grito": {"arquivo":"rosto_03.png","origem":[0.0,0.0],"pivo":[250.4,353.3],"ponta":[214.4,91.1],"escala":0.9724},
+    "dor": {"arquivo":"rosto_04.png","origem":[0.0,0.0],"pivo":[250.4,363.9],"ponta":[214.4,101.7],"escala":0.9724},
+    "nocaute": {"arquivo":"rosto_05.png","origem":[0.0,0.0],"pivo":[239.8,349.8],"ponta":[203.8,87.6],"escala":0.9724},
+    "susto": {"arquivo":"rosto_06.png","origem":[0.0,0.0],"pivo":[231.6,353.3],"ponta":[195.6,91.1],"escala":0.9724},
+    "vitoria": {"arquivo":"rosto_07.png","origem":[0.0,0.0],"pivo":[225.7,346.3],"ponta":[189.7,84.0],"escala":0.9724}
+  },
+  "contato": ["pe_frente","pe_tras"],
+  "escurecer_tras": 0.8
 }

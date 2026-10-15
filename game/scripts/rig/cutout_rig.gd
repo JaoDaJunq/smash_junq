@@ -22,7 +22,8 @@ extends Node2D
 ##   coxa_frente, canela_frente, coxa_tras, canela_tras, cauda (+ extras do personagem)
 ##
 ## Opções no rig.json (todas opcionais):
-##   "contato": ["canela_frente", "canela_tras"]   partes que tocam o chão
+##   "contato": ["canela_frente", "canela_tras"]   partes que tocam o chão (ou pe_*)
+##   "escurecer_tras": 1.0                         tom dos membros de trás (0.8 = mais escuro)
 ##   "passada": 1.0                                amplitude do andar/correr
 ##   "ginga": 0                                    balanço de capoeira parado (graus)
 ##   "pouso": 20                                   quanto agacha ao pousar (graus)
@@ -35,7 +36,8 @@ extends Node2D
 
 const FLOOR_Y := Fighter.HEIGHT * 0.5
 const TUMBLE_SPEED := 1100.0
-const TRAIL_PARTS := ["antebraco_frente", "antebraco_tras", "canela_frente", "canela_tras"]
+const TRAIL_PARTS := ["antebraco_frente", "antebraco_tras", "canela_frente", "canela_tras",
+	"mao_frente", "mao_tras", "pe_frente", "pe_tras"]
 const TRAIL_MAX := 9
 
 static var _hull_cache := {}  # caminho da imagem -> contorno convexo
@@ -106,6 +108,10 @@ func _ready() -> void:
 		if region.size != Vector2.ZERO:
 			s.region_enabled = true
 			s.region_rect = region
+		# Membros de trás um pouco mais escuros: dá profundidade.
+		if name.ends_with("_tras"):
+			var k := float(rig.get("escurecer_tras", 1.0))
+			s.self_modulate = Color(k, k, k)
 		add_child(s)
 		_sprites[name] = s
 		if name in contact or name in TRAIL_PARTS:
@@ -174,6 +180,7 @@ func _process(delta: float) -> void:
 	var target := pose_offsets(rig, debug_pose) if debug_pose != "" else _target_pose(delta)
 	if debug_pose == "":
 		target = _accents(target, delta)
+		target = _level_feet(target)
 	var w := 1.0 - exp(-blend_speed * delta)
 	if fighter != null and fighter.state == Fighter.State.ATTACK:
 		w = 1.0 - exp(-blend_speed * 2.0 * delta)  # golpes trocam de pose mais rápido
@@ -191,6 +198,19 @@ func _process(delta: float) -> void:
 	_apply(offsets, delta)
 	if debug_pose == "":
 		_update_trail()
+
+
+## Pés (se o boneco tiver): a sola fica paralela ao chão quando está apoiado,
+## descontando a inclinação do tronco, da coxa e da canela. No ar, pendem um pouco.
+func _level_feet(target: Dictionary) -> Dictionary:
+	var k := 1.0 if _planted() else 0.5
+	for side in ["frente", "tras"]:
+		var foot: String = "pe_" + side
+		if not _sprites.has(foot) or target.has(foot):
+			continue
+		var lean := float(target.get("tronco", 0.0)) + float(target.get("coxa_" + side, 0.0)) + float(target.get("canela_" + side, 0.0))
+		target[foot] = -lean * k
+	return target
 
 
 ## Acentos por cima da pose: pouso, arrancada e tranco de pancada.

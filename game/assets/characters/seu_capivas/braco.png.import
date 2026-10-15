@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d3fmukfqlrn8t"
-path="res://.godot/imported/parte_06.png-a8f74e47f4cd289214e1be4a545ba23d.ctex"
+uid="uid://dpxa05rvwko5f"
+path="res://.godot/imported/braco.png-a7c934c9f8223782e406bc07734f0a44.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/seu_capivas/parte_06.png"
-dest_files=["res://.godot/imported/parte_06.png-a8f74e47f4cd289214e1be4a545ba23d.ctex"]
+source_file="res://assets/characters/seu_capivas/braco.png"
+dest_files=["res://.godot/imported/braco.png-a7c934c9f8223782e406bc07734f0a44.ctex"]
 
 [params]
 
