@@ -65,7 +65,11 @@ func _ready() -> void:
 	_sprite = Sprite2D.new()
 	_sprite.name = "Quadro"
 	_sprite.centered = false
-	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	# Filtro linear + shader de pixel nítido: blocos retos em qualquer zoom da câmera.
+	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	var mat := ShaderMaterial.new()
+	mat.shader = preload("res://shaders/pixel_nitido.gdshader")
+	_sprite.material = mat
 	_sprite.position = Vector2(-center_x, -(BASELINE + 1))
 	add_child(_sprite)
 	if fighter != null:
