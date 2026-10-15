@@ -1,28 +1,28 @@
 {
   "aereo_baixo": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "aereo_cima": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "aereo_frente": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "aereo_neutro": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "aereo_tras": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "agarrar": {
     "quadros": 6,
@@ -30,19 +30,24 @@
     "impacto": 3
   },
   "andar": {
-    "quadros": 6,
+    "quadros": 12,
+    "fator": 2,
+    "impacto": 6
+  },
+  "arrancar": {
+    "quadros": 3,
     "fator": 1,
-    "impacto": 3
+    "impacto": 1
   },
   "borda": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 6
   },
   "correr": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
+    "quadros": 12,
+    "fator": 2,
+    "impacto": 6
   },
   "defesa_esquiva": {
     "quadros": 6,
@@ -50,68 +55,83 @@
     "impacto": 3
   },
   "dor": {
-    "quadros": 4,
-    "fator": 1,
-    "impacto": 2
-  },
-  "especial_baixo": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 2
-  },
-  "especial_cima": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
-  },
-  "especial_lado": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 2
-  },
-  "especial_neutro": {
-    "quadros": 6,
-    "fator": 1,
+    "quadros": 7,
+    "fator": 2,
     "impacto": 4
   },
-  "golpe_baixo": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+  "especial_baixo": {
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 4
   },
-  "golpe_cima": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+  "especial_cima": {
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 6
   },
-  "golpe_frente": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+  "especial_lado": {
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 4
   },
-  "jab": {
+  "especial_neutro": {
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 8
+  },
+  "frear": {
     "quadros": 3,
     "fator": 1,
     "impacto": 1
   },
-  "parado": {
-    "quadros": 4,
-    "fator": 1,
+  "golpe_baixo": {
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
+  },
+  "golpe_cima": {
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
+  },
+  "golpe_frente": {
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
+  },
+  "jab": {
+    "quadros": 5,
+    "fator": 2,
     "impacto": 2
+  },
+  "parado": {
+    "quadros": 8,
+    "fator": 2,
+    "impacto": 4
+  },
+  "pouso": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
   },
   "pulo": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 6
   },
   "tonto": {
-    "quadros": 4,
+    "quadros": 8,
+    "fator": 2,
+    "impacto": 4
+  },
+  "virar": {
+    "quadros": 3,
     "fator": 1,
-    "impacto": 2
+    "impacto": 1
   },
   "vitoria": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
+    "quadros": 12,
+    "fator": 2,
+    "impacto": 6
   }
 }

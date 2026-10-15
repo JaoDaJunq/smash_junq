@@ -106,4 +106,4 @@ O importador agora recusa sozinho folhas incompletas ou fora de escala (a anima�
 
 ### Seu Capivas
 
-Nada recebido ainda: os mesmos pedidos do Juba valem para ele (tabela acima e as duas folhas de transição).
+**No jogo:** intermediários das 21 animações da tabela (incluindo `tonto`) e as 4 transições (`virar`, `arrancar`, `frear` e `pouso`). As folhas foram importadas e passaram pela validação de quantidade e escala do importador.
