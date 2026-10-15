@@ -15,9 +15,9 @@
     "braco_tras": {"arquivo":"parte_07.png","origem":[874.0,514.0],"pivo":[1065.0,560.0],"ponta":[930.0,710.0],"pai":"tronco","encaixe":[640.0,165.0],"repouso":100.0,"z":-5.0,"apagar":[[1065.0,560.0,30.0]]},
     "antebraco_tras": {"arquivo":"parte_08.png","origem":[1166.0,523.0],"pivo":[1205.0,570.0],"ponta":[1360.0,660.0],"pai":"braco_tras","encaixe":[930.0,710.0],"repouso":85.0,"z":-6.0,"apagar":[[1203.0,570.0,28.0]]},
     "coxa_tras": {"arquivo":"parte_11.png","origem":[848.0,746.0],"pivo":[990.0,790.0],"ponta":[950.0,945.0],"pai":"tronco","encaixe":[700.0,425.0],"repouso":90.0,"z":-3.0},
-    "canela_tras": {"arquivo":"parte_12.png","origem":[1188.0,769.0],"pivo":[1265.0,795.0],"ponta":[1265.0,930.0],"pai":"coxa_tras","encaixe":[950.0,940.0],"repouso":90.0,"z":-4.0},
+    "canela_tras": {"apagar":[[1265,795,26]],"arquivo":"parte_12.png","origem":[1188.0,769.0],"pivo":[1265.0,795.0],"ponta":[1265.0,930.0],"pai":"coxa_tras","encaixe":[950.0,940.0],"repouso":90.0,"z":-4.0},
     "coxa_frente": {"arquivo":"parte_09.png","origem":[123.0,753.0],"pivo":[255.0,790.0],"ponta":[230.0,945.0],"pai":"tronco","encaixe":[800.0,425.0],"repouso":90.0,"z":-1.0},
-    "canela_frente": {"arquivo":"parte_10.png","origem":[476.0,760.0],"pivo":[560.0,795.0],"ponta":[560.0,930.0],"pai":"coxa_frente","encaixe":[230.0,940.0],"repouso":90.0,"z":-2.0},
+    "canela_frente": {"apagar":[[560,795,26]],"arquivo":"parte_10.png","origem":[476.0,760.0],"pivo":[560.0,795.0],"ponta":[560.0,930.0],"pai":"coxa_frente","encaixe":[230.0,940.0],"repouso":90.0,"z":-2.0},
     "braco_frente": {"arquivo":"parte_05.png","origem":[131.0,498.0],"pivo":[345.0,555.0],"ponta":[210.0,712.0],"pai":"tronco","encaixe":[830.0,170.0],"repouso":95.0,"z":4.0,"apagar":[[345.0,555.0,30.0]]},
     "antebraco_frente": {"arquivo":"parte_06.png","origem":[424.0,539.0],"pivo":[462.0,585.0],"ponta":[630.0,670.0],"pai":"braco_frente","encaixe":[210.0,712.0],"repouso":80.0,"z":3.0,"apagar":[[458.0,585.0,28.0]]}
   },

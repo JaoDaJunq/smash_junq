@@ -225,8 +225,11 @@ func _apply(offsets: Dictionary, delta: float) -> void:
 	for name in _sprites:
 		(_sprites[name] as Sprite2D).transform = xfs[name]
 	# Amassar/esticar mantém o volume; a virada estreita o corpo por um instante.
-	var sx := (1.0 + _squash) * (1.0 - 0.55 * _turn)
+	var sx := (1.0 + _squash) * (1.0 - 0.2 * _turn)
 	var sy := 1.0 - _squash
+	if debug_pose != "":
+		sx = 1.0
+		sy = 1.0
 	# Altura: no ar o quadril fica fixo; no chão os pés encostam na base do lutador.
 	var air_y := float(rig.get("quadril_y", 0.0)) + float(offsets.get("_sobe", 0.0))
 	var planted := _planted()

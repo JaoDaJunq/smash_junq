@@ -3,6 +3,7 @@ extends Node
 ## personagem, força cada pose e salva screenshots em evidence/etapa-3/rig/.
 ## Também fotografa uma partida no zoom normal.
 ##   godot --path game res://tests/rig_showcase.tscn
+##   (em movimento: -- --zoom 5 --ao-vivo)
 
 const MAIN := preload("res://scenes/main.tscn")
 const POSES := ["neutra", "parado", "pulo", "queda", "dor", "defesa", "borda", "agarrar", "agachar",
@@ -25,6 +26,12 @@ func _ready() -> void:
 	# Partida no zoom normal
 	await _shot("00-luta-normal")
 	cam.set_process(false)
+	if "--ao-vivo" in OS.get_cmdline_user_args():
+		await _live(p1, p2, cam, "juba")
+		await _live(p2, p1, cam, "capivas")
+		print("Screenshots em ", dir)
+		get_tree().quit()
+		return
 	for f in [p1, p2]:
 		var other: Fighter = p2 if f == p1 else p1
 		other.visible = false
@@ -73,3 +80,77 @@ func _poses() -> Array:
 			"--facing": _facing = int(args[i + 1])
 			"--poses": out = Array(args[i + 1].split(","))
 	return out
+
+
+## Prints em movimento de verdade (física ligada), com a câmera seguindo de perto:
+## parado, andando, correndo, virando, golpeando, apanhando, pulando e pousando.
+func _live(f: Fighter, other: Fighter, cam: Camera2D, tag: String) -> void:
+	var pid := f.player_id
+	cam.zoom = Vector2(_zoom, _zoom)
+	var follow := func() -> void: cam.global_position = f.global_position + Vector2(0, -15)
+	f.global_position = Vector2(-200, -56)
+	f.velocity = Vector2.ZERO
+	f.facing = 1
+	other.global_position = Vector2(480, -56)
+	await _live_frames(40, follow)
+	await _shot("vivo-%s-01-parado" % tag)
+	Input.action_press(pid + "_right", 0.6)
+	await _live_frames(12, follow)
+	await _shot("vivo-%s-02-andando" % tag)
+	await _live_frames(7, follow)
+	await _shot("vivo-%s-03-andando" % tag)
+	Input.action_release(pid + "_right")
+	await _live_frames(20, follow)
+	Input.action_press(pid + "_right", 1.0)
+	await _live_frames(14, follow)
+	await _shot("vivo-%s-04-correndo" % tag)
+	await _live_frames(5, follow)
+	await _shot("vivo-%s-05-correndo" % tag)
+	Input.action_release(pid + "_right")
+	await _live_frames(25, follow)
+	Input.action_press(pid + "_left", 0.6)
+	await _live_frames(2, follow)
+	await _shot("vivo-%s-06-virando" % tag)
+	Input.action_release(pid + "_left")
+	await _live_frames(25, follow)
+	f.facing = 1
+	f.start_attack("ftilt")
+	await _live_frames(maxi(1, f.attack.startup - 2), follow)
+	await _shot("vivo-%s-07-golpe-preparo" % tag)
+	await _live_frames(3, follow)
+	await _shot("vivo-%s-08-golpe-impacto" % tag)
+	await _live_frames(6, follow)
+	await _shot("vivo-%s-09-golpe-volta" % tag)
+	await _live_frames(30, follow)
+	# Leva um golpe: o outro chega perto e acerta
+	other.global_position = f.global_position + Vector2(70, 0)
+	other.velocity = Vector2.ZERO
+	other.facing = -1
+	f.facing = 1
+	await _live_frames(4, follow)
+	other.start_attack("ftilt")
+	await _live_frames(other.attack.startup + 3, follow)
+	await _shot("vivo-%s-10-apanhando" % tag)
+	await _live_frames(60, follow)
+	other.global_position = Vector2(480, -56)
+	f.global_position = Vector2(-150, -56)
+	f.velocity = Vector2.ZERO
+	await _live_frames(30, follow)
+	Input.action_press(pid + "_jump")
+	await _live_frames(5, follow)
+	await _shot("vivo-%s-11-pulando" % tag)
+	Input.action_release(pid + "_jump")
+	var guard := 0
+	while not f.is_on_floor() and guard < 200:
+		await _live_frames(1, follow)
+		guard += 1
+	await _live_frames(2, follow)
+	await _shot("vivo-%s-12-pouso" % tag)
+	await _live_frames(30, follow)
+
+
+func _live_frames(n: int, follow: Callable) -> void:
+	for i in n:
+		await get_tree().physics_frame
+		follow.call()
+	await get_tree().process_frame

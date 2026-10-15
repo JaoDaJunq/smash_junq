@@ -92,19 +92,73 @@ static func draw_order(parts: Dictionary) -> Array:
 	return names
 
 
-## Deixa transparentes círculos da parte ("apagar": [[x, y, raio], ...] em coords
-## da folha). Usado para tirar as bolinhas de junta que a IA desenhou nas pontas.
+## Tira as bolinhas de junta que a IA desenhou nas pontas ("apagar": [[x, y, raio], ...]
+## em coords da folha): repinta cada círculo com a cor da própria peça, de fora
+## para dentro, em vez de deixar um buraco transparente (o buraco aparecia nas
+## juntas quando a peça vizinha não cobria). O contorno escuro em volta não entra
+## na média, para a mancha não escurecer.
 static func erase_circles(img: Image, p: Dictionary) -> Image:
 	var out := img.duplicate() as Image
 	out.convert(Image.FORMAT_RGBA8)
+	var w := out.get_width()
+	var h := out.get_height()
 	var o := _v(p["origem"])
+	var fill := PackedByteArray()
+	fill.resize(w * h)
+	var todo: Array[Vector2i] = []
 	for c in p.get("apagar", []):
 		var center := Vector2(c[0], c[1]) - o
-		var r := float(c[2])
-		for y in range(maxi(0, int(center.y - r)), mini(out.get_height(), int(center.y + r) + 1)):
-			for x in range(maxi(0, int(center.x - r)), mini(out.get_width(), int(center.x + r) + 1)):
-				if Vector2(x, y).distance_to(center) <= r:
-					out.set_pixel(x, y, Color(0, 0, 0, 0))
+		var r := float(c[2]) + 3.0
+		for y in range(maxi(0, int(center.y - r)), mini(h, int(center.y + r) + 1)):
+			for x in range(maxi(0, int(center.x - r)), mini(w, int(center.x + r) + 1)):
+				if Vector2(x, y).distance_to(center) <= r and out.get_pixel(x, y).a > 0.05 and fill[y * w + x] == 0:
+					fill[y * w + x] = 1
+					todo.append(Vector2i(x, y))
+	# Camadas de fora para dentro: cada pixel recebe a média dos vizinhos já conhecidos.
+	var guard := 0
+	while not todo.is_empty() and guard < 200:
+		guard += 1
+		var done: Array[Vector2i] = []
+		var colors: Array[Color] = []
+		var rest: Array[Vector2i] = []
+		for q in todo:
+			var sum := Color(0, 0, 0, 0)
+			var n := 0
+			var dark_sum := Color(0, 0, 0, 0)
+			var dark_n := 0
+			for dy in range(-2, 3):
+				for dx in range(-2, 3):
+					var nx := q.x + dx
+					var ny := q.y + dy
+					if nx < 0 or ny < 0 or nx >= w or ny >= h or fill[ny * w + nx] == 1:
+						continue
+					var c := out.get_pixel(nx, ny)
+					if c.a < 0.5:
+						continue
+					if c.get_luminance() < 0.22:
+						dark_sum += c
+						dark_n += 1
+					else:
+						sum += c
+						n += 1
+			if n > 0:
+				done.append(q)
+				colors.append(sum / n)
+			elif dark_n > 0 and guard > 40:
+				done.append(q)
+				colors.append(dark_sum / dark_n)
+			else:
+				rest.append(q)
+		if done.is_empty():
+			break
+		for i in done.size():
+			var c := colors[i]
+			c.a = 1.0
+			out.set_pixel(done[i].x, done[i].y, c)
+			fill[done[i].y * w + done[i].x] = 0
+		todo = rest
+	for q in todo:
+		out.set_pixel(q.x, q.y, Color(0, 0, 0, 0))
 	return out
 
 
