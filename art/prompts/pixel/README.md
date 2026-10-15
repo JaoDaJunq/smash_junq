@@ -74,3 +74,15 @@ Pode subir tudo junto num commit (de preferência direto na `main`) e me avisar.
 1. Troco o magenta por transparente, reduzo cada quadro para 64 × 64 pixels exatos e prendo as cores na paleta (corrige pixels "sujos" da IA).
 2. Alinho os quadros pela linha dos pés e monto as animações no jogo (AnimatedSprite2D), com os quadros de golpe sincronizados com os quadros de ataque do moveset. As áreas de acerto continuam as mesmas.
 3. Mantenho o que já funciona: rastro dos golpes, amassar e esticar, flash de dano e efeitos.
+
+## Situação (15/10/2026)
+
+**No jogo:** as 23 animações do Juba e as 23 do Seu Capivas foram importadas (`game/tools/importar_pixel.gd`) e já aparecem na luta.
+
+**Refazer:**
+
+| Arquivo | Problema | O que mandar (anexe o sprite base) |
+|---|---|---|
+| `seu_capivas/dor.png` | Os 4 quadros vieram numa linha só, atravessando as células da grade; os do meio foram cortados. No jogo estão só o 1º e o 4º | `Refaça a folha "dor" do Seu Capivas respeitando a grade 3x2: UM quadro inteiro dentro de cada célula de 512x512, sem invadir a vizinha. Quadros: 1) tranco para trás, bochecha amassada · 2) laranjinha saindo do lugar · 3) lançado de costas no ar · 4) lançado girando. As duas células da segunda linha ficam vazias.` |
+
+Depois de salvar a folha nova, me avise: eu tiro o ajuste especial do importador e importo de novo.

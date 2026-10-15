@@ -42,7 +42,11 @@ func _ready() -> void:
 		cam.zoom = Vector2(_zoom, _zoom)
 		f.facing = _facing
 		cam.global_position = Vector2(0, -75)
-		var rig := f.get_node("Rig") as CutoutRig
+		var rig := f.get_node_or_null("Rig") as CutoutRig
+		if rig == null:
+			other.visible = true
+			f.set_physics_process(true)
+			continue  # personagem em pixel art: use --ao-vivo
 		var tag := "juba" if f == p1 else "capivas"
 		var poses: Array = _poses()
 		for i in poses.size():

@@ -310,6 +310,6 @@ func result_data(winner: String) -> Dictionary:
 func _set_mood(pid: String, face: String, seconds: float) -> void:
 	if not fighters.has(pid):
 		return
-	var rig := (fighters[pid] as Node).get_node_or_null("Rig") as CutoutRig
-	if rig != null:
-		rig.set_mood(face, seconds)
+	var visual := (fighters[pid] as Node).get_node_or_null("Visual")
+	if visual != null and visual.has_method("set_mood"):
+		visual.set_mood(face, seconds)

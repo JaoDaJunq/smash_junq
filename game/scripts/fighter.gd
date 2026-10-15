@@ -116,7 +116,7 @@ var invincible_time := 0.0
 var auto_respawn := true
 
 var shield_hp := 50.0
-## true quando um CutoutRig (arte do personagem) está desenhando o corpo.
+## true quando a arte do personagem (PixelSprite ou CutoutRig) está desenhando o corpo.
 var has_art := false
 var _shield_stun := 0
 var _break_timer := 0.0
