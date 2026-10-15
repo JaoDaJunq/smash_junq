@@ -6,7 +6,7 @@ extends SceneTree
 ## fora da cabeça atual numa faixa de baixo (pescoço/ombro que veio junto).
 ## Roda sem janela:
 ##   godot --headless --path game --script res://tools/alinhar_cabecas.gd -- \
-##     <pasta_recortes> <rig.json> <nomes,separados,por,vírgula> [corte_baixo=0.0] [corte_esq=0.0] [sem_azul]
+##     <pasta_recortes> <rig.json> <nomes,separados,por,vírgula> [corte_baixo=0.0] [corte_esq=0.0] [sem_azul|-] [esfumar_baixo=0.0]
 ## <pasta_recortes> vem de tools/cortar_partes.gd (parte_XX.png + partes.json).
 ## corte_baixo/corte_esq: frações da altura/largura da cabeça atual a partir das
 ## quais o que estiver fora do contorno atual é apagado (0 = não apaga nada).
@@ -23,6 +23,7 @@ func _initialize() -> void:
 	var cut_bottom := float(args[3]) if args.size() > 3 else 0.0
 	var cut_left := float(args[4]) if args.size() > 4 else 0.0
 	var no_blue := args.size() > 5 and args[5] == "sem_azul"
+	var feather := float(args[6]) if args.size() > 6 else 0.0
 	var rig := CutoutRigMath.load_rig(rig_path)
 	var head: Dictionary = rig["partes"]["cabeca"]
 	var base: Image = CutoutRigMath.load_part_images({"partes": {"cabeca": head}}, rig_path)["cabeca"]
@@ -67,6 +68,8 @@ func _initialize() -> void:
 						img.set_pixel(x, y, Color(0, 0, 0, 0))
 		if no_blue:
 			_erase_blue(img)
+		if feather > 0.0:
+			_feather_bottom(img, feather)
 		var file := "rosto_%02d.png" % i
 		img.save_png(rig_dir.path_join(file))
 		# Pontos da cabeça atual levados para as coordenadas do recorte novo
@@ -272,3 +275,24 @@ func _erase_blue(img: Image) -> void:
 					break
 			if near:
 				img.set_pixel(x, y, Color(0, 0, 0, 0))
+
+
+## Esfuma a parte de baixo (cangote/ombro que entra por cima do tronco): a
+## transparência cresce na última fração `frac` da altura, sem degrau visível.
+func _feather_bottom(img: Image, frac: float) -> void:
+	var top := img.get_height()
+	var bottom := 0
+	for y in img.get_height():
+		for x in range(0, img.get_width(), 4):
+			if img.get_pixel(x, y).a > 0.5:
+				top = mini(top, y)
+				bottom = maxi(bottom, y)
+				break
+	var start := bottom - (bottom - top) * frac
+	for y in range(int(start), bottom + 1):
+		var k := 1.0 - smoothstep(start, float(bottom), float(y))
+		for x in img.get_width():
+			var c := img.get_pixel(x, y)
+			if c.a > 0.0:
+				c.a *= k
+				img.set_pixel(x, y, c)
