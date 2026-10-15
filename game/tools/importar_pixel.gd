@@ -116,7 +116,7 @@ func _read(path: String, pick: Array) -> Array[Image]:
 		for c in 3:
 			var f := _cell(sheet, c, r, scale)
 			if f != null:
-				frames.append(f)
+				frames.append(_clean_slivers(f, path.get_file(), frames.size()))
 	if not pick.is_empty():
 		var chosen: Array[Image] = []
 		for i in pick:
@@ -246,3 +246,54 @@ func _area(img: Image) -> int:
 			if img.get_pixel(x, y).a > 0.5:
 				n += 1
 	return n
+
+
+## Restos do quadro vizinho: quando o GPT desenha um quadro passando um pouco da
+## célula, sobra no quadro ao lado uma lasquinha vertical fina colada na lateral.
+## Apaga pedaços soltos com até 2 px de largura, pelo menos 3 de altura e a até
+## 6 px da lateral esquerda ou direita. Efeitos de propósito (linhas de
+## velocidade horizontais, poeira, faíscas, objetos) não têm esse formato, e
+## lasquinhas brancas ou bem claras (linhas de tremida e de impacto) são mantidas.
+func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
+	var seen := {}
+	var parts := []
+	for y in NATIVE:
+		for x in NATIVE:
+			var start := Vector2i(x, y)
+			if seen.has(start) or img.get_pixel(x, y).a < 0.5:
+				continue
+			var stack: Array[Vector2i] = [start]
+			seen[start] = true
+			var comp: Array[Vector2i] = []
+			while not stack.is_empty():
+				var p: Vector2i = stack.pop_back()
+				comp.append(p)
+				for dy in [-1, 0, 1]:
+					for dx in [-1, 0, 1]:
+						var q := p + Vector2i(dx, dy)
+						if q.x < 0 or q.y < 0 or q.x >= NATIVE or q.y >= NATIVE or seen.has(q):
+							continue
+						if img.get_pixel(q.x, q.y).a < 0.5:
+							continue
+						seen[q] = true
+						stack.append(q)
+			parts.append(comp)
+	parts.sort_custom(func(a, b) -> bool: return a.size() > b.size())
+	for comp in parts.slice(1):
+		var lo := Vector2i(NATIVE, NATIVE)
+		var hi := Vector2i(-1, -1)
+		for p in comp:
+			lo = lo.min(p)
+			hi = hi.max(p)
+		var w := hi.x - lo.x + 1
+		var h := hi.y - lo.y + 1
+		if w <= 2 and h >= 3 and (lo.x <= 5 or hi.x >= NATIVE - 6):
+			var avg := Color(0, 0, 0, 0)
+			for p in comp:
+				avg += img.get_pixel(p.x, p.y) / comp.size()
+			if avg.get_luminance() > 0.8:
+				continue  # branco/azul-claro: linha de efeito, não resto de sprite
+			for p in comp:
+				img.set_pixel(p.x, p.y, Color(0, 0, 0, 0))
+			print("  limpo: %s, célula %d, lasca de %dx%d px em x=%d, cor %s" % [sheet_name, index + 1, w, h, lo.x, avg.to_html(false)])
+	return img
