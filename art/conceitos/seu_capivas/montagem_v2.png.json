@@ -1,0 +1,18 @@
+{
+  "arquivo": "montagem_v2.png",
+  "prompt_file": "art/prompts/pedidos/seu_capivas/01_partes_v2.md",
+  "ferramenta": "ChatGPT ImageGen",
+  "data": "2026-10-15",
+  "referencias": [
+    "art/conceitos/seu_capivas/partes_v2.png",
+    "art/conceitos/seu_capivas/cabecas_v1.png"
+  ],
+  "dimensoes_px": [
+    1024,
+    1536
+  ],
+  "modo": "RGBA",
+  "canal_alfa": true,
+  "estado": "conceito_aguarda_aprovacao",
+  "observacoes": "Prévia de encaixe neutro; usa partes_v2.png e cabecas_v1.png como referências. A segunda tentativa foi ajustada para perfil lateral com um membro visível por lado. Transparência alfa; conceito ainda não aprovado."
+}

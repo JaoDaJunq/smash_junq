@@ -1,0 +1,18 @@
+{
+  "arquivo": "partes_v2.png",
+  "prompt_file": "art/prompts/pedidos/seu_capivas/01_partes_v2.md",
+  "ferramenta": "ChatGPT ImageGen",
+  "data": "2026-10-15",
+  "referencias": [
+    "art/conceitos/seu_capivas/folha_v1.png",
+    "art/conceitos/seu_capivas/cabecas_v1.png"
+  ],
+  "dimensoes_px": [
+    1536,
+    1024
+  ],
+  "modo": "RGBA",
+  "canal_alfa": true,
+  "estado": "conceito_aguarda_aprovacao",
+  "observacoes": "Folha de peças separadas para cutout; gerada com folha_v1.png e cabecas_v1.png como referências. Passou por correção final para remover pelagem abaixo da barra da bermuda. Transparência alfa; conceito ainda não aprovado."
+}
