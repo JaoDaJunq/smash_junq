@@ -24,3 +24,4 @@ shape = SubResource("CapsuleShape2D_body")
 [node name="Visual" type="Node2D" parent="."]
 script = ExtResource("9_visual")
 folder = "res://assets/characters/juba/pixel"
+walk_frames = PackedInt32Array(0, 2, 4, 6, 8, 10)

@@ -166,7 +166,7 @@ func _pound_hit(data: AttackData) -> void:
 
 func _draw() -> void:
 	super()
-	if _charging and _charge > 0:
+	if _charging and _charge > 0 and not has_art:  # barra de carga provisória (greybox)
 		var ratio := float(_charge) / MAX_CHARGE
 		var width := RADIUS * 2.0
 		var top := -HEIGHT * 0.5 - 44.0

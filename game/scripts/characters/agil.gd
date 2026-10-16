@@ -136,8 +136,12 @@ func _apply_pending_counter() -> void:
 	foe.receive_hit(self, strike, facing)
 
 
+## Arco do contra-ataque e rastro do teletransporte: marcas provisórias do
+## greybox, só sem arte (com pixel art ficariam por cima do personagem).
 func _draw() -> void:
 	super._draw()
+	if has_art:
+		return
 	if _counter_active() or _counter_flash > 0.0:
 		var c := Color.WHITE if _counter_flash > 0.0 else Color(0.4, 1.0, 1.0, 0.8)
 		draw_arc(Vector2.ZERO, 66.0, 0.0, TAU, 32, c, 4.0)

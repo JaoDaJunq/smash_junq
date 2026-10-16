@@ -36,3 +36,6 @@ shape = SubResource("CapsuleShape2D_body")
 [node name="Visual" type="Node2D" parent="."]
 script = ExtResource("9_visual")
 folder = "res://assets/characters/seu_capivas/pixel"
+walk_fps = 5.0
+run_fps = 7.0
+walk_frames = PackedInt32Array(0, 2, 4, 6, 8, 10)

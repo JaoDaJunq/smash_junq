@@ -36,6 +36,20 @@ const ATTACK_ANIM := {
 @export var pixel_scale := 2.0
 ## Coluna do quadro que fica no centro do lutador.
 @export var center_x := 32.0
+@export_group("Andar e correr")
+## Quadros da folha original por segundo, na velocidade máxima (a intercalada
+## toca o dobro). Ficam em ~45% do casamento exato com o deslocamento (o passo
+## desenhado pedia ~2 ciclos por segundo andando, que no playtest 01 pareceu
+## rápido e tremido). Por personagem: o Seu Capivas tem passo desenhado mais
+## curto e anda mais devagar; com 5/7 ele fica na mesma proporção que o Juba com 6/9.
+@export var walk_fps := 6.0
+@export var run_fps := 9.0
+## Quadros da tira usados no loop (vazio = todos). Serve para tirar quadros que
+## fazem o corpo pular para cima e para baixo entre um e outro (tremedeira): no
+## andar dos dois, os intermediários alternam a altura da cabeça a cada quadro,
+## então o andar usa só os 6 quadros da folha original.
+@export var walk_frames := PackedInt32Array()
+@export var run_frames := PackedInt32Array()
 
 var fighter: Fighter
 var anim := ""
@@ -61,6 +75,7 @@ var _turn := 9.0         # tempo desde a última virada no chão
 var _dash := 9.0         # tempo desde a arrancada
 var _brake := 9.0        # tempo desde que parou de correr
 var _land := 9.0         # tempo desde o pouso
+var _step_phase := 0.0   # 0..1 dentro do ciclo de andar/correr
 
 
 func _ready() -> void:
@@ -179,6 +194,19 @@ func _loop(a: String, fps: float, frames: Array = []) -> Array:
 	return [a, list[int(_anim_time * fps * float(_factor.get(a, 1))) % list.size()]]
 
 
+## Ciclo de passos: a fase avança com o tempo (mais devagar quando o lutador
+## anda devagar), então mudar a velocidade não faz o quadro pular. Com uma lista
+## própria de quadros, o ciclo dura o mesmo tempo que com todos.
+func _cycle(a: String, fps: float, frames: PackedInt32Array) -> Array:
+	var n := int(_counts.get(a, 1))
+	var list := Array(frames).filter(func(i: int) -> bool: return i < n)
+	if list.is_empty():
+		list = range(n)
+	var rate := fps * float(_factor.get(a, 1)) / float(n)  # ciclos por segundo
+	_step_phase = fmod(_step_phase + get_process_delta_time() * rate, 1.0)
+	return [a, list[mini(list.size() - 1, int(_step_phase * list.size()))]]
+
+
 ## Toca a animação inteira uma vez em `time` segundos, a partir de `elapsed`.
 func _once(a: String, elapsed: float, time: float) -> Array:
 	var n := int(_counts.get(a, 1))
@@ -206,14 +234,12 @@ func _pick() -> Array:
 		S.WALK:
 			if _brake < BRAKE_TIME and has_anim("frear"):
 				return _once("frear", _brake, BRAKE_TIME)
-			var pace := clampf(absf(fighter.velocity.x) / maxf(1.0, fighter.walk_speed), 0.5, 1.3)
-			var n := int(_counts.get("andar", 1))
-			return ["andar", int(_clock * 10.0 * pace * float(_factor.get("andar", 1))) % n]
+			var pace := clampf(absf(fighter.velocity.x) / maxf(1.0, fighter.walk_speed), 0.5, 1.0)
+			return _cycle("andar", walk_fps * pace, walk_frames)
 		S.RUN:
 			if _dash < DASH_TIME and has_anim("arrancar"):
 				return _once("arrancar", _dash, DASH_TIME)
-			var n := int(_counts.get("correr", 1))
-			return ["correr", int(_clock * 13.0 * float(_factor.get("correr", 1))) % n]
+			return _cycle("correr", run_fps, run_frames)
 		S.AIR, S.RESPAWN:
 			return _air()
 		S.LAG:

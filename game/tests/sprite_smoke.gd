@@ -4,7 +4,8 @@ extends Node
 ## os quadros ativos, pés na base do lutador, espelhamento) e desenha uma tira de
 ## filme com os quadros mostrados, ampliados, para conferência.
 ##   godot --headless --path game res://tests/sprite_smoke.tscn
-## Saída: evidence/etapa-3/pixel/<personagem>.png
+## Saída: evidence/etapa-3/pixel/<personagem>.png (outra pasta, a partir da
+## raiz do repositório: ... -- --saida=evidence/playtest-01)
 
 const MAIN := preload("res://scenes/main.tscn")
 const ZOOM := 2
@@ -16,7 +17,11 @@ var out_dir := ""
 
 
 func _ready() -> void:
-	out_dir = ProjectSettings.globalize_path("res://").path_join("../evidence/etapa-3/pixel")
+	var sub := "evidence/etapa-3/pixel"
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--saida="):
+			sub = arg.trim_prefix("--saida=")
+	out_dir = ProjectSettings.globalize_path("res://").path_join("..").path_join(sub)
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	var main := MAIN.instantiate()
 	add_child(main)
@@ -48,13 +53,18 @@ func _film(f: Fighter, other: Fighter, file: String) -> void:
 	await _reset(f)
 	Input.action_press(pid + "_right", 0.6)
 	await _frames(6)
-	rows["andar"] = await _record(f, v, 36, 4)
+	rows["andar"] = await _record(f, v, 60, 5)
 	_check("%s andando usa 'andar'" % tag, v.anim == "andar", v.anim)
+	var walked := {}
+	for shot in rows["andar"]:
+		walked[shot["frame"]] = true
+	var extra := walked.keys().filter(func(i: int) -> bool: return not v.walk_frames.is_empty() and i not in v.walk_frames)
+	_check("%s andar só usa os quadros escolhidos" % tag, extra.is_empty(), "fora da lista: %s" % str(extra))
 	Input.action_release(pid + "_right")
 	await _reset(f)
 	Input.action_press(pid + "_right", 1.0)
 	await _frames(10)
-	rows["correr"] = await _record(f, v, 30, 3)
+	rows["correr"] = await _record(f, v, 48, 4)
 	_check("%s correndo usa 'correr'" % tag, v.anim == "correr", v.anim)
 	Input.action_release(pid + "_right")
 	await _reset(f)
