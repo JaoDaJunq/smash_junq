@@ -62,9 +62,9 @@ Quadros:
 | `aereo_tras.png` | Chute de costas | 1) olha para trás · 2) perna de trás recolhida · 3) impacto: perna esticada para trás · 4) recolhendo · 5) volta |
 | `aereo_cima.png` | Bananeira no ar chutando para cima | 1) virando de cabeça para baixo · 2) pernas subindo · 3) impacto: pernas para cima · 4) desvirando · 5) volta |
 | `aereo_baixo.png` | Pisão com os dois pés | 1) encolhido · 2) pernas descendo · 3) impacto: pés para baixo, juba subindo · 4) recolhendo · 5) volta |
-| `especial_neutro.png` | Arremesso de castanha | 1) pega a castanha · 2) braço para trás · 3) arremesso por cima do ombro · 4) castanha saindo · 5) braço à frente · 6) guarda |
+| `especial_neutro.png` | Arremesso de castanha | 1) pega a castanha · 2) braço para trás · 3) arremesso por cima do ombro · 4) braço esticado, a castanha já saiu (ela é um sprite à parte: `castanha.png`) · 5) braço à frente · 6) guarda |
 | `especial_lado.png` | Rolê de capoeira | 1) abaixa · 2) mãos no chão · 3) rolando de lado · 4) meio do giro · 5) saindo · 6) guarda |
-| `especial_cima.png` | Cipó | 1) olha para cima · 2) agarra o cipó · 3) sobe puxando · 4) gira no cipó · 5) solta · 6) caindo |
+| `especial_cima.png` | Sumiço do Mico (substitui o cipó) | 1) prepara agachado · 2) aú começando · 3) aú de cabeça para baixo · 4) aú fechando, encolhido (some) · 5) reaparece com armada · 6) guarda. As folhas são um efeito à parte (`fx_folhas.png`) |
 | `especial_baixo.png` | Negativa e contra-ataque | 1) abaixando · 2) deitado de lado esquivando · 3) apoio na mão · 4) chute para cima · 5) recolhendo · 6) levantando |
 | `defesa_esquiva.png` | Defesa e rolamento | 1) guarda baixa, braços cruzados · 2) guarda tremendo · 3) rolamento: abaixa · 4) rolando · 5) rolando · 6) levanta |
 | `agarrar.png` | Agarrão e arremessos | 1) mãos à frente agarrando · 2) segurando · 3) arremesso para a frente · 4) arremesso para trás · 5) arremesso para cima · 6) arremesso para baixo |

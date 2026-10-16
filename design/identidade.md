@@ -57,7 +57,7 @@ Os dois personagens temporários ganham identidade. As mecânicas continuam as m
 | Estilo de luta | **Capoeira**: ginga, giros, rasteiras, golpes de pé |
 | Visual | Juba laranja-dourada enorme, corpo pequeno, cauda longa. Calça de abadá branca com cordão colorido, faixa na testa |
 | Cores | Dourado-laranja · branco · verde-folha |
-| Especiais (mesma mecânica) | Neutro: arremessa uma castanha. Lateral: rolê de capoeira atravessando o palco. Para cima: se balança num cipó que aparece do nada. Para baixo: "negativa" da capoeira que esquiva e contra-ataca |
+| Especiais (mesma mecânica) | Neutro: arremessa uma castanha-do-pará (sprite próprio, girando no ar). Lateral: rolê de capoeira atravessando o palco. Para cima: **Sumiço do Mico** (aprovado no playtest 01): aú de capoeira, some numa explosão de folhas douradas e verdes e reaparece na direção escolhida dando uma armada (chute giratório); substitui o cipó. Para baixo: "negativa" da capoeira que esquiva e contra-ataca |
 | Animação de vitória | Faz ginga e mostra a língua |
 
 ### Seu Capivas — o Pesado (capivara)

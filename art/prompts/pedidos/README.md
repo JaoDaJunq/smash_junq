@@ -1,6 +1,8 @@
 # Pedidos de arte para animação — Juba e Seu Capivas
 
 > **Pausado (15/10/2026):** estamos testando **pixel art** no lugar do recorte. Use [art/prompts/pixel/](../pixel/README.md). Este pacote fica guardado caso o recorte volte.
+>
+> **Pedidos de pixel art do playtest 01 (para o Codex):** [PLAYTEST01_CODEX.md](PLAYTEST01_CODEX.md). Os arquivos `p01_*.md` das pastas `juba/` e `seu_capivas/` são desse pacote, não do recorte.
 
 Material para deixar as animações fluidas. Cada arquivo tem os prompts prontos para colar no ChatGPT, na **conversa do personagem** (a mesma onde foi feita a folha), sempre anexando as imagens indicadas.
 
