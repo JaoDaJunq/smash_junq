@@ -6,7 +6,7 @@ Projeto de jogo de luta em plataformas 2D, criado com apoio de IA e desenvolvido
 
 ## Estado do projeto
 
-**Primeiro corte jogável, em greybox (formas simples).** As Etapas 0 e 1 foram concluídas em 14/10/2026, e quase todo o [backlog](design/backlog.md) do primeiro corte está feito. Faltam: T01 (medir o PC de casa), T03 (conectar o godot-ai ao Claude no editor), T04 (testar gamepad real), T21 (testes do placar no GdUnit4) e T22 (exportar o `.exe` e fazer o primeiro playtest).
+**Primeiro corte jogável, já com o Juba e o Seu Capivas em pixel art.** As Etapas 0 e 1 foram concluídas em 14/10/2026, e quase todo o [backlog](design/backlog.md) do primeiro corte está feito. A arte em pixel dos dois lutadores entrou antes de a Etapa 2 ser fechada formalmente. O primeiro playtest humano (15/10/2026) gerou uma rodada de correções de arte e animação, listada em [art/prompts/pedidos/PLAYTEST01_CODEX.md](art/prompts/pedidos/PLAYTEST01_CODEX.md). Faltam: T01 (medir o PC de casa), T03 (conectar o godot-ai ao Claude no editor), T04 (testar gamepad real) e T22 (exportar o `.exe` e terminar o playtest com partidas completas).
 
 O jogo é um platform fighter 2D lateral, inspirado no formato de combate de Super Smash Bros. Os golpes acumulam dano; com mais dano, o adversário tende a ser lançado mais longe. Cada nocaute fora da arena vale um ponto, e vence quem chegar primeiro a 3 KOs.
 
@@ -21,7 +21,7 @@ O jogo é um platform fighter 2D lateral, inspirado no formato de combate de Sup
 
 ## Primeiro corte (aprovado)
 
-Uma arena, dois personagens temporários, golpes básicos e especiais, escudo, esquiva, agarrão e arremessos, dano, lançamento, recuperação, nocaute fora da arena e reinício rápido, jogável em 1 contra 1 local ou contra a CPU.
+Uma arena, dois personagens (Juba e Seu Capivas), golpes básicos e especiais, escudo, esquiva, agarrão e arremessos, dano, lançamento, recuperação, nocaute fora da arena e reinício rápido, jogável em 1 contra 1 local ou contra a CPU.
 
 Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco grande, várias arenas e itens.
 
@@ -56,7 +56,7 @@ Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco gran
 
 Correr: toque duplo na direção (ou empurrar o analógico rápido). Descer da plataforma: para baixo. Na borda: para cima sobe, pulo salta. Segurando alguém: Ataque bate, direção arremessa.
 
-**O que já funciona:** movimento completo, golpes básicos e especiais dos dois personagens temporários (Ágil e Pesado), escudo, esquivas, agarrão e arremessos, dano %, lançamento, zonas de KO, placar até 3 KOs com morte súbita, menus, pausa, resultado e revanche, a CPU básica, efeitos e sons de luta, música de fundo provisória, arena com cenário e o modo treino. Todos os assets de terceiros são CC0 e estão registrados em `assets/manifest.csv`.
+**O que já funciona:** movimento completo, golpes básicos e especiais dos dois lutadores, **Juba** (mico-leão-dourado capoeirista, o ágil) e **Seu Capivas** (capivara tiozão de clube, o pesado), com sprites em pixel art animados quadro a quadro, quadros intermediários e um filtro que mantém os pixels nítidos, escudo, esquivas, agarrão e arremessos, dano %, lançamento, zonas de KO, placar até 3 KOs com morte súbita, menus, pausa, resultado e revanche, a CPU básica, efeitos e sons de luta, música de fundo provisória, arena com cenário e o modo treino. Todos os assets de terceiros são CC0 e estão registrados em `assets/manifest.csv`. No código, os nomes internos continuam `agil` (Juba) e `pesado` (Seu Capivas).
 
 **Modo treino:** Jogar → Treino. O P2 vira um boneco (parado, pulando, com escudo ou lutando como CPU). A pausa abre o painel de treino: dano do boneco, manter esse dano, mostrar as áreas de acerto e recomeçar posições. No alto da tela aparecem o golpe, o dano, a força do lançamento e a distância.
 
@@ -100,4 +100,4 @@ godot --headless --path game --script res://tools/configure_input_map.gd
 
 ## Base técnica prevista
 
-Godot 4.7.2, Claude-Code-Game-Studios para organizar briefs e tarefas, godot-ai como ponte com o editor, e geração 3D/animação pesada em serviços de nuvem, conforme a necessidade. O PC de casa ainda não foi medido, então decisões de desempenho ficam pendentes de teste.
+Godot 4.7.2, Claude-Code-Game-Studios para organizar briefs e tarefas, godot-ai como ponte com o editor, e geração 3D/animação pesada em serviços de nuvem, conforme a necessidade. O PC de casa ainda não foi medido por completo (o Godot reporta uma NVIDIA GeForce RTX 3050 6 GB Laptop); decisões de desempenho ficam pendentes da T01.
