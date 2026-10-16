@@ -32,7 +32,7 @@ Pedaços de cada bioma brasileiro flutuam no céu do entardecer: Mata Atlântica
 
 1. **Legibilidade antes de detalhe.** Em plena luta, no tamanho real da tela, dá para saber quem é quem, para onde está virado e o que está fazendo.
 2. **Silhueta única.** Cada lutador é reconhecível só pela sombra: tamanho, postura, orelhas, cauda e roupa diferentes.
-3. **Exagero com propósito.** Antecipação e impacto exagerados nos golpes, rostos expressivos, bordas de "smear" nos movimentos rápidos.
+3. **Exagero com propósito.** Antecipação e impacto exagerados nos golpes, rostos expressivos. Rastros e "smears" dos movimentos rápidos são efeitos do jogo, não desenhados no sprite (ver "Regras de produção do pixel art").
 4. **Brasil sem clichê.** Bichos, roupas, objetos e cenários com referências reais do país, tratados com carinho e humor, nunca como caricatura ofensiva de pessoas ou regiões.
 
 ## Estilo dos personagens
@@ -86,6 +86,32 @@ Tatu-bola (rola como bola de boliche), Arara (golpes aéreos e grito sônico), B
 - **Técnica:** recorte (*cutout*) dentro do próprio Godot: cada personagem é um conjunto de partes (cabeça, tronco, braços, pernas, cauda) presas a ossos (`Skeleton2D`/`Bone2D` ou nós `Sprite2D` hierárquicos) e animadas com `AnimationPlayer`. Gratuito, roda leve e permite reaproveitar animações entre personagens de corpo parecido.
 - **Regra de ouro:** a animação segue os dados do golpe (quadros de início, ativos e recuperação do moveset), não o contrário. A área de acerto aparece exatamente nos quadros em que o golpe "encosta".
 - **Animações por personagem (primeiro corte):** parado, andar, correr, pular, pulo duplo, cair, pousar, os 9 básicos, os 4 especiais, escudo, rolagem, esquiva aérea, agarrão, golpe segurando, 4 arremessos, atordoado, lançado (girando), pendurado na borda, subir da borda, plataforma de retorno, vitória, entrada na arena. **Cerca de 35 animações** por personagem.
+
+## Regras de produção do pixel art
+
+Aprovadas pelo criador depois do playtest 01 (15/10/2026). Valem para todo pedido de sprite, de qualquer personagem, e para a avaliação antes de entrar no jogo.
+
+**O que vai no quadro**
+- Cada quadro contém **só o personagem e o que ele segura**.
+- **Proibido no sprite:** chão, plataforma, borda ou qualquer pedaço de cenário; linhas de velocidade, rastros, smear, poeira, ondas, brilhos, estrelinhas ou auras (os efeitos são feitos pelo jogo); objetos presos a algo fora do quadro (cipó, corda, gancho) sem origem visível no jogo.
+- **Todo objeto lançado** (projétil) tem sprite próprio, pedido junto com a animação que o lança, e entra em `assets/manifest.csv`.
+- **Espaço vazio generoso entre os quadros:** nada encosta na borda da célula. Se a pose não cabe, o gesto encolhe; o personagem não.
+
+**Consistência**
+- Toda pose, inclusive as raras (escudo, dor, borda, descanso), na **mesma escala, paleta, contorno e proporção** da folha aprovada.
+- Todo pedido anexa **a folha aprovada do personagem e um quadro já aprovado** (ex.: o parado), para servir de régua.
+
+**Animação**
+- Andar e correr com **poucos quadros e velocidade moderada**, casada com o deslocamento do personagem (o Seu Capivas anda mais devagar que o Juba). Intermediário que faz a cabeça subir e descer alternadamente fica de fora do ciclo.
+
+**Avaliação (antes de integrar)**
+- Comparar **cada pose lado a lado com o parado aprovado** (altura, tamanho da cabeça, espessura do contorno, cores).
+- Rodar a **checagem automática de "ilhas"** (pixels soltos separados do personagem) em **todos os quadros dos dois personagens** a cada importação, não só nos quadros que motivaram a correção.
+- Abrir as imagens e procurar cenário e efeitos desenhados.
+- Procurar **desenhos provisórios no código** (círculos, arcos, barras do greybox) que apareçam por cima da pixel art fora do modo de depuração.
+
+**Fechamento de etapa**
+- Nenhuma etapa de arte fecha sem **prints dentro do jogo de todos os golpes e estados** (cada ataque, especial, escudo, borda, respawn, KO, vitória), **no zoom real do jogo**, e sem **aprovação do criador**.
 
 ## Produção com IA — Proposta de fluxo
 

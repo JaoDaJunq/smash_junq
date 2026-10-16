@@ -21,6 +21,10 @@ No recorte, o corpo é montado com peças que giram nas juntas. Se a peça não 
 | Contorno | 1 pixel, cor vinho bem escura (não preto puro) |
 | Cores | só as da paleta do personagem (no arquivo dele) |
 | Proibido | anti-aliasing, borrado, degradê suave, brilho, texto, números, linhas de grade, moldura |
+| Só o personagem | cada quadro tem **só o personagem e o que ele segura**. Sem chão, plataforma, borda ou cenário; sem linhas de velocidade, rastros, smear, poeira, ondas, brilhos ou auras (os efeitos são do jogo); nada preso a algo fora do quadro (cipó, corda) |
+| Projétil | todo objeto lançado tem **sprite próprio**, pedido junto, e entra em `assets/manifest.csv` |
+| Margem | **espaço vazio generoso** em volta de cada quadro: nada encosta na borda da célula |
+| Referências | todo pedido anexa a **folha aprovada** e **um quadro já aprovado** (ex.: `parado.png`), também nas poses raras (escudo, dor, borda, descanso) |
 
 No jogo, o sprite aparece **ampliado 2×** (64 px viram 128), do tamanho atual dos lutadores.
 
@@ -46,6 +50,10 @@ Vamos fazer os sprites de um jogo de luta 2D em PIXEL ART de verdade. Regras que
 - O personagem tem exatamente o mesmo tamanho, as mesmas cores e o mesmo desenho em todos os quadros; só a pose muda. Os pés ficam sempre na mesma altura, 4 pixels acima da borda de baixo da célula.
 - Contorno de 1 pixel cor vinho bem escura. Usar só a paleta que eu passar.
 - Sem texto, números, linhas de grade ou moldura.
+- Cada quadro tem SÓ o personagem e o que ele segura na mão. Nunca desenhe chão, plataforma, borda ou cenário; nunca desenhe linhas de velocidade, rastros, borrão de movimento, poeira, ondas, brilhos, estrelinhas ou auras (o jogo faz esses efeitos); nada preso a algo fora do quadro (cipó, corda).
+- Se o personagem arremessa um objeto, o objeto vai numa imagem separada, que eu peço junto.
+- Deixe espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- Toda pose, mesmo as raras (defesa, dor, borda, descanso), tem a mesma escala, paleta, contorno e proporção da folha aprovada e do quadro aprovado que eu anexar.
 Responda só "ok" e espere o primeiro pedido.
 ```
 
@@ -58,6 +66,9 @@ Responda só "ok" e espere o primeiro pedido.
 | Fundo não é magenta liso | `O fundo tem que ser magenta chapado #FF00FF, uma cor só, sem sombra.` |
 | Quadros fora da grade | `Respeite a grade de 3 colunas x 2 linhas de 512x512; um quadro inteiro dentro de cada célula, sem invadir a vizinha.` |
 | Virado para a esquerda | `Todos os quadros de perfil olhando para a DIREITA.` |
+| Desenhou chão, plataforma, poeira, rastro ou brilho | `Refaça sem nada além do personagem: sem chão, plataforma, poeira, rastro, linhas de velocidade ou brilho. O jogo faz os efeitos.` |
+| Pose rara em outra escala ou traço | `Esta pose tem que ter a mesma altura, cabeça, contorno e cores do quadro "parado" anexado. Compare lado a lado e refaça.` |
+| Pedaço do quadro vizinho na célula | `Cada célula tem só um quadro, com margem vazia em volta; nenhum pedaço de outro quadro pode aparecer.` |
 | Pés em alturas diferentes | `Os pés ficam na mesma linha em todos os quadros, 4 pixels acima da borda de baixo da célula.` |
 
 ## Onde salvar
@@ -75,7 +86,8 @@ Pode subir tudo junto num commit (de preferência direto na `main`) e me avisar.
 
 1. Troco o magenta por transparente, reduzo cada quadro para 64 × 64 pixels exatos e prendo as cores na paleta (corrige pixels "sujos" da IA).
 2. Alinho os quadros pela linha dos pés e monto as animações no jogo (AnimatedSprite2D), com os quadros de golpe sincronizados com os quadros de ataque do moveset. As áreas de acerto continuam as mesmas.
-3. Mantenho o que já funciona: rastro dos golpes, amassar e esticar, flash de dano e efeitos.
+3. Mantenho o que já funciona: rastro dos golpes, amassar e esticar, flash de dano e efeitos (todos feitos pelo jogo, nunca desenhados no sprite).
+4. Antes de integrar, sigo as regras de avaliação de `design/identidade.md` ("Regras de produção do pixel art"): comparo cada pose com o parado aprovado, rodo a checagem de ilhas em todas as folhas dos dois personagens e procuro cenário e efeitos desenhados.
 
 ## Situação (15/10/2026)
 

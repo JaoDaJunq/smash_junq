@@ -61,14 +61,14 @@ Quadros:
 | Arquivo | Quadros |
 |---|---|
 | `transicoes_a.png` | **Virar:** 1) ainda olhando para a ESQUERDA, corpo começando a girar · 2) no meio da virada, de frente para a câmera, juba balançando · 3) já olhando para a DIREITA, em guarda de ginga. **Arrancada:** 4) corpo baixo, perna de trás empurrando o chão · 5) primeiro passo largo, inclinado para a frente · 6) entrando na corrida, braços para trás, juba esvoaçando |
-| `transicoes_b.png` | **Freada:** 1) pés derrapando à frente, corpo inclinado para trás, poeirinha · 2) ainda derrapando, braços abertos para se equilibrar · 3) voltando à guarda. **Pouso:** 4) tocando o chão, joelhos começando a dobrar · 5) agachado absorvendo o impacto, juba caída para a frente · 6) levantando para a guarda |
+| `transicoes_b.png` | **Freada:** 1) pés derrapando à frente, corpo inclinado para trás · 2) ainda derrapando, braços abertos para se equilibrar · 3) voltando à guarda. **Pouso:** 4) tocando o chão, joelhos começando a dobrar · 5) agachado absorvendo o impacto, juba caída para a frente · 6) levantando para a guarda |
 
 ### Seu Capivas
 
 | Arquivo | Quadros |
 |---|---|
 | `transicoes_a.png` | **Virar:** 1) ainda olhando para a ESQUERDA, barriga começando a girar · 2) no meio da virada, de frente para a câmera, toalha balançando · 3) já olhando para a DIREITA, parado e tranquilo. **Arrancada:** 4) peso jogado para a frente, barriga balançando · 5) primeiro passo pesado, chinelo batendo · 6) entrando na corrida desajeitada, toalha voando |
-| `transicoes_b.png` | **Freada:** 1) chinelos derrapando, corpo inclinado para trás, poeira · 2) barriga ainda indo para a frente, braços abertos · 3) se ajeitando, toalha caindo no ombro. **Pouso:** 4) chinelos tocando o chão · 5) agachado e amassado pelo peso, bochechas descendo, poeira · 6) se levantando devagar |
+| `transicoes_b.png` | **Freada:** 1) chinelos derrapando, corpo inclinado para trás · 2) barriga ainda indo para a frente, braços abertos · 3) se ajeitando, toalha caindo no ombro. **Pouso:** 4) chinelos tocando o chão · 5) agachado e amassado pelo peso, bochechas descendo · 6) se levantando devagar |
 
 **Importante na virada:** o quadro 1 olhando para a **esquerda** e o 3 para a **direita** (o jogo espelha sozinho quando a virada é no outro sentido).
 

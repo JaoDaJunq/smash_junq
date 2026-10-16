@@ -52,10 +52,10 @@ Quadros:
 | `pulo.png` | Pulo, queda e pouso | 1) agachado com esforço · 2) impulso · 3) subindo, pernas encolhidas, toalha voando · 4) topo, braços abertos · 5) caindo, bochechas subindo · 6) pouso pesado agachado |
 | `dor.png` | Levando golpe | 1) tranco para trás, bochecha amassada · 2) laranjinha saindo do lugar · 3) lançado de costas no ar · 4) lançado girando |
 | `jab.png` | Tapa de sumô | 1) preparo, mão espalmada recolhida · 2) tapa esticado à frente · 3) volta |
-| `golpe_frente.png` | Empurrão de barriga | 1) preparo, joga o peso para trás · 2) passo à frente · 3) impacto: barriga projetada à frente, com rastro · 4) recolhendo · 5) volta |
+| `golpe_frente.png` | Empurrão de barriga | 1) preparo, joga o peso para trás · 2) passo à frente · 3) impacto: barriga projetada à frente · 4) recolhendo · 5) volta |
 | `golpe_cima.png` | Cabeçada para cima | 1) abaixa a cabeça · 2) sobe o corpo · 3) impacto: cabeça para cima, laranjinha quase cai · 4) descendo · 5) volta |
-| `golpe_baixo.png` | Pisão de sumô | 1) levanta a perna bem alto · 2) perna no alto · 3) impacto: chinelo bate no chão, poeira · 4) recolhendo · 5) volta |
-| `aereo_neutro.png` | Bola giratória | 1) encolhendo · 2) bola, abraçando os joelhos · 3) impacto: bola girando, com rastro circular · 4) girando · 5) abrindo |
+| `golpe_baixo.png` | Pisão de sumô | 1) levanta a perna bem alto · 2) perna no alto · 3) impacto: chinelo bate no chão · 4) recolhendo · 5) volta |
+| `aereo_neutro.png` | Bola giratória | 1) encolhendo · 2) bola, abraçando os joelhos · 3) impacto: bola girando · 4) girando · 5) abrindo |
 
 ## Passo 3 · Animações — Lote 2
 
@@ -68,7 +68,7 @@ Quadros:
 | `especial_neutro.png` | Barrigada carregada | 1) meditando de olhos fechados · 2) enchendo a barriga · 3) barriga enorme · 4) barrigada para a frente · 5) impacto · 6) volta |
 | `especial_lado.png` | Abraço de capivara | 1) braços abertos · 2) avançando · 3) abraço apertado · 4) levantando · 5) arremessa por cima do ombro · 6) volta |
 | `especial_cima.png` | Pulo de bomba | 1) agachado · 2) impulso · 3) subindo, joelhos abraçados · 4) topo · 5) caindo de bomba · 6) impacto |
-| `especial_baixo.png` | Senta e faz onda de choque | 1) pulinho · 2) sentando no ar · 3) impacto sentado, poeira · 4) onda saindo · 5) levantando · 6) volta |
+| `especial_baixo.png` | Senta e faz onda de choque | 1) pulinho · 2) sentando no ar · 3) impacto sentado, bumbum no chão · 4) ainda sentado, barriga balançando · 5) levantando · 6) volta |
 | `defesa_esquiva.png` | Defesa e rolamento | 1) encolhido atrás da toalha esticada · 2) toalha tremendo · 3) rolamento: abaixa · 4) rolando · 5) rolando · 6) levanta |
 | `agarrar.png` | Agarrão e arremessos | 1) braços abertos agarrando · 2) abraçando · 3) arremesso para a frente · 4) arremesso para trás · 5) arremesso para cima · 6) arremesso para baixo |
 | `borda.png` | Borda | 1) pendurado com esforço, olhos arregalados · 2) balançando · 3) puxando o corpo · 4) barriga na plataforma · 5) de pé · 6) volta |

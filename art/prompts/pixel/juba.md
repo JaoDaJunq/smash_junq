@@ -49,10 +49,10 @@ Quadros:
 | `pulo.png` | Pulo, queda e pouso | 1) agachado preparando · 2) impulso saindo do chão · 3) subindo, pernas encolhidas · 4) topo · 5) caindo, braços para cima · 6) pouso agachado |
 | `dor.png` | Levando golpe | 1) tranco para trás, olhos apertados · 2) corpo dobrado, juba bagunçada · 3) lançado de costas no ar · 4) lançado girando de cabeça para baixo |
 | `jab.png` | Tapa rápido | 1) preparo, mão recolhida · 2) tapa esticado na altura do rosto · 3) volta para a guarda |
-| `golpe_frente.png` | Martelo (chute lateral alto) | 1) preparo, joelho sobe · 2) perna girando · 3) impacto: perna esticada na altura da cabeça, com rastro curvo · 4) perna voltando · 5) guarda |
-| `golpe_cima.png` | Meia-lua de frente (chute em arco para cima) | 1) preparo · 2) perna subindo pela frente · 3) impacto: perna no alto, acima da cabeça, com rastro curvo · 4) perna descendo · 5) guarda |
-| `golpe_baixo.png` | Rasteira | 1) agachando, mão no chão · 2) perna começa a varrer · 3) impacto: perna esticada rente ao chão, com rastro · 4) recolhendo · 5) levantando |
-| `aereo_neutro.png` | Parafuso no ar | 1) encolhido · 2) girando, pernas abrindo · 3) impacto: pernas abertas no giro, com rastro circular · 4) terminando o giro · 5) encolhido |
+| `golpe_frente.png` | Martelo (chute lateral alto) | 1) preparo, joelho sobe · 2) perna girando · 3) impacto: perna esticada na altura da cabeça · 4) perna voltando · 5) guarda |
+| `golpe_cima.png` | Meia-lua de frente (chute em arco para cima) | 1) preparo · 2) perna subindo pela frente · 3) impacto: perna no alto, acima da cabeça · 4) perna descendo · 5) guarda |
+| `golpe_baixo.png` | Rasteira | 1) agachando, mão no chão · 2) perna começa a varrer · 3) impacto: perna esticada rente ao chão · 4) recolhendo · 5) levantando |
+| `aereo_neutro.png` | Parafuso no ar | 1) encolhido · 2) girando, pernas abrindo · 3) impacto: pernas abertas no giro · 4) terminando o giro · 5) encolhido |
 
 ## Passo 3 · Animações — Lote 2
 
@@ -69,5 +69,5 @@ Quadros:
 | `defesa_esquiva.png` | Defesa e rolamento | 1) guarda baixa, braços cruzados · 2) guarda tremendo · 3) rolamento: abaixa · 4) rolando · 5) rolando · 6) levanta |
 | `agarrar.png` | Agarrão e arremessos | 1) mãos à frente agarrando · 2) segurando · 3) arremesso para a frente · 4) arremesso para trás · 5) arremesso para cima · 6) arremesso para baixo |
 | `borda.png` | Borda | 1) pendurado pelas mãos, olhos arregalados · 2) pendurado balançando · 3) puxando o corpo · 4) joelho na plataforma · 5) de pé · 6) guarda |
-| `tonto_pulo_duplo.png` | Tonto e pulo duplo | 1) tonto, estrelinhas · 2) tonto balançando · 3) pulo duplo: cambalhota começa · 4) de cabeça para baixo · 5) terminando · 6) abrindo |
+| `tonto_pulo_duplo.png` | Tonto e pulo duplo | 1) tonto, olhos girando · 2) tonto balançando · 3) pulo duplo: cambalhota começa · 4) de cabeça para baixo · 5) terminando · 6) abrindo |
 | `vitoria.png` | Vitória | 1) ginga · 2) ginga trocando · 3) pulo · 4) aterrissa · 5) mostra a língua · 6) aponta para a câmera |
