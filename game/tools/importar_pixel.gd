@@ -20,6 +20,10 @@ extends SceneTree
 
 const NATIVE := 64
 const BASELINE := 59
+## Pedaço solto com até este número de pixels (separado do personagem) é migalha
+## da célula vizinha ou da redução de escala e é apagado. Objetos de propósito
+## (laranjinha, coco, castanha) são bem maiores que isso. Playtest 01.
+const MIGALHA := 4
 ## personagem -> animação -> índices dos quadros aproveitáveis (na ordem da grade)
 const SELECAO := {}
 ## Intermediários errados (pose que não está entre os vizinhos): personagem ->
@@ -287,6 +291,11 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 			hi = hi.max(p)
 		var w := hi.x - lo.x + 1
 		var h := hi.y - lo.y + 1
+		if comp.size() <= MIGALHA:
+			for p in comp:
+				img.set_pixel(p.x, p.y, Color(0, 0, 0, 0))
+			print("  limpo: %s, célula %d, migalha de %d px em (%d, %d)" % [sheet_name, index + 1, comp.size(), lo.x, lo.y])
+			continue
 		if w <= 2 and h >= 3 and (lo.x <= 5 or hi.x >= NATIVE - 6):
 			var avg := Color(0, 0, 0, 0)
 			for p in comp:
