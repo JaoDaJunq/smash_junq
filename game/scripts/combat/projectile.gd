@@ -8,6 +8,13 @@ var owner_fighter: Fighter
 var velocity := Vector2.ZERO
 var lifetime := 1.2
 var color := Color.WHITE
+## Sprite opcional (tira de quadros 64x64 do importador, ex.: castanha do Juba).
+## Sem sprite, desenha o círculo provisório.
+var sprite: Texture2D
+var sprite_scale := 2.0
+var spin_fps := 14.0
+var _frames: Array[Rect2] = []   # recorte de cada quadro (só a parte desenhada)
+var _age := 0.0
 
 
 ## Cria o projétil como filho do pai do dono e o posiciona. Retorna o projétil.
@@ -22,6 +29,26 @@ static func spawn(scene: PackedScene, owner_f: Fighter, attack_data: AttackData,
 	owner_f.get_parent().add_child(p)
 	p.global_position = at
 	return p
+
+
+## Usa uma tira de pixel art no lugar do círculo provisório.
+func set_sprite(tex: Texture2D, scale_px := 2.0) -> void:
+	sprite = tex
+	sprite_scale = scale_px
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_frames.clear()
+	var img := tex.get_image()
+	for i in maxi(1, tex.get_width() / 64):
+		var used := img.get_region(Rect2i(i * 64, 0, 64, 64)).get_used_rect()
+		if used.size != Vector2i.ZERO:
+			_frames.append(Rect2(used.position + Vector2i(i * 64, 0), used.size))
+	queue_redraw()
+
+
+func _process(delta: float) -> void:
+	if sprite:
+		_age += delta
+		queue_redraw()
 
 
 func _physics_process(delta: float) -> void:
@@ -42,6 +69,14 @@ func _physics_process(delta: float) -> void:
 
 
 func _draw() -> void:
+	if sprite and not _frames.is_empty():
+		var src: Rect2 = _frames[int(_age * spin_fps) % _frames.size()]
+		var size := src.size * sprite_scale
+		var flip := -1.0 if velocity.x < 0.0 else 1.0
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(flip, 1.0))
+		draw_texture_rect_region(sprite, Rect2(-size * 0.5, size), src)
+		draw_set_transform(Vector2.ZERO)
+		return
 	var r := data.hitbox_radius if data else 12.0
 	draw_circle(Vector2.ZERO, r, color)
 	draw_arc(Vector2.ZERO, r, 0.0, TAU, 20, Color.WHITE, 2.0)

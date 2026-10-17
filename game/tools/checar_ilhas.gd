@@ -15,6 +15,10 @@ extends SceneTree
 const NATIVE := 64
 ## Ilha com até este número de pixels é tratada como pixel solto/sobra.
 const SOBRA := 12
+## Tiras que não são o lutador (efeitos e projéteis): pedaços soltos são esperados.
+const NAO_LUTADOR := ["castanha"]
+## Objetos soltos de propósito: "personagem/animação" -> o que é.
+const OBJETOS := {"seu_capivas/dor": "laranjinha voando da cabeça (piada)"}
 
 
 func _initialize() -> void:
@@ -31,6 +35,8 @@ func _initialize() -> void:
 		var anims := meta.keys()
 		anims.sort()
 		for anim in anims:
+			if anim.begins_with("fx_") or anim in NAO_LUTADOR or OBJETOS.has("%s/%s" % [person, anim]):
+				continue
 			var img := Image.load_from_file(dir.path_join(anim + ".png"))
 			img.convert(Image.FORMAT_RGBA8)
 			var n := img.get_width() / NATIVE

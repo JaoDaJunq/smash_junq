@@ -44,6 +44,11 @@
     "fator": 2,
     "impacto": 6
   },
+  "castanha": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
   "correr": {
     "quadros": 12,
     "fator": 2,
@@ -53,6 +58,11 @@
     "quadros": 6,
     "fator": 1,
     "impacto": 3
+  },
+  "descanso": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
   },
   "dor": {
     "quadros": 7,
@@ -83,6 +93,11 @@
     "quadros": 3,
     "fator": 1,
     "impacto": 1
+  },
+  "fx_folhas": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
   },
   "golpe_baixo": {
     "quadros": 9,

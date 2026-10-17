@@ -7,6 +7,9 @@ extends Fighter
 ##   cima: teletransporte curto (recuperação)    baixo: contra-ataque
 
 const PROJECTILE := preload("res://scenes/combat/projectile.tscn")
+## Arte da castanha (especial neutro) e das folhas do Sumiço do Mico (especial para cima).
+const CASTANHA_PATH := "res://assets/characters/juba/pixel/castanha.png"
+const FOLHAS_PATH := "res://assets/characters/juba/pixel/fx_folhas.png"
 
 @export_group("Especiais")
 @export var projectile_speed := 1000.0
@@ -61,7 +64,9 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 		"special_neutral":
 			if frame == attack.startup:
 				var vel := Vector2(projectile_speed * facing, 0.0)
-				Projectile.spawn(PROJECTILE, self, attack, hitbox_center(attack), vel, projectile_life)
+				var p := Projectile.spawn(PROJECTILE, self, attack, hitbox_center(attack), vel, projectile_life)
+				if has_art and ResourceLoader.exists(CASTANHA_PATH):
+					p.set_sprite(load(CASTANHA_PATH))
 		"special_side":
 			_dash(frame)
 		"special_up":
@@ -90,6 +95,10 @@ func _teleport() -> void:
 	move_and_collide(_teleport_dir * teleport_distance)  # para se bater no palco
 	_trail_to = global_position
 	_trail_time = 0.25
+	if has_art and ResourceLoader.exists(FOLHAS_PATH):
+		var leaves: Texture2D = load(FOLHAS_PATH)
+		PixelFx.spawn(get_parent(), leaves, _trail_from, 0.35)   # some numa explosão de folhas
+		PixelFx.spawn(get_parent(), leaves, _trail_to, 0.35)     # e reaparece em outra
 	velocity = Vector2.ZERO
 	_attack_in_air = true  # daqui em diante é golpe de ar (cai e pousa normalmente)
 

@@ -54,10 +54,15 @@
     "fator": 1,
     "impacto": 3
   },
+  "descanso": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
   "dor": {
-    "quadros": 7,
-    "fator": 2,
-    "impacto": 4
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
   },
   "especial_baixo": {
     "quadros": 11,

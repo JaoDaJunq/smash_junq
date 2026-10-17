@@ -283,6 +283,9 @@ func _air() -> Array:
 			return ["tonto_pulo_duplo", spin[int(_flip * spin.size())]]
 		_flip = -1.0
 	if fighter.state == Fighter.State.RESPAWN:
+		# Na plataforma de volta: sentado descansando; ao sair dela, cai normalmente.
+		if has_anim("descanso"):
+			return _loop("descanso", 3.0)
 		return ["pulo", _at("pulo", 3)]
 	if _since_jump < 0.08:
 		return ["pulo", _at("pulo", 1)]
