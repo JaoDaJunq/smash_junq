@@ -8,7 +8,8 @@ lado a lado numa linha) para a grade do importador: 1536x1024, 3x2 células de
 
 Uso (a partir da raiz do repositório):
   python game/tools/normalizar_folha.py <entrada.png> [saida.png]
-Sem saída, sobrescreve a entrada. Criado no playtest 01 (o gerador às vezes ignora a grade).
+Sem saída, sobrescreve a entrada. --topo: encosta o desenho no alto da célula e
+corta o que passar de 64 embaixo (poses penduradas, presas pela mão). Criado no playtest 01 (o gerador às vezes ignora a grade).
 """
 import sys
 from PIL import Image
@@ -49,6 +50,9 @@ def main():
         i = args.index("--bloco")
         BLOCO = float(args[i + 1])
         del args[i:i + 2]
+    topo = "--topo" in args
+    if topo:
+        args.remove("--topo")
     src = args[0]
     dst = args[1] if len(args) > 1 else src
     im = Image.open(src).convert("RGB")
@@ -83,10 +87,14 @@ def main():
                 p = im.getpixel((min(W - 1, int(xa + (x + 0.5) * b)), min(H - 1, int(ya + (y + 0.5) * b))))
                 if not bg(p):
                     small.putpixel((x, y), (*p, 255))
+        if topo and h > NATIVE:  # pendurado: a mão fica no topo, corta só a ponta de baixo
+            print(f"  quadro {i + 1}: {h - NATIVE} linha(s) de baixo cortadas")
+            small = small.crop((0, 0, w, NATIVE))
+            h = NATIVE
         if w > NATIVE or h > NATIVE:
             sys.exit(f"{src}: quadro {i + 1} com {w}x{h} nativos (bloco {b}); maior que 64")
         cell = Image.new("RGBA", (NATIVE, NATIVE), (0, 0, 0, 0))
-        cell.alpha_composite(small, ((NATIVE - w) // 2, max(0, BASELINE + 1 - h)))
+        cell.alpha_composite(small, ((NATIVE - w) // 2, 0 if topo else max(0, BASELINE + 1 - h)))
         big = cell.resize((CELL, CELL), Image.NEAREST)
         c, r = i % 3, i // 3
         layer = Image.new("RGB", (CELL, CELL), MAG)

@@ -119,10 +119,25 @@
     "fator": 1,
     "impacto": 1
   },
+  "jab_b": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
+  },
+  "jab_c": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
   "parado": {
     "quadros": 8,
     "fator": 2,
     "impacto": 4
+  },
+  "pendurado": {
+    "quadros": 2,
+    "fator": 1,
+    "impacto": 1
   },
   "pouso": {
     "quadros": 3,

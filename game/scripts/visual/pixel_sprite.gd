@@ -76,6 +76,7 @@ var _dash := 9.0         # tempo desde a arrancada
 var _brake := 9.0        # tempo desde que parou de correr
 var _land := 9.0         # tempo desde o pouso
 var _step_phase := 0.0   # 0..1 dentro do ciclo de andar/correr
+var _hang_hand := Vector2(-1, -1)  # pixel da mão que segura a quina (folha "pendurado")
 
 
 func _ready() -> void:
@@ -114,6 +115,8 @@ func _ready() -> void:
 			_kick(0.12)
 			_hit_time = 0.0)
 	position = Vector2(0, FEET_Y)
+	if _textures.has("pendurado"):
+		_hang_hand = _top_pixel(_textures["pendurado"])
 	_show("parado", 0)
 
 
@@ -156,6 +159,9 @@ func _process(delta: float) -> void:
 	# Carga: treme cada vez mais e brilha; na carga cheia pisca branco.
 	var charge := fighter.charge_ratio()
 	_sprite.position = Vector2(-center_x, -(BASELINE + 1))
+	if anim == "pendurado" and _hang_hand.x >= 0.0 and fighter._ledge != null:
+		# A mão do desenho fica exatamente na quina da plataforma.
+		_sprite.position = to_local(fighter._ledge.global_position) - _hang_hand
 	if charge >= 0.0:
 		var amp := 0.3 + 1.2 * charge
 		_sprite.position.x += amp * sin(_clock * 70.0)
@@ -174,6 +180,16 @@ func a_charge() -> String:
 func set_mood(face: String, seconds := 1.5) -> void:
 	_mood = face
 	_mood_time = seconds
+
+
+## Pixel opaco mais alto do 1º quadro (a ponta dos dedos de quem está pendurado).
+func _top_pixel(tex: Texture2D) -> Vector2:
+	var img := tex.get_image()
+	for y in NATIVE:
+		for x in NATIVE:
+			if img.get_pixel(x, y).a > 0.5:
+				return Vector2(x + 0.5, y)
+	return Vector2(-1, -1)
 
 
 func has_anim(a: String) -> bool:
@@ -274,6 +290,8 @@ func _pick() -> Array:
 			var hit: Array = _span("dor", 0, 1) if n0 >= 4 else [0]
 			return ["dor", hit[mini(hit.size() - 1, int(_hit_time / 0.15 * hit.size()))]]
 		S.LEDGE:
+			if has_anim("pendurado"):
+				return _loop("pendurado", 1.5)  # pose parada, só respirando
 			return _loop("borda", 3.0, _span("borda", 0, 1))
 		S.SHIELD:
 			return _loop("defesa_esquiva", 8.0, _span("defesa_esquiva", 0, 1))

@@ -68,6 +68,16 @@ func _film(f: Fighter, other: Fighter, file: String) -> void:
 	_check("%s correndo usa 'correr'" % tag, v.anim == "correr", v.anim)
 	Input.action_release(pid + "_right")
 	await _reset(f)
+	# Pendurado na borda: pose parada, com a ponta dos dedos na quina da plataforma.
+	var ledge: Node2D = get_tree().get_nodes_in_group("ledges")[0]
+	f._grab_ledge(ledge, int(ledge.get_meta("side", 1)))
+	await _frames(6)
+	_check("%s pendurado usa 'pendurado'" % tag, v.anim == "pendurado", v.anim)
+	var hand := v._sprite.to_global(v._hang_hand)
+	_check("%s segura a quina com a mão" % tag, hand.distance_to(ledge.global_position) <= 4.0,
+		"mão a %.1f px da quina" % hand.distance_to(ledge.global_position))
+	f._release_ledge(Fighter.State.AIR)
+	await _reset(f)
 	_double_jump(pid)
 	rows["pulo"] = await _record(f, v, 72, 6)
 	for move in ["jab", "ftilt", "utilt", "dtilt", "special_neutral"]:

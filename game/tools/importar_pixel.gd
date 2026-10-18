@@ -31,8 +31,11 @@ const SELECAO := {}
 const MEIO_REPETIR := {
 	"seu_capivas": {"dor": [2]},  # veio em pé entre "lançado de costas" e "girando"
 }
+## Animações que não se alinham pelos pés (ficam como vieram; ex.: pendurado na
+## borda, que o jogo prende pela mão).
+const SEM_ALINHAR := ["pendurado"]
 ## Animações em loop (recebem também o intermediário entre o último e o primeiro).
-const LOOPS := ["parado", "andar", "correr", "vitoria", "tonto"]
+const LOOPS := ["parado", "andar", "correr", "vitoria", "tonto", "descanso", "pendurado"]
 ## Folhas com mais de uma animação: folha -> {animação: quadros}.
 const DIVIDIR := {
 	"transicoes_a": {"virar": [0, 1, 2], "arrancar": [3, 4, 5]},
@@ -58,7 +61,9 @@ func _initialize() -> void:
 		var anim := file.get_basename()
 		if not file.ends_with(".png") or anim == "base" or anim.ends_with("_meio"):
 			continue
-		var frames := _align(_read(src.path_join(file), SELECAO.get(who, {}).get(anim, [])))
+		var frames := _read(src.path_join(file), SELECAO.get(who, {}).get(anim, []))
+		if anim not in SEM_ALINHAR:
+			frames = _align(frames)
 		if DIVIDIR.has(anim):
 			for part in DIVIDIR[anim]:
 				var sub: Array[Image] = []
