@@ -136,6 +136,41 @@ func _run() -> void:
 	_check("Ataque interrompe o agarrão", p2.damage_percent > 0.0 and p1.state != Fighter.State.HELD and p2.state != Fighter.State.HOLDING, "P2 %.1f%%, P1 %s" % [p2.damage_percent, Fighter.State.keys()[p1.state]])
 
 
+	# Defesa andando = esquiva rápida (estilo Brawlhalla), sem passar pelo escudo
+	await _face_off()
+	p2.state = Fighter.State.IDLE
+	Input.action_press("p2_left")
+	await _frames(6)
+	var xs := p2.global_position.x
+	await _tap("p2_shield", 1.0, 2)
+	_check("Defesa andando vira esquiva intocável", p2.state == Fighter.State.DODGE and not p2.can_be_hit(), Fighter.State.keys()[p2.state])
+	Input.action_release("p2_left")
+	await _frames(30)
+	_check("Esquiva andando desloca para o lado do movimento", p2.global_position.x < xs - 80.0, "%.0f px" % (p2.global_position.x - xs))
+
+	# Escape de combo: no meio do atordoamento, Defesa esquiva; depois tem espera
+	await _face_off()
+	p2.damage_percent = 120.0
+	Input.action_press("p1_right")
+	await _tap("p1_attack")
+	Input.action_release("p1_right")
+	for i in 40:
+		if p2.state == Fighter.State.HITSTUN:
+			break
+		await get_tree().physics_frame
+	var waited := 0
+	while p2.state == Fighter.State.HITSTUN and not p2.can_escape() and waited < 120:
+		await get_tree().physics_frame
+		waited += 1
+	_check("Atordoado não escapa logo de cara", waited > 3, "%d quadros" % waited)
+	await _tap("p2_shield")
+	await _frames(2)
+	_check("Defesa no atordoamento escapa com esquiva", p2.state == Fighter.State.DODGE and not p2.can_be_hit(), Fighter.State.keys()[p2.state])
+	_check("Escape tem tempo de espera", p2._escape_wait > 1.0, "%.2f s" % p2._escape_wait)
+	await _frames(120)
+	await _face_off()
+
+
 func grab_wait() -> int:
 	return p1.grab_startup + p1.grab_active + 2
 

@@ -21,6 +21,8 @@ const TURN_TIME := 0.12
 const DASH_TIME := 0.15
 const BRAKE_TIME := 0.18
 const LAND_TIME := 0.15
+## Comemoração: toca uma vez neste tempo e fica parada na pose final.
+const VICTORY_TIME := 2.2
 
 ## Golpe do moveset -> animação.
 const ATTACK_ANIM := {
@@ -69,6 +71,9 @@ var _throw := 0.0        # tempo mostrando o arremesso depois de segurar
 var _hit_time := 0.0
 var _mood := ""
 var _mood_time := 0.0
+var _mood_age := 0.0
+var _escape_flash := 0.0  # piscada quando o escape de combo volta a ficar disponível
+var _escape_was_waiting := false     # tempo desde o começo da reação atual
 var _last_state := -1
 var _last_facing := 0
 var _turn := 9.0         # tempo desde a última virada no chão
@@ -130,6 +135,13 @@ func _process(delta: float) -> void:
 	_brake += delta
 	_land += delta
 	_mood_time = maxf(0.0, _mood_time - delta)
+	_mood_age += delta
+	_escape_flash = maxf(0.0, _escape_flash - delta)
+	if fighter != null:
+		var waiting := fighter._escape_wait > 0.0
+		if _escape_was_waiting and not waiting:
+			_escape_flash = 0.18
+		_escape_was_waiting = waiting
 	_throw = maxf(0.0, _throw - delta)
 	if fighter == null:
 		return
@@ -156,6 +168,8 @@ func _process(delta: float) -> void:
 		c.a = 0.45 if int(_clock * 12.0) % 2 == 0 else 0.8
 	elif fighter._is_intangible():
 		c.a = 0.45
+	if _escape_flash > 0.0:
+		c = Color(1.6, 1.6, 2.0, c.a)
 	# Carga: treme cada vez mais e brilha; na carga cheia pisca branco.
 	var charge := fighter.charge_ratio()
 	_sprite.position = Vector2(-center_x, -(BASELINE + 1))
@@ -180,6 +194,7 @@ func a_charge() -> String:
 func set_mood(face: String, seconds := 1.5) -> void:
 	_mood = face
 	_mood_time = seconds
+	_mood_age = 0.0
 
 
 ## Pixel opaco mais alto do 1º quadro (a ponta dos dedos de quem está pendurado).
@@ -253,7 +268,7 @@ func _pick() -> Array:
 	match fighter.state:
 		S.IDLE:
 			if _mood == "vitoria" and _mood_time > 0.0 and has_anim("vitoria"):
-				return _loop("vitoria", 8.0)
+				return _once("vitoria", _mood_age, VICTORY_TIME)
 			if _throw > 0.0 and has_anim("agarrar"):
 				return ["agarrar", _at("agarrar", 2)]
 			if _brake < BRAKE_TIME and has_anim("frear"):

@@ -18,6 +18,8 @@ var attack_range := 95.0
 
 var mode := Mode.APPROACH
 var rng := RandomNumberGenerator.new()
+## Chance, por quadro em que pode, de escapar do combo com a esquiva.
+@export var escape_chance := 0.04
 
 var _hold := {}           # ação -> quadros restantes segurando
 var _cooldown := 0
@@ -44,6 +46,9 @@ func think(me: Fighter, _delta: float) -> void:
 	match me.state:
 		Fighter.State.HITSTUN, Fighter.State.SHIELD_BREAK, Fighter.State.LAG:
 			mode = Mode.REACT
+			# Às vezes escapa do combo com a esquiva (nem sempre, para ser justo).
+			if me.state == Fighter.State.HITSTUN and me.can_escape() and rng.randf() < escape_chance:
+				_tap("shield")
 			return
 		Fighter.State.HELD:
 			mode = Mode.REACT

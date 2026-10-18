@@ -44,6 +44,9 @@ func _ready() -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 12)
 	col.add_child(gap)
+	var controls := add_button(col, "Controles", func() -> void: Game.go_to(Game.CONTROLS_SCENE))
+	controls.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	focusables.append(controls)
 	var back := add_button(col, "Voltar", _go_back, true)
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	focusables.append(back)

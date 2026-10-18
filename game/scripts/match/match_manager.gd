@@ -96,7 +96,7 @@ func _build_fighters() -> void:
 		pause_menu.process_mode = Node.PROCESS_MODE_DISABLED
 	for pid in IDS:
 		(fighters[pid] as Fighter).hit_taken.connect(_on_fighter_hit.bind(pid))
-	ko_scored.connect(func(scorer: String, _victim: String) -> void: _set_mood(scorer, "vitoria", 1.6))
+	ko_scored.connect(func(scorer: String, _victim: String) -> void: _set_mood(scorer, "vitoria", 2.4))
 
 
 ## Zera o placar e os lutadores e começa a contagem. Usado na entrada e na revanche.

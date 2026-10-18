@@ -10,16 +10,15 @@ const SCROLL_STEP := 160
 const SCROLL_HEIGHT := 700.0
 const CONTENT_WIDTH := 1580.0
 
-## Ação, Jogador 1, Jogador 2, Gamepad.
+## Ação e as ações do mapa que ela mostra (as teclas vêm de Opções → Controles).
 const CONTROLS: Array[Array] = [
-	["Mover", "W A S D", "Setas", "Analógico / direcional"],
-	["Pular", "Espaço", "Numpad 0", "A"],
-	["Ataque", "J", "Numpad 1", "X"],
-	["Especial", "K", "Numpad 2", "B"],
-	["Escudo (no ar: esquiva)", "L", "Numpad 3", "RB ou LB"],
-	["Rolagem", "L + esquerda/direita", "Numpad 3 + seta", "RB + direção"],
-	["Agarrão", "L + J", "Numpad 3 + Numpad 1", "RT"],
-	["Pausa", "Esc", "Numpad Enter", "Start"],
+	["Mover", ["up", "left", "down", "right"]],
+	["Pular", ["jump"]],
+	["Ataque", ["attack"]],
+	["Especial", ["special"]],
+	["Defesa / esquiva", ["shield"]],
+	["Agarrão", ["grab"]],
+	["Pausa", ["pause"]],
 ]
 const RULES: Array[String] = [
 	"Cada golpe que acerta aumenta o dano (%) do adversário.",
@@ -29,11 +28,11 @@ const RULES: Array[String] = [
 	"KO dos dois ao mesmo tempo no ponto final: morte súbita.",
 ]
 const TIPS: Array[String] = [
-	"Correr: toque duplo na direção (ou empurre o analógico rápido).",
-	"Descer da plataforma: aperte para baixo.",
-	"Na borda: para cima sobe, pulo salta.",
-	"Segurando alguém: Ataque bate, uma direção arremessa.",
-	"No ar: o escudo vira esquiva.",
+	"Correr: toque duplo na direção. Descer da plataforma: para baixo.",
+	"Na borda: para cima sobe, pulo salta. Segurando alguém: Ataque bate, direção arremessa.",
+	"Defesa parado = escudo; andando ou no ar = esquiva intocável. Defesa + Ataque agarra.",
+	"Levou golpe? Depois de um instante, Defesa escapa do combo (espera 2 s).",
+	"Ataque 3 vezes seguidas faz uma sequência. Troque as teclas em Opções → Controles.",
 ]
 
 var table: GridContainer
@@ -77,15 +76,24 @@ func _build_table() -> Control:
 	table = GridContainer.new()
 	table.columns = 4
 	table.add_theme_constant_override("h_separation", 32)
-	table.add_theme_constant_override("v_separation", 10)
+	table.add_theme_constant_override("v_separation", 8)
 	panel.add_child(table)
 	var heads := ["Ação", "Jogador 1 (teclado)", "Jogador 2 (teclado)", "Gamepad"]
 	var colors := [ACCENT, Game.PLAYER_COLORS["p1"], Game.PLAYER_COLORS["p2"], GOOD]
 	for i in heads.size():
 		table.add_child(_cell(heads[i], 26, colors[i]))
 	for row in CONTROLS:
-		for i in row.size():
-			table.add_child(_cell(row[i], CELL_SIZE, MUTED if i == 0 else Color(0.953, 0.937, 0.902)))
+		table.add_child(_cell(row[0], CELL_SIZE, MUTED))
+		for col in [["p1", "teclado"], ["p2", "teclado"], ["p1", "controle"]]:
+			var names: Array[String] = []
+			for act in row[1]:
+				var n := Controles.describe("%s_%s" % [col[0], act], col[1])
+				if n != "—" and n not in names:
+					names.append(n)
+			var text := " ".join(names) if not names.is_empty() else "—"
+			if row[1].size() > 1 and col[1] == "controle":
+				text = "Analógico / direcional"
+			table.add_child(_cell(text, CELL_SIZE, Color(0.953, 0.937, 0.902)))
 	return panel
 
 

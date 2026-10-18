@@ -6,6 +6,7 @@ extends Node
 
 const MAIN_MENU := preload("res://scenes/ui/main_menu.tscn")
 const OPTIONS := preload("res://scenes/ui/options.tscn")
+const CONTROLS := preload("res://scenes/ui/controls.tscn")
 const HOW_TO_PLAY := preload("res://scenes/ui/how_to_play.tscn")
 const TEST_FILE := "user://settings_menus_smoke.cfg"
 const VIEW := Vector2(1920, 1080)
@@ -35,6 +36,7 @@ func _run() -> void:
 	_test_settings_and_buses()
 	await _test_main_menu()
 	await _test_options()
+	await _test_controls()
 	await _test_how_to_play()
 
 
@@ -101,8 +103,8 @@ func _test_options() -> void:
 	var o: OptionsScreen = OPTIONS.instantiate()
 	add_child(o)
 	await _frames(5)
-	_check("Opções: 3 deslizantes, 2 liga/desliga e Voltar", o.focusables.size() == 6 and o.sliders.size() == 3 and o.toggles.size() == 2 \
-		and o.buttons.size() == 1 and o.buttons[0].text == "Voltar", str(o.focusables.size()))
+	_check("Opções: 3 deslizantes, 2 liga/desliga, Controles e Voltar", o.focusables.size() == 7 and o.sliders.size() == 3 and o.toggles.size() == 2 \
+		and o.buttons.size() == 2 and o.buttons[1].text == "Voltar", str(o.focusables.size()))
 	_check("Opções: foco inicial em Volume geral", o.sliders["master_volume"].has_focus(), "")
 	_check("Opções: mostra os valores salvos", is_equal_approx(o.sliders["master_volume"].value, 0.8) \
 		and is_equal_approx(o.sliders["sfx_volume"].value, 1.0) and is_equal_approx(o.sliders["music_volume"].value, 0.7), "")
@@ -183,7 +185,12 @@ func _test_options() -> void:
 	var col := o.get_child(1).get_child(0) as Control
 	_check("Opções cabem em 1920x1080", col.get_combined_minimum_size().x <= VIEW.x and col.get_combined_minimum_size().y <= VIEW.y, str(col.get_combined_minimum_size()))
 	await _tap("p1_down")
-	_check("Voltar fica com foco", o.buttons[0].has_focus(), "")
+	_check("Controles fica com foco", o.buttons[0].has_focus() and o.buttons[0].text == "Controles", o.buttons[0].text)
+	Game.requested_scene = ""
+	await _tap("p1_attack")
+	_check("Controles abre a tela de controles", Game.requested_scene == Game.CONTROLS_SCENE, Game.requested_scene)
+	await _tap("p1_down")
+	_check("Voltar fica com foco", o.buttons[1].has_focus(), "")
 	Game.requested_scene = ""
 	await _tap("p1_attack")
 	_check("Voltar leva ao menu principal", Game.requested_scene == Game.MENU_SCENE, Game.requested_scene)
@@ -210,14 +217,45 @@ func _test_shake_reaches_camera() -> void:
 	await _frames(2)
 
 
+# --- Controles ---
+
+func _test_controls() -> void:
+	Controles.file_path = "user://controles_teste.cfg"
+	Controles.reset_to_defaults()
+	var c: ControlsScreen = CONTROLS.instantiate()
+	add_child(c)
+	await _frames(5)
+	_check("Controles: um botão por ação e jogador", c.cells.size() == Controles.ACTIONS.size() * 2, str(c.cells.size()))
+	_check("Controles: Defesa do J1 é Shift", Controles.describe("p1_shield") == "Shift", Controles.describe("p1_shield"))
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	c._start_listen("p1_attack", c.cells["p1_attack"])
+	c.apply_binding("p1_attack", click)
+	_check("Controles: Ataque do J1 no mouse esquerdo", Controles.describe("p1_attack") == "Mouse esquerdo", Controles.describe("p1_attack"))
+	_check("Controles: o controle (gamepad) continua", Controles.describe("p1_attack", "controle") == "X", Controles.describe("p1_attack", "controle"))
+	var key := InputEventKey.new()
+	key.physical_keycode = KEY_K
+	key.pressed = true
+	var conflicts := Controles.rebind("p1_jump", key)
+	_check("Controles: avisa tecla repetida", "p1_special" in conflicts, str(conflicts))
+	Controles.load_controls()
+	_check("Controles: trocas ficam salvas", Controles.describe("p1_attack") == "Mouse esquerdo" and Controles.describe("p1_jump") == "K", Controles.describe("p1_jump"))
+	Controles.reset_to_defaults()
+	_check("Controles: restaurar padrão", Controles.describe("p1_attack") == "J" and Controles.describe("p1_jump") == "Espaço", Controles.describe("p1_attack"))
+	c.queue_free()
+	Controles.file_path = Controles.FILE_PATH
+	await _frames(2)
+
+
 # --- Como jogar ---
 
 func _test_how_to_play() -> void:
 	var h: HowToPlayScreen = HOW_TO_PLAY.instantiate()
 	add_child(h)
 	await _frames(6)
-	_check("Como jogar: tabela com cabeçalho e 8 linhas", h.table.get_child_count() == 4 * (1 + HowToPlayScreen.CONTROLS.size()), str(h.table.get_child_count()))
-	_check("Como jogar: textos dos 3 controles", _has_text(h.table, "Numpad 3 + Numpad 1") and _has_text(h.table, "RT") and _has_text(h.table, "L + J"), "")
+	_check("Como jogar: tabela com cabeçalho e 7 linhas", h.table.get_child_count() == 4 * (1 + HowToPlayScreen.CONTROLS.size()), str(h.table.get_child_count()))
+	_check("Como jogar: textos dos 3 controles", _has_text(h.table, "Shift") and _has_text(h.table, "RT") and _has_text(h.table, "Numpad 3"), "")
 	_check("Como jogar: 3 a 5 regras", HowToPlayScreen.RULES.size() >= 3 and HowToPlayScreen.RULES.size() <= 5, str(HowToPlayScreen.RULES.size()))
 	_check("Como jogar: Voltar com foco", h.buttons.size() == 1 and h.buttons[0].text == "Voltar" and h.buttons[0].has_focus(), "")
 	var col := h.scroll.get_parent() as Control

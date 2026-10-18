@@ -6,6 +6,7 @@ const MENU_SCENE := "res://scenes/ui/main_menu.tscn"
 const MODE_SCENE := "res://scenes/ui/mode_select.tscn"
 const SELECT_SCENE := "res://scenes/ui/character_select.tscn"
 const OPTIONS_SCENE := "res://scenes/ui/options.tscn"
+const CONTROLS_SCENE := "res://scenes/ui/controls.tscn"
 const HOW_TO_PLAY_SCENE := "res://scenes/ui/how_to_play.tscn"
 const MATCH_SCENE := "res://scenes/match.tscn"
 

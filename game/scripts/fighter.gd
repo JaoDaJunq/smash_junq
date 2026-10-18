@@ -7,6 +7,8 @@ extends CharacterBody2D
 ## ganchos marcados como "Gancho para personagens".
 ## Valores em pixels e segundos; ajustar no playtest.
 
+## Escapou de um combo com a esquiva.
+signal escaped
 signal damage_changed(percent: float)
 ## Avisos para efeitos visuais e sons (não mudam regras do jogo).
 signal hit_taken(attacker: Node2D, data: AttackData, launch: Vector2)
@@ -63,10 +65,10 @@ const LAYER_PLATFORM := 2
 @export var roll_speed := 700.0
 @export var roll_frames := 24
 ## Quadros (início, fim) sem poder ser atingido.
-@export var roll_invuln := Vector2i(4, 16)
+@export var roll_invuln := Vector2i(2, 16)  # intocável quase na hora (estilo Brawlhalla)
 @export var air_dodge_speed := 650.0
 @export var air_dodge_frames := 30
-@export var air_dodge_invuln := Vector2i(3, 20)
+@export var air_dodge_invuln := Vector2i(2, 20)
 @export_group("Agarrão")
 @export var grab_reach := Vector2(52, -10)
 @export var grab_radius := 30.0
@@ -109,6 +111,13 @@ var _hit_targets: Array[Fighter] = []
 var _lag_frames := 0
 
 var _hitstun := 0.0
+var _hitstun_total := 0.0
+## Escape de combo: no meio do atordoamento, Defesa faz uma esquiva (com espera).
+@export var escape_after := 0.35        # fração do atordoamento que precisa passar
+@export var escape_cooldown := 2.0      # segundos até poder escapar de novo
+var _escape_wait := 0.0
+var _shield_was_down := false
+var _shield_tap := false   # Defesa acabou de ser apertada (neste quadro de física)
 var _hitstop := 0
 var _launch := Vector2.ZERO  # parte do movimento que vem do golpe recebido
 var _fall := 0.0             # queda acumulada durante o atordoamento
@@ -181,6 +190,10 @@ func _physics_process(delta: float) -> void:
 		controls.begin_frame()
 		brain.think(self, delta)
 	invincible_time = maxf(invincible_time - delta, 0.0)
+	_escape_wait = maxf(_escape_wait - delta, 0.0)
+	var shield_down := controls.pressed("shield")
+	_shield_tap = shield_down and not _shield_was_down
+	_shield_was_down = shield_down
 	_update_holding()
 	# Guarda o próximo toque da sequência do ataque básico, mesmo durante a pausa de impacto.
 	if state == State.ATTACK and JAB_CHAIN.has(attack_id) and attack_frame >= 1 			and controls.just_pressed("attack") and _stick_direction() == "neutral":
@@ -246,7 +259,12 @@ func _process_ground(dir: float, run_trigger: bool, delta: float) -> void:
 		start_grab()
 		return
 	if controls.pressed("shield"):
-		_enter_shield()
+		# Defesa (Shift): parado levanta o escudo; andando ou correndo, esquiva
+		# rápida e intocável para o lado do movimento (como no Brawlhalla).
+		if _shield_tap and absf(dir) > 0.0:
+			_start_roll(int(signf(dir)))
+		else:
+			_enter_shield()
 		return
 	if _try_start_action():
 		return
@@ -595,6 +613,7 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 	_fall = 0.0
 	velocity = _launch
 	_hitstun = Combat.hitstun_time(speed)
+	_hitstun_total = _hitstun
 	state = State.HITSTUN
 	var stop := Combat.hitstop_frames(data.damage)
 	_hitstop = stop
@@ -606,8 +625,25 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 	return true
 
 
+## Pode escapar do combo agora? (parte do atordoamento já passou e a espera acabou)
+func can_escape() -> bool:
+	return state == State.HITSTUN and _escape_wait <= 0.0 		and _hitstun <= _hitstun_total * (1.0 - escape_after)
+
+
 func _process_hitstun(delta: float) -> void:
 	_hitstun -= delta
+	if _shield_tap and can_escape():
+		_escape_wait = escape_cooldown
+		_hitstun = 0.0
+		_launch = Vector2.ZERO
+		_fall = 0.0
+		if is_on_floor():
+			var d := controls.axis("left", "right")
+			_start_roll(int(signf(d)) if absf(d) > 0.0 else -facing)
+		else:
+			_start_air_dodge()
+		escaped.emit()
+		return
 	# Lançamento e queda separados: a velocidade do golpe perde força aos poucos e
 	# a gravidade (mais fraca durante o atordoamento) puxa para baixo por conta própria.
 	_launch = _launch.move_toward(Vector2.ZERO, Combat.LAUNCH_DECAY * delta)

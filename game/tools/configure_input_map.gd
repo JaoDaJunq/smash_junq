@@ -7,7 +7,7 @@ extends SceneTree
 const KEYS := {
 	"p1": {
 		"left": KEY_A, "right": KEY_D, "up": KEY_W, "down": KEY_S,
-		"jump": KEY_SPACE, "attack": KEY_J, "special": KEY_K, "shield": KEY_L,
+		"jump": KEY_SPACE, "attack": KEY_J, "special": KEY_K, "shield": KEY_SHIFT,
 		"pause": KEY_ESCAPE,
 	},
 	"p2": {
