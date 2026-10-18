@@ -12,6 +12,8 @@ signal countdown_finished
 enum Phase { COUNTDOWN, FIGHT, ENDED }
 
 const ARENA := preload("res://scenes/arena.tscn")
+## Teste: força a arena original (as cenas de teste usam a geometria dela).
+var use_default_arena := false
 const IDS := ["p1", "p2"]
 const START_FACING := {"p1": 1, "p2": -1}
 const COUNTDOWN_STEPS := ["3", "2", "1", "LUTEM!"]
@@ -67,7 +69,8 @@ func _ready() -> void:
 
 
 func _build_fighters() -> void:
-	_arena = ARENA.instantiate()
+	var arena_scene := ARENA if use_default_arena else load(Game.arena_scene()) as PackedScene
+	_arena = arena_scene.instantiate()
 	add_child(_arena)
 	for pid in IDS:
 		var marker := _arena.get_node_or_null("Spawn" + pid.capitalize()) as Node2D

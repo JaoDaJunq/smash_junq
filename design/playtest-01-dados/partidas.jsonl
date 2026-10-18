@@ -1,0 +1,6 @@
+{"caiu":"CPU","dano":285.0,"evento":"ko","golpe_de":"Juba","lancamento":1716,"modo":"cpu","personagem":"Seu Capivas","quando":"2026-10-18T16:08:10","s_desde_golpe":0.9,"saiu_por":"direita","tempo_s":153.1,"ultimo_golpe":"special_side"}
+{"caiu":"Jogador 1","dano":202.0,"evento":"ko","golpe_de":"Seu Capivas","lancamento":629,"modo":"cpu","personagem":"Juba","quando":"2026-10-18T16:08:26","s_desde_golpe":11.0,"saiu_por":"baixo","tempo_s":168.8,"ultimo_golpe":"jab"}
+{"caiu":"CPU","dano":95.0,"evento":"ko","golpe_de":"Juba","lancamento":759,"modo":"cpu","personagem":"Seu Capivas","quando":"2026-10-18T16:08:53","s_desde_golpe":2.7,"saiu_por":"baixo","tempo_s":195.4,"ultimo_golpe":"special_side"}
+{"caiu":"Jogador 1","dano":118.0,"evento":"ko","golpe_de":"Seu Capivas","lancamento":1387,"modo":"cpu","personagem":"Juba","quando":"2026-10-18T16:09:08","s_desde_golpe":3.4,"saiu_por":"baixo","tempo_s":210.4,"ultimo_golpe":"ftilt"}
+{"caiu":"CPU","dano":320.1,"evento":"ko","golpe_de":"Juba","lancamento":1814,"modo":"cpu","personagem":"Seu Capivas","quando":"2026-10-18T16:11:23","s_desde_golpe":0.9,"saiu_por":"esquerda","tempo_s":346.3,"ultimo_golpe":"special_down"}
+{"duracao_s":346.3,"evento":"fim","modo":"cpu","personagens":{"p1":"Juba","p2":"Seu Capivas"},"placar":{"p1":3,"p2":2},"quando":"2026-10-18T16:11:23","vencedor":"Jogador 1"}

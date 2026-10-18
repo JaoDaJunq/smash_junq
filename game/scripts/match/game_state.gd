@@ -28,6 +28,15 @@ const CHARACTERS: Array[Dictionary] = [
 	},
 ]
 
+## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam
+## arte importada por tools/importar_arena.py.
+const ARENAS: Array[Dictionary] = [
+	{"name": "Ruínas da Mata", "scene": "res://scenes/arena.tscn"},
+	{"name": "Pantanal", "scene": "res://scenes/arenas/pantanal.tscn"},
+	{"name": "Caatinga", "scene": "res://scenes/arenas/caatinga.tscn"},
+	{"name": "Cerrado", "scene": "res://scenes/arenas/cerrado.tscn"},
+]
+
 const PLAYER_COLORS := {
 	"p1": Color(0.31, 0.55, 1.0),
 	"p2": Color(1.0, 0.42, 0.35),
@@ -41,6 +50,8 @@ var characters := {
 	"p2": CHARACTERS[1]["scene"],
 }
 var ko_target := 3
+## Índice em ARENAS; -1 = aleatória (sorteada a cada partida).
+var arena_index := 0
 ## Resultado da última partida (preenchido pelo MatchManager).
 var last_result := {}
 ## Teste: quando true, go_to() só registra o pedido em requested_scene.
@@ -57,6 +68,26 @@ func character_index(player_id: String) -> int:
 		if CHARACTERS[i]["scene"] == characters[player_id]:
 			return i
 	return 0
+
+
+## Cena da arena da próxima partida (sorteia se a escolha for "aleatória").
+func arena_scene() -> String:
+	var options := ARENAS.filter(arena_ready)
+	if arena_index >= 0 and arena_index < ARENAS.size() and arena_ready(ARENAS[arena_index]):
+		return ARENAS[arena_index]["scene"]
+	return options[randi() % options.size()]["scene"]
+
+
+## A arena tem cena e (se usa arte) a arte já importada?
+func arena_ready(a: Dictionary) -> bool:
+	if not ResourceLoader.exists(a["scene"]):
+		return false
+	var key := String(a["scene"]).get_file().get_basename()
+	return a["scene"] == ARENAS[0]["scene"] or FileAccess.file_exists("res://assets/arenas/%s/arena.json" % key)
+
+
+func arena_name(index: int) -> String:
+	return "Aleatória" if index < 0 else ARENAS[index]["name"]
 
 
 func set_character(player_id: String, index: int) -> void:

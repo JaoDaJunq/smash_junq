@@ -42,4 +42,19 @@ Quatro partidas completas CPU x CPU, simuladas sem janela (detalhes e cada KO em
 
 ## Notas
 
-_(preencher depois de jogar)_
+Playtest humano do João, 15 a 18/10/2026, pelo jogo aberto direto do Godot (sem o `.exe`), no PC com NVIDIA RTX 3050 6 GB (notebook). Dados em [`playtest-01-dados/`](playtest-01-dados/).
+
+**Partida contra a CPU (18/10):** João (Juba) 3 x 2 CPU (Seu Capivas), 5:46. O Seu Capivas caiu com 285% e 320% (resistente demais, como na simulação); o Juba caiu com 202% (sem conseguir voltar) e 118%. KOs do Juba vieram do especial lateral (2) e do especial para baixo. Treino: 248 golpes registrados.
+
+| Pergunta | Notas |
+|---|---|
+| Controles | Bons. Escudo quase não foi usado; pedido: Shift como botão único de defesa (parado = escudo, andando/no ar = esquiva intocável, estilo Brawlhalla) e controles editáveis, inclusive mouse. Feito. |
+| Peso dos golpes | Muita coisa "MUITO boa". Ataque básico parecia duro (sempre o mesmo tapa): virou sequência de 3 golpes, aprovada. |
+| % para KO / Pesado resistente | Seu Capivas aguenta demais (285–320%). Ajuste de peso fica para a próxima rodada. |
+| Ágil x Pesado diferentes | Sim. |
+| CPU | Justa; venceu 2 KOs. |
+| Duração | 5:46, um pouco acima dos 3–5 min do GDD (efeito do Pesado resistente). |
+| Arte e animação | Rodada 1: andar/correr tremidos, cipó, escudo fora do padrão, borda com plataforma desenhada, círculo azul, bola azul no lugar da castanha, respawn, carregado com efeitos desenhados e sobras na sentada. Tudo corrigido (ver `art/prompts/pedidos/PLAYTEST01_CODEX.md`). Rodada 2: carregado ilegível, borda com animação demais, comemoração rápida demais: corrigidos. |
+| Arenas | A arena original "estava meio feia": 3 arenas novas em pixel art (Pantanal, Caatinga, Cerrado), escolhidas na tela de personagens. |
+
+**Falta para fechar a T22 pelo critério do backlog:** rodar o `.exe` exportado no PC de casa e jogar uma partida no modo 2 jogadores.
