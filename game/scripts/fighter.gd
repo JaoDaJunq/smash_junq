@@ -95,6 +95,14 @@ var helpless := false
 ## Golpe em andamento.
 var attack: AttackData = null
 var attack_id := ""
+## Sequência do ataque básico: jab -> jab2 (outra mão) -> jab3 (finalização).
+## Apertar Ataque de novo durante o golpe (ou logo depois) puxa o próximo.
+const JAB_CHAIN := {"jab": "jab2", "jab2": "jab3"}
+const JAB_LINK_FRAMES := 14   # janela depois do golpe para emendar o próximo
+var _jab_queued := false
+var _jab_last := ""
+var _jab_last_frame := -999
+var _jab_cache := {}
 var attack_frame := 0
 var _attack_in_air := false
 var _hit_targets: Array[Fighter] = []
@@ -174,6 +182,9 @@ func _physics_process(delta: float) -> void:
 		brain.think(self, delta)
 	invincible_time = maxf(invincible_time - delta, 0.0)
 	_update_holding()
+	# Guarda o próximo toque da sequência do ataque básico, mesmo durante a pausa de impacto.
+	if state == State.ATTACK and JAB_CHAIN.has(attack_id) and attack_frame >= 1 			and controls.just_pressed("attack") and _stick_direction() == "neutral":
+		_jab_queued = true
 	if _hitstop > 0:
 		_hitstop -= 1
 		queue_redraw()
@@ -351,7 +362,7 @@ func _try_start_action() -> bool:
 			"side":
 				facing = int(signf(controls.axis("left", "right")))
 				move_id = "ftilt"
-			_: move_id = "jab"
+			_: move_id = _next_jab()
 	else:
 		match stick:
 			"up": move_id = "uair"
@@ -374,11 +385,51 @@ func _stick_direction() -> String:
 	return "neutral"
 
 
+## Próximo golpe da sequência do ataque básico (ou "jab" se a janela passou).
+func _next_jab() -> String:
+	if Engine.get_physics_frames() - _jab_last_frame <= JAB_LINK_FRAMES and JAB_CHAIN.has(_jab_last):
+		return JAB_CHAIN[_jab_last]
+	return "jab"
+
+
+## Dados do 2º e 3º golpes da sequência, derivados do jab do moveset.
+func _combo_jab(move_id: String) -> AttackData:
+	if moveset == null or moveset.jab == null:
+		return null
+	if _jab_cache.has(move_id):
+		return _jab_cache[move_id]
+	var d := moveset.jab.duplicate() as AttackData
+	if move_id == "jab2":
+		d.hitbox_offset.x += 8.0
+		d.base_knockback *= 0.6   # empurra pouco e baixo: o terceiro ainda alcança
+		d.angle = 15.0
+		d.self_velocity = Vector2(200.0, 0.0)  # passinho: acompanha quem foi empurrado
+	else:  # jab3: finalização mais lenta que lança
+		d.startup += 3
+		d.active += 1
+		d.recovery += 10
+		d.damage *= 1.8
+		d.base_knockback *= 1.6
+		d.knockback_growth = maxf(d.knockback_growth * 3.0, 4.5)
+		d.angle = 38.0
+		d.hitbox_offset.x += 18.0
+		d.hitbox_radius *= 1.3
+		d.self_velocity = Vector2(320.0, 0.0)
+	_jab_cache[move_id] = d
+	return d
+
+
+## Carga do golpe carregável (0..1) enquanto o botão está seguro; -1 sem carga.
+## Os lutadores com golpe carregável sobrescrevem.
+func charge_ratio() -> float:
+	return -1.0
+
+
 ## Começa um golpe do moveset pelo nome (ex.: "jab", "fair", "special_up").
 func start_attack(move_id: String) -> bool:
 	if moveset == null:
 		return false
-	var data := moveset.move(move_id)
+	var data := _combo_jab(move_id) if move_id in ["jab2", "jab3"] else moveset.move(move_id)
 	if data == null:
 		return false
 	attack = data
@@ -420,6 +471,11 @@ func _process_attack(dir: float, delta: float) -> void:
 	_on_attack_frame(attack_id, attack_frame)
 	if state != State.ATTACK:
 		return  # o gancho pode ter encerrado o golpe
+	if JAB_CHAIN.has(attack_id):
+		if _jab_queued and attack_frame >= attack.startup + attack.active + 2:
+			_jab_queued = false
+			start_attack(JAB_CHAIN[attack_id])
+			return
 	if attack.is_active(attack_frame):
 		_check_hits()
 		if state != State.ATTACK or attack == null:
@@ -437,6 +493,10 @@ func _process_attack(dir: float, delta: float) -> void:
 func _end_attack() -> void:
 	var finished := attack
 	var finished_id := attack_id
+	_jab_queued = false
+	if finished_id.begins_with("jab"):
+		_jab_last = finished_id
+		_jab_last_frame = Engine.get_physics_frames()
 	attack = null
 	attack_id = ""
 	if finished and finished.helpless_after and not is_on_floor():

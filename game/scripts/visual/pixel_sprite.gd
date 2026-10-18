@@ -24,7 +24,7 @@ const LAND_TIME := 0.15
 
 ## Golpe do moveset -> animação.
 const ATTACK_ANIM := {
-	"jab": "jab", "ftilt": "golpe_frente", "utilt": "golpe_cima", "dtilt": "golpe_baixo",
+	"jab": "jab", "jab2": "jab_b", "jab3": "jab_c", "ftilt": "golpe_frente", "utilt": "golpe_cima", "dtilt": "golpe_baixo",
 	"nair": "aereo_neutro", "fair": "aereo_frente", "bair": "aereo_tras",
 	"uair": "aereo_cima", "dair": "aereo_baixo",
 	"special_neutral": "especial_neutro", "special_side": "especial_lado",
@@ -153,7 +153,21 @@ func _process(delta: float) -> void:
 		c.a = 0.45 if int(_clock * 12.0) % 2 == 0 else 0.8
 	elif fighter._is_intangible():
 		c.a = 0.45
+	# Carga: treme cada vez mais e brilha; na carga cheia pisca branco.
+	var charge := fighter.charge_ratio()
+	_sprite.position = Vector2(-center_x, -(BASELINE + 1))
+	if charge >= 0.0:
+		var amp := 0.3 + 1.2 * charge
+		_sprite.position.x += amp * sin(_clock * 70.0)
+		var glow := 1.0 + 0.45 * charge * (0.6 + 0.4 * sin(_clock * (10.0 + 20.0 * charge)))
+		c = Color(glow, glow * 0.95, glow * 0.8, c.a)
+		if charge >= 1.0 and int(_clock * 16.0) % 2 == 0:
+			c = Color(2.2, 2.2, 2.2, c.a)
 	modulate = c
+
+
+func a_charge() -> String:
+	return ATTACK_ANIM["special_neutral"]
 
 
 ## Força uma reação por um tempo (ex.: "vitoria" ao fazer KO ou ganhar a partida).
@@ -247,6 +261,10 @@ func _pick() -> Array:
 				return _once("pouso", _land, LAND_TIME)
 			return ["pulo", _at("pulo", 5)]
 		S.ATTACK:
+			if fighter.charge_ratio() >= 0.0 and has_anim(a_charge()):
+				# Carregando: respira entre "meditando", "enchendo a barriga" e
+				# "barriga enorme", cada vez mais rápido.
+				return _loop(a_charge(), 4.0 + 8.0 * fighter.charge_ratio(), _span(a_charge(), 0, 2))
 			return _attack()
 		S.HITSTUN, S.HELD:
 			var n0 := (int(_counts.get("dor", 1)) + int(_factor.get("dor", 1)) - 1) / int(_factor.get("dor", 1))
@@ -300,6 +318,8 @@ func _air() -> Array:
 func _attack() -> Array:
 	var data := fighter.attack
 	var a: String = ATTACK_ANIM.get(fighter.attack_id, "golpe_frente")
+	if not has_anim(a) and fighter.attack_id.begins_with("jab"):
+		a = "jab"  # folha da sequência ainda não importada
 	if data == null or not has_anim(a):
 		return ["parado", 0]
 	var n := int(_counts[a])

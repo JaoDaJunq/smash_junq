@@ -50,6 +50,7 @@ func _run() -> void:
 	# --- 9 golpes básicos: (golpe, teclas de P2, no ar, posição de P1 relativa a P2)
 	# P2 olha para a esquerda; "right" no ar (sem virar) vira o golpe de trás.
 	await _basic("jab", [], false, Vector2(-75, 0))
+	await _jab_chain()
 	await _basic("ftilt", ["left"], false, Vector2(-85, 0))
 	await _basic("utilt", ["up"], false, Vector2(-10, 0))
 	await _basic("dtilt", ["down"], false, Vector2(-75, 0))
@@ -94,6 +95,34 @@ func _basic(move_id: String, keys: Array, air: bool, rel: Vector2) -> void:
 	_check("%s: começa" % move_id, started, "")
 	_check("%s: acerta P1" % move_id, hit_frame >= 0 and is_equal_approx(p1.damage_percent, data.damage),
 		"%.1f%% (esperado %.1f) no quadro %d" % [p1.damage_percent, data.damage, hit_frame])
+	await _frames(60)
+	await _settle()
+
+
+## Sequência do ataque básico: apertar Ataque 3 vezes faz jab -> jab2 -> jab3,
+## e o terceiro lança mais forte. Uma pausa longa recomeça do jab.
+func _jab_chain() -> void:
+	await _setup(false, Vector2(-75, 0))
+	var seen: Array[String] = []
+	for i in 3:
+		await _tap("p2_attack")
+		for f in 30:
+			if p2.attack_id != "" and (seen.is_empty() or seen[-1] != p2.attack_id):
+				seen.append(p2.attack_id)
+			if seen.size() > i:
+				break
+			await get_tree().physics_frame
+		await _frames(4)
+	await _frames(40)
+	_check("Ataque básico: 3 toques fazem jab, jab2 e jab3", seen == ["jab", "jab2", "jab3"], str(seen))
+	_check("Ataque básico: o terceiro golpe lança (finalização)", p1.state == Fighter.State.HITSTUN or absf(p1.velocity.x) > 0.0 or p1.damage_percent > p2.moveset.jab.damage * 3.0,
+		"dano %.1f%%" % p1.damage_percent)
+	await _frames(60)
+	await _settle()
+	await _setup(false, Vector2(-75, 0))
+	await _tap("p2_attack")
+	await _frames(2)
+	_check("Ataque básico: depois de uma pausa recomeça do jab", p2.attack_id == "jab", p2.attack_id)
 	await _frames(60)
 	await _settle()
 

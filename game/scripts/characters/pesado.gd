@@ -37,6 +37,10 @@ func start_special(kind: String) -> void:
 		_charge = 0
 
 
+func charge_ratio() -> float:
+	return float(_charge) / MAX_CHARGE if _charging and attack_id == "special_neutral" else -1.0
+
+
 func _on_attack_frame(move_id: String, frame: int) -> void:
 	match move_id:
 		"special_neutral": _charge_step(frame)
