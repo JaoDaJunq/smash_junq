@@ -19,6 +19,8 @@ const CHARACTERS: Array[Dictionary] = [
 		"retrato": "res://assets/characters/juba/retrato.png",
 		"desc": "Mico-leão-dourado capoeirista. Rápido e leve:\ncombos e volta fácil, mas voa mais cedo.",
 		"weight": "Leve",
+		"id": "juba",
+		"stats": {"Velocidade": 5, "Força": 2, "Peso": 1, "Volta ao palco": 5},
 	},
 	{
 		"name": "Seu Capivas",
@@ -26,19 +28,21 @@ const CHARACTERS: Array[Dictionary] = [
 		"retrato": "res://assets/characters/seu_capivas/retrato.png",
 		"desc": "Capivara tiozão de clube. Lento e pesado:\naguenta muito dano e um acerto lança longe.",
 		"weight": "Pesado",
+		"id": "seu_capivas",
+		"stats": {"Velocidade": 2, "Força": 5, "Peso": 5, "Volta ao palco": 2},
 	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam
 ## arte importada por tools/importar_arena.py.
 const ARENAS: Array[Dictionary] = [
-	{"name": "Ruínas da Mata", "scene": "res://scenes/arena.tscn", "preview": "res://assets/arenas/previa_ruinas.png",
+	{"name": "Ruínas da Mata", "scene": "res://scenes/arena.tscn", "preview": "res://assets/arenas/previa_ruinas.png", "pin": Vector2(0.77, 0.72),
 		"desc": "A clássica: palco largo de pedra flutuando no entardecer e duas plataformas no alto."},
-	{"name": "Pantanal", "scene": "res://scenes/arenas/pantanal.tscn", "preview": "res://assets/arenas/pantanal/previa.png",
+	{"name": "Pantanal", "scene": "res://scenes/arenas/pantanal.tscn", "preview": "res://assets/arenas/pantanal/previa.png", "pin": Vector2(0.39, 0.59),
 		"desc": "Uma ilha de barro no meio da lagoa e duas vitórias-régias que sobem e descem dos lados."},
-	{"name": "Caatinga", "scene": "res://scenes/arenas/caatinga.tscn", "preview": "res://assets/arenas/caatinga/previa.png",
+	{"name": "Caatinga", "scene": "res://scenes/arenas/caatinga.tscn", "preview": "res://assets/arenas/caatinga/previa.png", "pin": Vector2(0.80, 0.33),
 		"desc": "Chão largo com uma laje de pedra alta à esquerda e tábuas em alturas diferentes."},
-	{"name": "Cerrado", "scene": "res://scenes/arenas/cerrado.tscn", "preview": "res://assets/arenas/cerrado/previa.png",
+	{"name": "Cerrado", "scene": "res://scenes/arenas/cerrado.tscn", "preview": "res://assets/arenas/cerrado/previa.png", "pin": Vector2(0.61, 0.49),
 		"desc": "Palco compacto e alto, ilhas de terra dos lados e três galhos de ipê em triângulo."},
 ]
 

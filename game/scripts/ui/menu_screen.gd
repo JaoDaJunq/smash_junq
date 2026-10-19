@@ -71,8 +71,11 @@ func build_column(title: String, subtitle := "", dim_background := false, title_
 	return col
 
 
-## Fundo em degradê vertical (anoitecer), com a cor sólida como reserva.
+## Fundo: a pintura do menu escurecida (mesma "vibe" em todas as telas); sem
+## ela, o degradê vertical do anoitecer.
 func _make_backdrop() -> Control:
+	if UiArt.tex(UiArt.MENU_BG) != null:
+		return UiArt.backdrop(0.55)
 	var grad := Gradient.new()
 	grad.set_color(0, BG_TOP)
 	grad.set_color(1, BG_BOTTOM)
