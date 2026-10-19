@@ -45,7 +45,7 @@ def main():
     if os.path.exists(bg):
         Image.open(bg).convert("RGB").save(os.path.join(UI, "menu_fundo.png"))
         done.append("menu_fundo")
-    for name in ("logo", "mapa_brasil"):
+    for name in ("logo", "mapa_brasil", "apresentacao_juba", "apresentacao_seu_capivas"):
         p = os.path.join(SRC, name + ".png")
         if os.path.exists(p):
             key_magenta(Image.open(p)).save(os.path.join(UI, name + ".png"))
