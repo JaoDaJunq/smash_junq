@@ -102,6 +102,27 @@ def fill_cell(tile, k):
     return out
 
 
+def sit_on_floor(tile):
+    """Enfeite: encosta a parte de baixo do desenho na última linha do quadro
+    (o jogo apoia essa linha no chão; senão o enfeite fica flutuando)."""
+    box = tile.getbbox()
+    if not box:
+        return tile
+    out = Image.new("RGBA", (NATIVE, NATIVE), (0, 0, 0, 0))
+    part = tile.crop(box)
+    out.paste(part, ((NATIVE - part.width) // 2, NATIVE - part.height))
+    return out
+
+
+def outline_color(tile):
+    """Cor mais escura do bloco do canto (o contorno), em hexadecimal."""
+    px = [p for p in tile.getdata() if p[3] > 0]
+    if not px:
+        return "#2a1a10"
+    r, g, b, _ = min(px, key=lambda p: p[0] + p[1] + p[2])
+    return "#%02x%02x%02x" % (r, g, b)
+
+
 def surface_row(tile):
     """Primeira linha com pelo menos 40% de pixels desenhados (o chão do bloco)."""
     px = tile.load()
@@ -144,8 +165,13 @@ def main():
                 k = half * 6 + i
                 if k < 9:
                     t = fill_cell(t, k)
+                else:
+                    t = sit_on_floor(t)
                 blocks.paste(t, (k * NATIVE, 0))
         blocks.save(os.path.join(dst, "blocos.png"))
+        # Miolo do terreno à parte: o jogo repete ele dentro da ilha afinando para baixo.
+        blocks.crop((4 * NATIVE, 0, 5 * NATIVE, NATIVE)).save(os.path.join(dst, "miolo.png"))
+        meta["contorno"] = outline_color(blocks.crop((0, 0, NATIVE, NATIVE)))
         meta["superficie_blocos"] = surface_row(blocks.crop((NATIVE, 0, 2 * NATIVE, NATIVE)))
         meta["versao"] = 2
     with open(os.path.join(dst, "arena.json"), "w", encoding="utf-8") as f:

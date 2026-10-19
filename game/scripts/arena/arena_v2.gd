@@ -6,6 +6,8 @@ extends Node2D
 ## Fica na raiz da cena da arena como "ArtArena"; a cena só tem os pontos de
 ## entrada (SpawnP1/SpawnP2).
 ##
+## Terreno: a fileira de cima usa os blocos (cantos e meio); embaixo, a ilha
+## afina como um triângulo de cabeça para baixo, preenchida com o miolo.
 ## Unidade: 1 bloco = 64 pixels de arte x 2 = 128 de mundo (mesma escala dos
 ## lutadores). y = 0 é o topo do palco principal; y cresce para baixo.
 
@@ -57,6 +59,8 @@ const LAYOUTS := {
 @export var sky_tint := Color(0.9, 0.9, 0.95)
 
 var _blocks: Texture2D
+var _core: Texture2D
+var _outline := Color("2a1a10")
 var _platforms: Texture2D
 var _surf := 8
 var _plat_surf: Array = [8, 8]
@@ -70,6 +74,8 @@ func _ready() -> void:
 	var plat: Array = meta.get("superficie", [8, 8, 8, 8, 8, 8])
 	_plat_surf = [plat[4], plat[5]]
 	_blocks = load(folder.path_join("blocos.png"))
+	_core = load(folder.path_join("miolo.png"))
+	_outline = Color(String(meta.get("contorno", "#2a1a10")))
 	_platforms = load(folder.path_join("palco.png"))
 	_add_sky(load(folder.path_join("fundo.png")))
 	var layout: Dictionary = LAYOUTS[arena]
@@ -127,55 +133,76 @@ func _tile(parent: Node2D, tex: Texture2D, i: int, pos: Vector2, z := -5) -> voi
 func _build_solid(s: Dictionary) -> void:
 	var w: int = s["w"]
 	var h: int = s["h"]
+	var on_main: bool = s.get("on_top_of_main", false)
 	var top := Vector2(s["x"], s["y"])
+	if on_main:
+		# Laje em cima do palco: uma fileira só, com o fim do bloco encostado no chão.
+		top.y = -(NATIVE - _surf) * K
+	var width := w * TILE
+	var y0 := top.y - _surf * K   # a linha da superfície do bloco fica no topo
+	var yb := y0 + TILE           # fim da fileira de cima
 	var body := StaticBody2D.new()
 	body.collision_layer = LAYER_STAGE
 	body.collision_mask = 0
 	body.name = "Terreno%d" % get_child_count()
 	add_child(body)
-	var shape := CollisionShape2D.new()
-	var rect := RectangleShape2D.new()
-	rect.size = Vector2(w * TILE, h * TILE)
-	shape.shape = rect
-	shape.position = top + rect.size * 0.5
+	# Fileira de cima (superfície, cantos com contorno)
+	for col in w:
+		_tile(self, _blocks, _kind(col, w), Vector2(top.x + col * TILE, y0))
+	var shape := CollisionPolygon2D.new()
+	if on_main:
+		shape.polygon = PackedVector2Array([top, top + Vector2(width, 0), top + Vector2(width, -top.y), Vector2(top.x, 0)])
+	else:
+		# Embaixo: ilha afinando como um triângulo de cabeça para baixo (como a
+		# arena original), com a textura do terreno, sombra e contorno.
+		var cx := top.x + width * 0.5
+		var tip := maxf(TILE * 0.5, width * 0.14)
+		var depth := clampf(width * 0.5, TILE * 1.3, TILE * 4.0) + (h - 1) * TILE * 0.5
+		var under := yb - TILE * 0.45  # começa por trás da fileira de cima: sem fresta
+		var poly := PackedVector2Array([Vector2(top.x + 2.0 * K, under), Vector2(top.x + width - 2.0 * K, under),
+			Vector2(cx + tip * 0.5, yb + depth), Vector2(cx - tip * 0.5, yb + depth)])
+		var fill := Polygon2D.new()
+		fill.polygon = poly
+		fill.texture = _core
+		fill.texture_scale = Vector2(1.0 / K, 1.0 / K)
+		fill.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		fill.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		fill.z_index = -6
+		add_child(fill)
+		var shade := Polygon2D.new()
+		shade.polygon = poly
+		shade.vertex_colors = PackedColorArray([Color(0, 0, 0, 0.0), Color(0, 0, 0, 0.0), Color(0, 0, 0, 0.55), Color(0, 0, 0, 0.55)])
+		shade.z_index = -6
+		add_child(shade)
+		var line := Line2D.new()
+		line.points = PackedVector2Array([poly[0], poly[3], poly[2], poly[1]])
+		line.width = 2.0 * K
+		line.default_color = _outline
+		line.joint_mode = Line2D.LINE_JOINT_ROUND
+		line.z_index = -5
+		add_child(line)
+		# raízes/pedras penduradas na ponta
+		_tile(self, _blocks, 7, Vector2(cx - TILE * 0.5, yb + depth - 2.0 * K), -6)
+		shape.polygon = PackedVector2Array([top, top + Vector2(width, 0), Vector2(top.x + width, yb),
+			Vector2(cx + tip * 0.5, yb + depth), Vector2(cx - tip * 0.5, yb + depth), Vector2(top.x, yb)])
 	body.add_child(shape)
-	var y0 := top.y - _surf * K   # a linha da superfície do bloco fica no topo
-	for row in h:
-		for col in w:
-			var kind := 1
-			if col == 0:
-				kind = 0
-			elif col == w - 1:
-				kind = 2
-			var base := 0 if row == 0 else 3
-			_tile(self, _blocks, base + kind, Vector2(top.x + col * TILE, y0 + row * TILE))
-	# Em cima do palco: o corpo desce mais uma fileira, por cima do chão, para a
-	# laje não parecer solta.
-	if s.get("on_top_of_main", false):
-		for col in w:
-			var kind := 1
-			if col == 0:
-				kind = 0
-			elif col == w - 1:
-				kind = 2
-			_tile(self, _blocks, 3 + kind, Vector2(top.x + col * TILE, y0 + h * TILE))
-	# parte de baixo (raízes, pedras penduradas), sem colisão
-	if not s.get("on_top_of_main", false):
-		for col in w:
-			var kind := 1
-			if col == 0:
-				kind = 0
-			elif col == w - 1:
-				kind = 2
-			_tile(self, _blocks, 6 + kind, Vector2(top.x + col * TILE, y0 + h * TILE))
 	for side in s.get("ledges", []):
 		var m := Marker2D.new()
 		m.add_to_group("ledges")
 		var sign := -1 if side == "l" else 1
 		m.set_meta("side", sign)
-		m.position = Vector2(top.x if side == "l" else top.x + w * TILE, top.y)
+		m.position = Vector2(top.x if side == "l" else top.x + width, top.y)
 		m.name = "Borda%s%d" % [side.to_upper(), get_child_count()]
 		add_child(m)
+
+
+## 0 = canto esquerdo, 1 = meio, 2 = canto direito.
+func _kind(col: int, w: int) -> int:
+	if col == 0:
+		return 0
+	if col == w - 1:
+		return 2
+	return 1
 
 
 # --- Plataformas finas ---
@@ -220,4 +247,5 @@ func _build_moving(top: Vector2, offset: Vector2, period: float, phase: float) -
 
 func _decor(x: float, i: int) -> void:
 	# enfeite apoiado na superfície do palco principal (atrás dos lutadores)
-	_tile(self, _blocks, 9 + i, Vector2(x - TILE * 0.5, -TILE + 1.0), -3)
+	# o importador encosta o desenho na última linha do bloco: ela fica no chão
+	_tile(self, _blocks, 9 + i, Vector2(x - TILE * 0.5, -TILE + K), -3)
