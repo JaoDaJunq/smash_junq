@@ -22,7 +22,8 @@ func _ready() -> void:
 		add_child(s)
 		await _frames(30)
 		if key == "selecao":
-			s._move("p2", Vector2i(1, 0))   # P2 num "?" para mostrar o "em breve"
+			s._set_cursor("p2", Vector2i(0, 2))   # P2 no Maracajá
+			s._refresh()
 			await _frames(5)
 			s._toggle_lock("p1")
 		elif key == "arena":

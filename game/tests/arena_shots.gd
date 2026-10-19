@@ -12,7 +12,12 @@ func _ready() -> void:
 	Game.mode = "cpu"
 	var out := ProjectSettings.globalize_path("res://").path_join("../evidence/arenas")
 	DirAccess.make_dir_recursive_absolute(out)
-	var only := OS.get_cmdline_user_args()
+	var only: Array = []
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("p1="):
+			Game.set_character("p1", int(a.substr(3)))   # ex.: p1=2 (Maracajá)
+		else:
+			only.append(a)
 	for i in Game.ARENAS.size():
 		var a: Dictionary = Game.ARENAS[i]
 		var key := String(a["scene"]).get_file().get_basename()
