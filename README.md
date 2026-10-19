@@ -31,6 +31,8 @@ Fora do primeiro corte: multiplayer online, campanha ou progressão, elenco gran
 - [GDD — aprovado](design/gdd.md)
 - [Backlog do primeiro corte — lista oficial de tarefas](design/backlog.md)
 - [Identidade — mundo, personagens e bíblia visual (rascunho)](design/identidade.md)
+- [design/novo-personagem.md](design/novo-personagem.md): tudo o que um personagem novo precisa (imagens, pastas, quadros, código); confira com `python game/tools/checar_personagem.py <id>`.
+- [design/elenco.md](design/elenco.md): os 6 grupos de bichos e os 4 tipos.
 - [Arsenal, rota de produção, pesquisa e decisões](docs/arsenal-jogo-ia.md)
 - As decisões confirmadas e as propostas em validação devem ficar identificadas separadamente.
 - A rota de produção recomendada está no arsenal; o avanço de etapa depende dos critérios de saída definidos ali.
