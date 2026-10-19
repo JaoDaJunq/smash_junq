@@ -114,6 +114,35 @@ def sit_on_floor(tile):
     return out
 
 
+def seamless_core(tile):
+    """Miolo para repetir dentro da ilha: corta as linhas e colunas das beiradas
+    que fogem do tom do resto (contorno, sombra, buraco transparente). Repetidas,
+    elas viram uma faixa atravessando a ilha."""
+    px = tile.load()
+    w, h = tile.size
+
+    def tone(cells):
+        vals = [sum(px[x, y][:3]) if px[x, y][3] > 0 else -999 for x, y in cells]
+        return sum(vals) / len(vals), min(vals)
+
+    rows = [tone([(x, y) for x in range(w)]) for y in range(h)]
+    cols = [tone([(x, y) for y in range(h)]) for x in range(w)]
+
+    def trim(lines):
+        mid = sorted(t for t, _ in lines)[len(lines) // 2]
+        bad = lambda t, lo: lo < -1 or abs(t - mid) > mid * 0.12
+        a, b = 0, len(lines)
+        while a < 8 and bad(*lines[a]):
+            a += 1
+        while len(lines) - b < 8 and bad(*lines[b - 1]):
+            b -= 1
+        return a, b
+
+    y0, y1 = trim(rows)
+    x0, x1 = trim(cols)
+    return tile.crop((x0, y0, x1, y1))
+
+
 def outline_color(tile):
     """Cor mais escura do bloco do canto (o contorno), em hexadecimal."""
     px = [p for p in tile.getdata() if p[3] > 0]
@@ -170,7 +199,7 @@ def main():
                 blocks.paste(t, (k * NATIVE, 0))
         blocks.save(os.path.join(dst, "blocos.png"))
         # Miolo do terreno à parte: o jogo repete ele dentro da ilha afinando para baixo.
-        blocks.crop((4 * NATIVE, 0, 5 * NATIVE, NATIVE)).save(os.path.join(dst, "miolo.png"))
+        seamless_core(blocks.crop((4 * NATIVE, 0, 5 * NATIVE, NATIVE))).save(os.path.join(dst, "miolo.png"))
         meta["contorno"] = outline_color(blocks.crop((0, 0, NATIVE, NATIVE)))
         meta["superficie_blocos"] = surface_row(blocks.crop((NATIVE, 0, 2 * NATIVE, NATIVE)))
         meta["versao"] = 2

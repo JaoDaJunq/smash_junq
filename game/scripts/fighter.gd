@@ -200,6 +200,13 @@ func _physics_process(delta: float) -> void:
 		_jab_queued = true
 	if _hitstop > 0:
 		_hitstop -= 1
+		# Congelado no impacto, mas em cima de plataforma que se move acompanha ela
+		# (senão a vitória-régia atravessa os pés e o lutador cai).
+		if is_on_floor() and state != State.LEDGE and state != State.HELD:
+			var keep := velocity
+			velocity = Vector2.ZERO
+			move_and_slide()
+			velocity = keep
 		queue_redraw()
 		return
 	_ledge_cooldown = maxf(_ledge_cooldown - delta, 0.0)
@@ -241,6 +248,8 @@ func _physics_process(delta: float) -> void:
 	if state != State.LEDGE and state != State.HELD and state != State.RESPAWN:
 		var was_airborne := not is_on_floor()
 		_fall_speed_before_move = velocity.y
+		if state == State.ATTACK and is_on_floor():
+			_stop_at_edge(delta)
 		move_and_slide()
 		_after_move(was_airborne)
 		_update_holding()  # quem está seguro acompanha a posição já atualizada
@@ -959,6 +968,21 @@ func _process_held(_delta: float) -> void:
 		if controls.just_pressed(action):
 			held_by.shorten_grab(0.08)
 			break
+
+
+# --- Beirada ---
+
+## Golpe no chão não leva o lutador para fora da beirada (passinho do jab, golpes
+## que avançam): se não houver chão logo à frente dos pés, para no lugar.
+func _stop_at_edge(delta: float) -> void:
+	if absf(velocity.x) < 1.0:
+		return
+	var ahead := signf(velocity.x) * (RADIUS * 0.5 + absf(velocity.x) * delta)
+	var from := global_position + Vector2(ahead, HEIGHT * 0.5 - 4.0)
+	var q := PhysicsRayQueryParameters2D.create(from, from + Vector2(0, 24.0), collision_mask)
+	q.exclude = [get_rid()]
+	if get_world_2d().direct_space_state.intersect_ray(q).is_empty():
+		velocity.x = 0.0
 
 
 # --- Plataformas atravessáveis ---

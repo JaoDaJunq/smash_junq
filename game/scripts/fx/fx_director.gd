@@ -89,7 +89,9 @@ func _on_hit(attacker: Node2D, data: AttackData, launch: Vector2, target: Fighte
 	var speed := launch.length()
 	var contact := target.global_position + Vector2(0, -15)
 	if attacker != null and is_instance_valid(attacker):
-		contact = contact.lerp(attacker.global_position + Vector2(0, -15), 0.35)
+		# Um pouco para o lado de quem bateu, mas sempre colado em quem apanhou
+		# (com a castanha, quem bateu pode estar do outro lado da arena).
+		contact += ((attacker.global_position + Vector2(0, -15) - contact) * 0.35).limit_length(36.0)
 	var heavy := speed >= heavy_launch
 	var tint := Color.WHITE
 	if attacker is Fighter:
