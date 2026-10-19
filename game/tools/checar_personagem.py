@@ -85,6 +85,7 @@ def main():
     total = check_files("1 · Ficha", [
         (f"design/personagens/{cid}.md", f"design/personagens/{cid}.md", None),
         (f"art/prompts/pixel/{cid}.md (paleta e regras)", f"art/prompts/pixel/{cid}.md", None),
+        ("concept escolhido (art/concepts/<id>/escolhido.png)", f"art/concepts/{cid}/escolhido.png", None),
     ])
     total += check_files("2 · Base", [(f"art/pixel/{cid}/base.png", f"art/pixel/{cid}/base.png", None)])
     total += check_sheets(cid, "3 · Lote 1 (jogável)", LOTE1)

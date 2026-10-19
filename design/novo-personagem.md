@@ -10,14 +10,15 @@ Este documento é o roteiro para colocar um lutador novo no jogo sem retrabalho.
 | # | Etapa | Quem faz | O que o João aprova |
 |---|---|---|---|
 | 1 | **Ficha** do personagem: conceito, golpes e paleta (modelo em `design/personagens/_modelo.md`) | Hermes | A ficha inteira |
-| 2 | **Sprite base**: uma pose de referência | Codex | O visual do personagem |
+| 1b | **4 concept arts**: 4 direções de roupa e atitude do mesmo bicho, em `art/concepts/<id>/` | Codex | **Qual concept vamos seguir** |
+| 2 | **Sprite base**: uma pose de referência, seguindo o concept escolhido | Codex | O visual do personagem em pixel art |
 | 3 | **Lote 1**: dá para jogar | Codex → Hermes integra | Playtest rápido |
 | 4 | **Lote 2**: golpes completos | Codex → Hermes integra | Playtest |
 | 5 | **Lote 3**: quadros intermediários (fluidez) | Codex → Hermes integra | Playtest |
 | 6 | **Interface**: retrato e arte de apresentação | Codex → Hermes integra | Print das telas |
 | 7 | **Código**, balanceamento e testes | Hermes | Partida contra a CPU |
 
-Só se passa para a etapa seguinte depois que a anterior for aprovada. O sprite base é o que mais economiza tempo: se ele estiver errado, todo o resto sai errado.
+Só se passa para a etapa seguinte depois que a anterior for aprovada. Nenhum sprite é pedido antes da escolha do concept: ele é a referência de todos os pedidos dali em diante. O sprite base é o que mais economiza tempo: se ele estiver errado, todo o resto sai errado.
 
 ## 1 · Ficha: `design/personagens/<id>.md`
 
@@ -35,6 +36,14 @@ A ficha precisa ter:
 - as poses da comemoração.
 
 **Regra de ouro:** o personagem tem que ser tão característico quanto o Juba e o Capivas. Isso quer dizer uma profissão, um jeito de lutar que vem dela, uma silhueta que se reconhece de longe e humor.
+
+## 1b · Concept arts: `art/concepts/<id>/conceito_<n>_<direcao>.png`
+Quatro folhas de 1536×1024, uma por direção, em fundo bege liso e sem texto. Cada folha traz:
+- o personagem de corpo inteiro, em pose de apresentação;
+- o personagem de perfil, em movimento;
+- 3 rostos com expressões diferentes.
+
+O estilo é o das artes de apresentação (cartoon de jogo de luta). Muda só a roupa e a atitude, e o bicho continua o mesmo nos 4. O pedido vai em `art/prompts/pedidos/<id>/c01_concepts.md`.
 
 ## 2 a 5 · Sprites: `art/pixel/<id>/`
 
