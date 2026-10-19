@@ -7,6 +7,7 @@ extends Node
 const MATCH := preload("res://scenes/match.tscn")
 const MAIN_MENU := preload("res://scenes/ui/main_menu.tscn")
 const CHAR_SELECT := preload("res://scenes/ui/character_select.tscn")
+const ARENA_SELECT := preload("res://scenes/ui/arena_select.tscn")
 
 var results: Array[String] = []
 var failures := 0
@@ -29,6 +30,7 @@ func _ready() -> void:
 
 
 func _run() -> void:
+	await _test_arena_select()
 	await _test_menus()
 	await _test_countdown_and_ko()
 	await _test_invincibility()
@@ -104,7 +106,7 @@ func _test_menus() -> void:
 	await _tap("p2_jump")
 	_check("P2 confirma com pulo", sel.locked["p2"], str(sel.locked))
 	await _wait(sel.START_DELAY + 0.3)
-	_check("Os dois prontos vão para a luta", Game.requested_scene == Game.MATCH_SCENE, Game.requested_scene)
+	_check("Os dois prontos vão para a escolha de arena", Game.requested_scene == Game.ARENA_SELECT_SCENE, Game.requested_scene)
 	_check("Escolhas ficam no Game", Game.character_scene("p1").ends_with("pesado.tscn") and Game.character_scene("p2").ends_with("agil.tscn"), str(Game.characters))
 	sel.queue_free()
 	Game.set_character("p1", 0)
@@ -346,7 +348,7 @@ func _test_cpu_mode() -> void:
 	Game.requested_scene = ""
 	await _tap("p1_attack")
 	await _wait(sel.START_DELAY + 0.3)
-	_check("CPU: escolhas completas vão para a luta", Game.requested_scene == Game.MATCH_SCENE and Game.character_scene("p2").ends_with("agil.tscn"), Game.requested_scene)
+	_check("CPU: escolhas completas vão para a escolha de arena", Game.requested_scene == Game.ARENA_SELECT_SCENE and Game.character_scene("p2").ends_with("agil.tscn"), Game.requested_scene)
 	sel.queue_free()
 	Game.mode = "versus"
 	Game.set_character("p1", 0)
@@ -359,6 +361,44 @@ func _check(name: String, ok: bool, detail: Variant = "") -> void:
 	if not ok:
 		failures += 1
 	results.append("[%s] %s — %s" % ["OK" if ok else "FALHA", name, str(detail)])
+
+
+## Escolha de arena: setas trocam, Ataque confirma e vai para a luta; um clique
+## do mouse (com o Ataque no mouse) não confirma nada sozinho na tela de personagens.
+func _test_arena_select() -> void:
+	Game.arena_index = 0
+	var a := ARENA_SELECT.instantiate()
+	add_child(a)
+	await _frames(4)
+	_check("Arenas: cartões de Aleatória + arenas prontas", a.cards.size() >= 2, str(a.cards.size()))
+	var start: int = a.index
+	await _tap("p1_right")
+	_check("Arenas: direita troca o cartão", a.index == posmod(start + 1, a.cards.size()), str(a.index))
+	Game.requested_scene = ""
+	await _tap("p1_attack")
+	await _wait(0.5)
+	_check("Arenas: Ataque confirma e vai para a luta", Game.requested_scene == Game.MATCH_SCENE and Game.arena_index == a._options[a.index], "%s %d" % [Game.requested_scene, Game.arena_index])
+	a.queue_free()
+	Game.arena_index = 0
+	var sel := CHAR_SELECT.instantiate()
+	add_child(sel)
+	await _frames(3)
+	Controles.file_path = "user://controles_teste.cfg"
+	var left := InputEventMouseButton.new()
+	left.button_index = MOUSE_BUTTON_LEFT
+	left.pressed = true
+	Controles.rebind("p1_attack", left)
+	Input.parse_input_event(left.duplicate())
+	await _frames(3)
+	var up := left.duplicate() as InputEventMouseButton
+	up.pressed = false
+	Input.parse_input_event(up)
+	await _frames(2)
+	Controles.reset_to_defaults()
+	Controles.file_path = Controles.FILE_PATH
+	_check("Clique do mouse não confirma o personagem sozinho", not sel.locked["p1"], str(sel.locked))
+	sel.queue_free()
+	await _frames(2)
 
 
 func _frames(n: int) -> void:

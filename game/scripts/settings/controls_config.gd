@@ -17,12 +17,27 @@ const ACTIONS: Array[Array] = [
 	["shield", "Defesa / esquiva"], ["grab", "Agarrão"], ["pause", "Pausa"],
 ]
 
+## Quadro em que o último botão do mouse foi apertado (os menus usam para não
+## tratar um clique em botão como "Ataque" quando o Ataque está no mouse).
+var mouse_click_frame := -1
+
 ## Teste: caminho do arquivo (os testes usam outro para não mexer no do jogador).
 var file_path := FILE_PATH
 
 
 func _ready() -> void:
 	load_controls()
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		mouse_click_frame = Engine.get_process_frames()
+
+
+## Para os menus: a ação foi apertada agora, e não por um clique do mouse
+## (o clique já aperta o botão da tela por conta própria).
+func menu_pressed(action: String) -> bool:
+	return Input.is_action_just_pressed(action) and Engine.get_process_frames() != mouse_click_frame
 
 
 ## Volta ao padrão do projeto e aplica as trocas salvas.

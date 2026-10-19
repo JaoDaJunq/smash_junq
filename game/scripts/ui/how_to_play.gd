@@ -127,10 +127,10 @@ func _process(delta: float) -> void:
 	if scroll == null or not is_visible_in_tree():
 		return
 	for p in ["ui", "p1", "p2"]:
-		if Input.is_action_just_pressed(p + "_down"):
+		if Controles.menu_pressed(p + "_down"):
 			scroll.scroll_vertical += SCROLL_STEP
 			return
-		if Input.is_action_just_pressed(p + "_up"):
+		if Controles.menu_pressed(p + "_up"):
 			scroll.scroll_vertical -= SCROLL_STEP
 			return
 

@@ -220,18 +220,18 @@ func _poll_buttons() -> void:
 		if buttons[i].has_focus():
 			index = i
 	var step := 0
-	if not Input.is_action_just_pressed("ui_down") and not Input.is_action_just_pressed("ui_up"):
+	if not Controles.menu_pressed("ui_down") and not Controles.menu_pressed("ui_up"):
 		for p in PLAYERS:
-			if Input.is_action_just_pressed(p + "_down"):
+			if Controles.menu_pressed(p + "_down"):
 				step += 1
-			if Input.is_action_just_pressed(p + "_up"):
+			if Controles.menu_pressed(p + "_up"):
 				step -= 1
 	if step != 0:
 		buttons[clampi(index + signi(step), 0, buttons.size() - 1)].grab_focus()
 		return
-	if index < 0 or Input.is_action_just_pressed("ui_accept"):
+	if index < 0 or Controles.menu_pressed("ui_accept"):
 		return
 	for p in PLAYERS:
-		if Input.is_action_just_pressed(p + "_attack") or Input.is_action_just_pressed(p + "_jump"):
+		if Controles.menu_pressed(p + "_attack") or Controles.menu_pressed(p + "_jump"):
 			buttons[index].pressed.emit()
 			return

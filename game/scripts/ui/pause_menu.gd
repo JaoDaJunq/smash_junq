@@ -18,7 +18,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	for p in PLAYERS:
-		if Input.is_action_just_pressed(p + "_pause"):
+		if Controles.menu_pressed(p + "_pause"):
 			toggle()
 			return
 	super._process(delta)

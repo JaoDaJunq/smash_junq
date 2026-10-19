@@ -253,7 +253,7 @@ func _actions(suffix: String) -> Array:
 
 func _just(actions: Array) -> bool:
 	for a in actions:
-		if Input.is_action_just_pressed(a):
+		if Controles.menu_pressed(a):
 			return true
 	return false
 

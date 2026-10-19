@@ -10,7 +10,6 @@ var choice := {"p1": 0, "p2": 1}
 var locked := {"p1": false, "p2": false}
 var _panels := {}
 var _starting := false
-var _arena_label: Label
 
 
 func _ready() -> void:
@@ -26,16 +25,7 @@ func _ready() -> void:
 	for pid in PLAYERS:
 		_panels[pid] = _build_panel(pid)
 		row.add_child(_panels[pid]["root"])
-	var arena_row := HBoxContainer.new()
-	arena_row.add_theme_constant_override("separation", 16)
-	arena_row.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	col.add_child(arena_row)
-	arena_row.add_child(_mouse_button("◀", func() -> void: _move_arena(-1), 70))
-	_arena_label = make_label("", "HeadingLabel", ACCENT)
-	_arena_label.custom_minimum_size = Vector2(520, 0)
-	arena_row.add_child(_arena_label)
-	arena_row.add_child(_mouse_button("▶", func() -> void: _move_arena(1), 70))
-	col.add_child(make_label("Esquerda/Direita escolhe  ·  Cima/Baixo troca a arena  ·  Ataque ou Pulo confirma  ·  Especial desfaz  ·  Pausa volta", "HintLabel"))
+	col.add_child(make_label("Esquerda/Direita escolhe  ·  Ataque ou Pulo confirma  ·  Especial desfaz  ·  Pausa volta", "HintLabel"))
 	if not versus:
 		var other := "do boneco" if Game.mode == "training" else "da CPU"
 		col.add_child(make_label("Você escolhe o seu lutador e depois o " + other, "HintLabel"))
@@ -117,7 +107,7 @@ func slot_active(slot: String) -> bool:
 
 func _process(_delta: float) -> void:
 	for pid in PLAYERS:
-		if Input.is_action_just_pressed(pid + "_pause"):
+		if Controles.menu_pressed(pid + "_pause"):
 			_back()
 			return
 	# No modo CPU só um painel escolhe por vez (o do P1 trava quando a CPU escolhe)
@@ -128,18 +118,14 @@ func _process(_delta: float) -> void:
 		if not slot_active(slot):
 			continue
 		var c := controller_of(slot)
-		if Input.is_action_just_pressed(c + "_left"):
+		if Controles.menu_pressed(c + "_left"):
 			_move(slot, -1)
-		if Input.is_action_just_pressed(c + "_right"):
+		if Controles.menu_pressed(c + "_right"):
 			_move(slot, 1)
-		if Input.is_action_just_pressed(c + "_up"):
-			_move_arena(-1)
-		elif Input.is_action_just_pressed(c + "_down"):
-			_move_arena(1)
-		if Input.is_action_just_pressed(c + "_attack") or Input.is_action_just_pressed(c + "_jump"):
+		if Controles.menu_pressed(c + "_attack") or Controles.menu_pressed(c + "_jump"):
 			if not locked[slot]:
 				_toggle_lock(slot)
-		elif Input.is_action_just_pressed(c + "_special"):
+		elif Controles.menu_pressed(c + "_special"):
 			_unlock(slot)
 
 
@@ -152,16 +138,6 @@ func _move(slot: String, step: int) -> void:
 	var p: Dictionary = _panels[slot]
 	pop(p["name"], 1.18)
 	pop(p["preview_box"], 1.1)
-
-
-## Arena: Aleatória (-1) e as da lista, em volta.
-func _move_arena(step: int) -> void:
-	if _starting:
-		return
-	Game.arena_index = posmod(Game.arena_index + 1 + step, Game.ARENAS.size() + 1) - 1
-	Sfx.play("ui_move")
-	_refresh()
-	pop(_arena_label, 1.12)
 
 
 func _toggle_lock(slot: String) -> void:
@@ -198,7 +174,7 @@ func _start_match() -> void:
 		Game.set_character(pid, choice[pid])
 	_refresh()
 	await get_tree().create_timer(START_DELAY).timeout
-	Game.go_to(Game.MATCH_SCENE)
+	Game.go_to(Game.ARENA_SELECT_SCENE)
 
 
 func _back() -> void:
@@ -209,8 +185,6 @@ func _back() -> void:
 
 
 func _refresh() -> void:
-	if _arena_label:
-		_arena_label.text = "Arena: " + Game.arena_name(Game.arena_index)
 	for pid in PLAYERS:
 		var p: Dictionary = _panels[pid]
 		var info: Dictionary = Game.CHARACTERS[choice[pid]]

@@ -97,6 +97,9 @@ Aprovadas pelo criador depois do playtest 01 (15/10/2026). Valem para todo pedid
 - **Todo objeto lançado** (projétil) tem sprite próprio, pedido junto com a animação que o lança, e entra em `assets/manifest.csv`.
 - **Espaço vazio generoso entre os quadros:** nada encosta na borda da célula. Se a pose não cabe, o gesto encolhe; o personagem não.
 
+**Comemoração (vitória)**
+- Enxuta: **3 ou 4 poses**, sem quadros intermediários. Toca uma vez (cerca de 2 s) e para na pose final. Pedido do criador no playtest 01: as de 6 poses do Juba e do Seu Capivas ficaram longas demais.
+
 **Consistência**
 - Toda pose, inclusive as raras (escudo, dor, borda, descanso), na **mesma escala, paleta, contorno e proporção** da folha aprovada.
 - Todo pedido anexa **a folha aprovada do personagem e um quadro já aprovado** (ex.: o parado), para servir de régua.
