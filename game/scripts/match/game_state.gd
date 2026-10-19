@@ -31,6 +31,14 @@ const CHARACTERS: Array[Dictionary] = [
 		"id": "seu_capivas",
 		"stats": {"Velocidade": 2, "Força": 5, "Peso": 5, "Volta ao palco": 2},
 	},
+	{
+		"name": "Maracajá",
+		"scene": "res://scenes/characters/maracaja.tscn",
+		"desc": "Jaguatirica malandra do parkour. Rápido e rasteiro:\nbotes de longe, gruda na parede e pula de novo.",
+		"weight": "Leve",
+		"id": "maracaja",
+		"stats": {"Velocidade": 5, "Força": 2, "Peso": 2, "Volta ao palco": 4},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

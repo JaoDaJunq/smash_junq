@@ -326,6 +326,9 @@ func _pick() -> Array:
 
 
 func _air() -> Array:
+	# Grudado na parede (Maracajá)
+	if fighter.has_method("is_clinging") and fighter.is_clinging() and has_anim("parede"):
+		return _loop("parede", 3.0)
 	# Pulo duplo do Juba: cambalhota da folha tonto_pulo_duplo (quadros 3 a 6)
 	if _flip >= 0.0:
 		_flip += get_process_delta_time() / 0.3

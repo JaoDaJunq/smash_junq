@@ -1,15 +1,15 @@
 # Maracajá · ficha
 
-> **Proposta (19/10/2026).** Depois que o João aprovar a ficha e um dos 4 concepts (`art/concepts/maracaja/`), vem o sprite base.
+> **Aprovado (19/10/2026).** Concept escolhido pelo João: **4 · gato malandro** (`art/concepts/maracaja/escolhido.png`). Ele curtiu o chinelinho.
 
 | | |
 |---|---|
 | **id** (pasta) | `maracaja` |
 | **Bicho** | Jaguatirica (*Leopardus pardalis*) |
 | **Grupo · Tipo** | Felinos · **Rápido** |
-| **Profissão / papel** | **Traceur de parkour**. Cresceu pulando muro e laje no morro e hoje dá aula de parkour no projeto social do bairro. No torneio, é o "gato do telhado": ninguém o pega |
+| **Profissão / papel** | **Malandro do parkour**. Cresceu pulando muro e laje no morro e hoje dá aula de parkour no projeto social do bairro. No torneio, é o "gato do telhado": ninguém o pega |
 | **Personalidade** | Descolado, silencioso, convencido e um pouco preguiçoso fora da luta: só se mexe quando vale a pena. Tique: quando acerta um golpe bonito, alisa o bigode com a ponta da garra |
-| **Acessório de assinatura** | **Faixas nos antebraços** (como as dos traceurs) e **tênis gasto sem cadarço**. As unhas aparecem só na hora do golpe |
+| **Visual (concept escolhido)** | **Gato malandro**: camisa de botão aberta com estampa de folhas, corrente dourada fina, faixa branca no antebraço, calça bege dobrada na canela, **chinelo de dedo verde-limão** e **palito no canto da boca** |
 | **Silhueta** | Magro, comprido e baixo (corre meio agachado, como um gato espreitando), com **cauda longa** em S, orelhas redondas para trás e **rosetas pretas** marcantes. É o mais "deitado" do elenco: o Juba é vertical e saltitante; o Maracajá é horizontal e rasteiro |
 | **Cores** | Pelagem ocre-dourada `#D99A4E` · rosetas marrom-escuro `#3E2414` · barriga e focinho creme `#F3E3C3` · destaque (faixas e tênis) verde-limão `#B6DD3C` · contorno vinho `#2a0f12` |
 | **Altura no sprite** | Cerca de 46 px de 64, de pé (cabe em 38 px agachado). É mais baixo que o Juba (52), porém mais comprido |
