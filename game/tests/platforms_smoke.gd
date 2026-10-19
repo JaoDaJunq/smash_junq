@@ -45,6 +45,17 @@ func _ready() -> void:
 	var dx := absf(p1.global_position.x - pad.global_position.x)
 	await _frames(20)
 	_check("Batendo em cima dela continua na plataforma", p1.is_on_floor() and dx < 128.0, "no chão=%s, %.0f px do centro, estado %s" % [p1.is_on_floor(), dx, Fighter.State.keys()[p1.state]])
+	# Especial que avança sai da beirada (não fica preso nela).
+	p1.global_position = pad.global_position + Vector2(60, -60)
+	p1.velocity = Vector2.ZERO
+	p1.state = Fighter.State.AIR
+	p1.facing = 1
+	p2.global_position = Vector2(2000, -2000)
+	await _frames(20)
+	var started := p1.start_attack("special_side")
+	await _frames(60)
+	var off := absf(p1.global_position.x - pad.global_position.x)
+	_check("Investida (especial do lado) sai da beirada da plataforma", started and off > 140.0, "começou=%s, %.0f px do centro, chão=%s" % [started, off, p1.is_on_floor()])
 	print("\n".join(results))
 	print("RESULTADO: %s (%d falha(s))" % ["OK" if failures == 0 else "FALHOU", failures])
 	get_tree().quit(failures)

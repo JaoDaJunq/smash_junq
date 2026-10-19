@@ -248,7 +248,7 @@ func _physics_process(delta: float) -> void:
 	if state != State.LEDGE and state != State.HELD and state != State.RESPAWN:
 		var was_airborne := not is_on_floor()
 		_fall_speed_before_move = velocity.y
-		if state == State.ATTACK and is_on_floor():
+		if state == State.ATTACK and is_on_floor() and attack_id.begins_with("jab"):
 			_stop_at_edge(delta)
 		move_and_slide()
 		_after_move(was_airborne)
@@ -972,8 +972,9 @@ func _process_held(_delta: float) -> void:
 
 # --- Beirada ---
 
-## Golpe no chão não leva o lutador para fora da beirada (passinho do jab, golpes
-## que avançam): se não houver chão logo à frente dos pés, para no lugar.
+## Só o ataque básico (passinho do jab2/jab3) para na beirada, para não derrubar
+## ninguém de plataforma pequena. Especiais e golpes que avançam saem da beirada
+## normalmente (ex.: a investida do Juba atravessa e sai da plataforma).
 func _stop_at_edge(delta: float) -> void:
 	if absf(velocity.x) < 1.0:
 		return
