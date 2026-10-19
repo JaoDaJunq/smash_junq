@@ -25,7 +25,7 @@ const LAYER_PLATFORM := 2
 const LAYOUTS := {
 	"pantanal": {
 		"desc": "Uma ilha de barro no meio da lagoa e duas vitórias-régias que sobem e descem dos lados: boas para voltar, ruins para ficar parado.",
-		"solids": [{"x": -448.0, "y": 0.0, "w": 7, "h": 2, "ledges": ["l", "r"]}],
+		"solids": [{"x": -448.0, "y": 0.0, "w": 7, "h": 2, "ledges": ["l", "r"], "shape": "tigela", "seed": 11}],
 		"soft": [[0.0, -330.0]],
 		"moving": [[-600.0, -150.0, Vector2(0, -110), 5.0, 0.0], [600.0, -150.0, Vector2(0, -110), 5.0, 0.5]],
 		"decor": [[-320.0, 0], [250.0, 1], [380.0, 2]],
@@ -33,7 +33,7 @@ const LAYOUTS := {
 	"caatinga": {
 		"desc": "Chão largo com uma laje de pedra alta do lado esquerdo e tábuas em alturas diferentes: mapa torto, bom para quem gosta de pular por cima.",
 		"solids": [
-			{"x": -640.0, "y": 0.0, "w": 10, "h": 2, "ledges": ["r"]},
+			{"x": -640.0, "y": 0.0, "w": 10, "h": 2, "ledges": ["r"], "shape": "torta", "seed": 7},
 			{"x": -640.0, "y": -128.0, "w": 3, "h": 1, "ledges": ["l"], "on_top_of_main": true},
 		],
 		"soft": [[320.0, -230.0], [-450.0, -380.0]],
@@ -43,9 +43,9 @@ const LAYOUTS := {
 	"cerrado": {
 		"desc": "Palco compacto e alto, duas ilhas de terra mais baixas dos lados e três galhos de ipê em triângulo: muito vão para jogar o adversário fora.",
 		"solids": [
-			{"x": -384.0, "y": 0.0, "w": 6, "h": 3, "ledges": ["l", "r"]},
-			{"x": -896.0, "y": 140.0, "w": 2, "h": 2, "ledges": ["l", "r"]},
-			{"x": 640.0, "y": 140.0, "w": 2, "h": 2, "ledges": ["l", "r"]},
+			{"x": -384.0, "y": 0.0, "w": 6, "h": 3, "ledges": ["l", "r"], "shape": "v", "seed": 3},
+			{"x": -896.0, "y": 140.0, "w": 2, "h": 2, "ledges": ["l", "r"], "shape": "degraus", "seed": 21},
+			{"x": 640.0, "y": 140.0, "w": 2, "h": 2, "ledges": ["l", "r"], "shape": "torta_e", "seed": 5},
 		],
 		"soft": [[-300.0, -210.0], [300.0, -210.0], [0.0, -410.0]],
 		"moving": [],
@@ -132,82 +132,59 @@ func _tile(parent: Node2D, tex: Texture2D, i: int, pos: Vector2, z := -5) -> voi
 
 func _build_solid(s: Dictionary) -> void:
 	var w: int = s["w"]
-	var h: int = s["h"]
 	var on_main: bool = s.get("on_top_of_main", false)
 	var top := Vector2(s["x"], s["y"])
 	if on_main:
-		# Laje em cima do palco: uma fileira só, com o fim do bloco encostado no chão.
-		top.y = -(NATIVE - _surf) * K
+		top.y = -float(s.get("h_px", 120.0))
 	var width := w * TILE
-	var y0 := top.y - _surf * K   # a linha da superfície do bloco fica no topo
-	var yb := y0 + TILE           # fim da fileira de cima
 	var body := StaticBody2D.new()
 	body.collision_layer = LAYER_STAGE
 	body.collision_mask = 0
 	body.name = "Terreno%d" % get_child_count()
 	add_child(body)
-	# Fileira de cima (superfície, cantos com contorno)
-	for col in w:
-		_tile(self, _blocks, _kind(col, w), Vector2(top.x + col * TILE, y0))
-	var shape := CollisionPolygon2D.new()
+	# Uma peça só: o contorno vai da superfície, desce pelos lados e fecha embaixo.
+	var poly: PackedVector2Array
 	if on_main:
-		# Preenche de trás da fileira até o chão: a laje fica grudada no palco.
-		var x0 := top.x + 2.0 * K
-		var x1 := top.x + width - 2.0 * K
-		var fill_l := Polygon2D.new()
-		fill_l.polygon = PackedVector2Array([Vector2(x0, yb - TILE * 0.45), Vector2(x1, yb - TILE * 0.45), Vector2(x1, 6.0), Vector2(x0, 6.0)])
-		fill_l.texture = _core
-		fill_l.texture_scale = Vector2(1.0 / K, 1.0 / K)
-		fill_l.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-		fill_l.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		fill_l.z_index = -6
-		add_child(fill_l)
-		for xe in [x0, x1]:
-			var edge_l := Line2D.new()
-			edge_l.points = PackedVector2Array([Vector2(xe, yb - TILE * 0.45), Vector2(xe, 4.0)])
-			edge_l.width = 2.0 * K
-			edge_l.default_color = _outline
-			edge_l.z_index = -5
-			add_child(edge_l)
-		shape.polygon = PackedVector2Array([top, top + Vector2(width, 0), top + Vector2(width, -top.y), Vector2(top.x, 0)])
+		# Laje em cima do palco: paredes retas até o chão (some atrás da grama dele).
+		poly = PackedVector2Array([top, Vector2(top.x, 10.0), Vector2(top.x + width, 10.0), top + Vector2(width, 0)])
 	else:
-		# Embaixo: ilha afinando para baixo como a arena original (curva funda no
-		# meio, rasa nas pontas, borda irregular), em degraus de pixel.
-		var under := yb - TILE * 0.45  # começa por trás da fileira de cima: sem fresta
-		var poly := _island_outline(top.x, width, under, s.get("seed", int(top.x)))
-		var fill := Polygon2D.new()
-		fill.polygon = poly
-		fill.texture = _core
-		fill.texture_scale = Vector2(1.0 / K, 1.0 / K)
-		fill.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-		fill.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		fill.z_index = -6
-		add_child(fill)
+		poly = _island_outline(top.x, width, top.y, String(s.get("shape", "v")), int(s.get("seed", int(top.x))))
+	var z_fill := -3 if on_main else -6
+	var fill := Polygon2D.new()
+	fill.polygon = poly
+	fill.texture = _core
+	fill.texture_scale = Vector2(1.0 / K, 1.0 / K)
+	fill.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	fill.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	fill.z_index = z_fill
+	add_child(fill)
+	if not on_main:
 		var shade := Polygon2D.new()
 		shade.polygon = poly
-		var cols := PackedColorArray()
 		var deepest := 1.0
 		for v in poly:
-			deepest = maxf(deepest, v.y - under)
+			deepest = maxf(deepest, v.y - top.y)
+		var cols := PackedColorArray()
 		for v in poly:
-			cols.append(Color(0, 0, 0, 0.5 * clampf((v.y - under) / deepest, 0.0, 1.0)))
+			cols.append(Color(0, 0, 0, 0.5 * clampf((v.y - top.y - TILE * 0.3) / deepest, 0.0, 1.0)))
 		shade.vertex_colors = cols
-		shade.z_index = -6
+		shade.z_index = z_fill
 		add_child(shade)
+	# Contorno: lados e fundo (o lado de cima fica sob a faixa de grama). Na laje,
+	# só as duas paredes, até o chão.
+	var edges: Array[PackedVector2Array] = [poly]
+	if on_main:
+		edges = [PackedVector2Array([poly[0], Vector2(top.x, 0)]), PackedVector2Array([poly[3], Vector2(top.x + width, 0)])]
+	for e in edges:
 		var line := Line2D.new()
-		var edge := poly.slice(1)  # sem o lado de cima (escondido atrás da fileira)
-		line.points = edge
+		line.points = e
 		line.width = 2.0 * K
 		line.default_color = _outline
 		line.joint_mode = Line2D.LINE_JOINT_SHARP
-		line.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		line.z_index = -5
+		line.z_index = z_fill + 1
 		add_child(line)
-		var col_pts := PackedVector2Array([top, top + Vector2(width, 0)])
-		for i in range(poly.size() - 1, 0, -1):
-			col_pts.append(poly[i])
-		shape.polygon = col_pts
-	body.add_child(shape)
+	_top_strip(top, width, z_fill + 1)
+	body.add_child(_collision(poly))
 	for side in s.get("ledges", []):
 		var m := Marker2D.new()
 		m.add_to_group("ledges")
@@ -218,27 +195,75 @@ func _build_solid(s: Dictionary) -> void:
 		add_child(m)
 
 
-## Contorno da parte de baixo de uma ilha: começa no canto esquerdo de cima,
-## desce em curva (funda no meio, rasa nas pontas, com bicos irregulares) e
-## sobe até o canto direito. Pontos em degraus de 4 pixels de arte.
-func _island_outline(x0: float, width: float, y: float, seed: int) -> PackedVector2Array:
+func _collision(poly: PackedVector2Array) -> CollisionPolygon2D:
+	var c := CollisionPolygon2D.new()
+	c.polygon = poly
+	return c
+
+
+## Faixa da superfície (grama, beirada) por cima da peça: só a parte de cima do
+## bloco do meio, repetida e cortada reto nas pontas (sem os cantos redondos).
+func _top_strip(top: Vector2, width: float, z: int) -> void:
+	var rows := _surf + 7
+	var x := 0.0
+	# Onde há uma laje em cima, a faixa do chão não aparece (a laje é a mesma peça).
+	for o in LAYOUTS[arena]["solids"]:
+		if o.get("on_top_of_main", false) and absf(float(o["x"]) - top.x) < 1.0 and top.y > -1.0:
+			x = float(o["w"]) * TILE
+	while x < width - 0.5:
+		var piece := minf(TILE, width - x)
+		var sp := Sprite2D.new()
+		sp.texture = _blocks
+		sp.region_enabled = true
+		sp.region_rect = Rect2(NATIVE, 0, piece / K, rows)
+		sp.centered = false
+		sp.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sp.scale = Vector2(K, K)
+		sp.position = Vector2(top.x + x, top.y - _surf * K)
+		sp.z_index = z
+		add_child(sp)
+		x += piece
+
+
+## Contorno de uma ilha (uma peça só): canto de cima esquerdo, parede curta,
+## fundo com o formato pedido, parede curta e canto de cima direito.
+## Formatos: "v" (fundo no meio), "tigela" (redonda), "torta" (funda para a
+## direita), "torta_e" (para a esquerda), "degraus" (blocos de pedra).
+func _island_outline(x0: float, width: float, y: float, shape: String, seed: int) -> PackedVector2Array:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed
-	var depth := clampf(width * 0.26, TILE * 0.9, TILE * 2.2)
 	var step := 4.0 * K
-	var pts := PackedVector2Array([Vector2(x0 + 2.0 * K, y)])
-	var n := maxi(8, int(width / (TILE * 0.5)))
-	for k in n + 1:
-		var t := -1.0 + 2.0 * float(k) / float(n)
-		var prof := pow(1.0 - absf(t), 0.7)
-		var d := (step + (depth - step) * prof)
-		if k % 3 == 0 and prof > 0.2:
-			d *= rng.randf_range(1.05, 1.18)
-		else:
-			d *= rng.randf_range(0.85, 0.97)
-		var px := x0 + width * 0.5 + t * (width * 0.5 - 2.0 * K)
-		pts.append(Vector2(snappedf(px, step), y + snappedf(d, step)))
-	pts.append(Vector2(x0 + width - 2.0 * K, y))
+	var depth := clampf(width * 0.42, TILE * 1.4, TILE * 2.4)
+	var wall_l := snappedf(TILE * rng.randf_range(0.35, 0.6), step)
+	var wall_r := snappedf(TILE * rng.randf_range(0.35, 0.6), step)
+	var pts := PackedVector2Array([Vector2(x0, y), Vector2(x0, y + wall_l)])
+	var n := maxi(7, int(width / (TILE * 0.45)))
+	var steps_h := 0.0
+	for k in range(1, n):
+		var t := float(k) / float(n)
+		var f := 0.0
+		match shape:
+			"tigela":
+				f = sqrt(maxf(0.0, 1.0 - pow(2.0 * t - 1.0, 2.0)))
+			"torta":
+				f = t / 0.68 if t < 0.68 else (1.0 - t) / 0.32
+			"torta_e":
+				f = t / 0.32 if t < 0.32 else (1.0 - t) / 0.68
+			"degraus":
+				if k % 2 == 1:
+					steps_h = sqrt(maxf(0.0, 1.0 - pow(2.0 * t - 1.0, 2.0))) * rng.randf_range(0.75, 1.05)
+				f = steps_h
+			_:
+				f = 1.0 - absf(2.0 * t - 1.0)
+		f = clampf(f, 0.0, 1.0)
+		var wall := lerpf(wall_l, wall_r, t)
+		var d := wall + (depth - wall) * pow(f, 0.85)
+		if shape != "degraus":
+			d *= rng.randf_range(0.88, 1.08) if k % 2 == 0 else rng.randf_range(0.95, 1.12)
+		var px := x0 + width * t + (rng.randf_range(-0.2, 0.2) * TILE * 0.45 if shape != "degraus" else 0.0)
+		pts.append(Vector2(snappedf(px, step), y + snappedf(maxf(d, wall * 0.8), step)))
+	pts.append(Vector2(x0 + width, y + wall_r))
+	pts.append(Vector2(x0 + width, y))
 	return pts
 
 
@@ -298,7 +323,7 @@ func surface_y(x: float) -> float:
 		var x0: float = s["x"]
 		var y: float = s["y"]
 		if s.get("on_top_of_main", false):
-			y = -(NATIVE - _surf) * K
+			y = -float(s.get("h_px", 120.0))
 		if x >= x0 and x <= x0 + s["w"] * TILE and (is_nan(best) or y < best):
 			best = y
 	return best
@@ -311,7 +336,7 @@ func _decor(x: float, i: int) -> void:
 	if is_nan(y):
 		push_warning("enfeite fora do terreno em x=%s" % x)
 		return
-	_tile(self, _blocks, 9 + i, Vector2(x - TILE * 0.5, y - TILE + K), -3)
+	_tile(self, _blocks, 9 + i, Vector2(x - TILE * 0.5, y - TILE + K), -1)
 	var last := get_child(get_child_count() - 1)
 	last.add_to_group("decor")
 	last.set_meta("floor_y", y)
