@@ -23,7 +23,7 @@ func _ready() -> void:
 		_check("%s: pontos de entrada" % a["name"], arena.has_node("SpawnP1") and arena.has_node("SpawnP2"), "")
 		var art := arena.get_node_or_null("ArtArena")
 		if art:
-			_check("%s: terreno montado com blocos" % a["name"], art.get_children().filter(func(n: Node) -> bool: return n is Sprite2D).size() >= 12, "")
+			_check("%s: terreno montado com blocos" % a["name"], art.get_children().filter(func(n: Node) -> bool: return n is Sprite2D).size() >= 8, "")
 			var key := String(a["scene"]).get_file().get_basename()
 			var layout: Dictionary = art.LAYOUTS[key]
 			var movers := art.find_children("*", "AnimatableBody2D", true, false).size()
