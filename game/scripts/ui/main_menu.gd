@@ -51,9 +51,7 @@ func _ready() -> void:
 	logo.name = "Logo"
 	logo_box.add_child(logo)
 	logo.pivot_offset = logo_box.custom_minimum_size * 0.5
-	var tw := logo.create_tween().set_loops().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tw.tween_property(logo, "rotation", deg_to_rad(-1.5), 1.8).set_trans(Tween.TRANS_SINE)
-	tw.tween_property(logo, "rotation", deg_to_rad(1.5), 1.8).set_trans(Tween.TRANS_SINE)
+	# parado: o criador não gostou do balanço
 
 	for entry in [["Jogar", func() -> void: Game.go_to(Game.MODE_SCENE), false],
 			["Como jogar", func() -> void: Game.go_to(Game.HOW_TO_PLAY_SCENE), false],
