@@ -151,16 +151,30 @@ func _build_solid(s: Dictionary) -> void:
 		_tile(self, _blocks, _kind(col, w), Vector2(top.x + col * TILE, y0))
 	var shape := CollisionPolygon2D.new()
 	if on_main:
+		# Preenche de trás da fileira até o chão: a laje fica grudada no palco.
+		var x0 := top.x + 2.0 * K
+		var x1 := top.x + width - 2.0 * K
+		var fill_l := Polygon2D.new()
+		fill_l.polygon = PackedVector2Array([Vector2(x0, yb - TILE * 0.45), Vector2(x1, yb - TILE * 0.45), Vector2(x1, 6.0), Vector2(x0, 6.0)])
+		fill_l.texture = _core
+		fill_l.texture_scale = Vector2(1.0 / K, 1.0 / K)
+		fill_l.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		fill_l.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		fill_l.z_index = -6
+		add_child(fill_l)
+		for xe in [x0, x1]:
+			var edge_l := Line2D.new()
+			edge_l.points = PackedVector2Array([Vector2(xe, yb - TILE * 0.45), Vector2(xe, 4.0)])
+			edge_l.width = 2.0 * K
+			edge_l.default_color = _outline
+			edge_l.z_index = -5
+			add_child(edge_l)
 		shape.polygon = PackedVector2Array([top, top + Vector2(width, 0), top + Vector2(width, -top.y), Vector2(top.x, 0)])
 	else:
-		# Embaixo: ilha afinando como um triângulo de cabeça para baixo (como a
-		# arena original), com a textura do terreno, sombra e contorno.
-		var cx := top.x + width * 0.5
-		var tip := maxf(TILE * 0.5, width * 0.14)
-		var depth := clampf(width * 0.5, TILE * 1.3, TILE * 4.0) + (h - 1) * TILE * 0.5
+		# Embaixo: ilha afinando para baixo como a arena original (curva funda no
+		# meio, rasa nas pontas, borda irregular), em degraus de pixel.
 		var under := yb - TILE * 0.45  # começa por trás da fileira de cima: sem fresta
-		var poly := PackedVector2Array([Vector2(top.x + 2.0 * K, under), Vector2(top.x + width - 2.0 * K, under),
-			Vector2(cx + tip * 0.5, yb + depth), Vector2(cx - tip * 0.5, yb + depth)])
+		var poly := _island_outline(top.x, width, under, s.get("seed", int(top.x)))
 		var fill := Polygon2D.new()
 		fill.polygon = poly
 		fill.texture = _core
@@ -171,20 +185,28 @@ func _build_solid(s: Dictionary) -> void:
 		add_child(fill)
 		var shade := Polygon2D.new()
 		shade.polygon = poly
-		shade.vertex_colors = PackedColorArray([Color(0, 0, 0, 0.0), Color(0, 0, 0, 0.0), Color(0, 0, 0, 0.55), Color(0, 0, 0, 0.55)])
+		var cols := PackedColorArray()
+		var deepest := 1.0
+		for v in poly:
+			deepest = maxf(deepest, v.y - under)
+		for v in poly:
+			cols.append(Color(0, 0, 0, 0.5 * clampf((v.y - under) / deepest, 0.0, 1.0)))
+		shade.vertex_colors = cols
 		shade.z_index = -6
 		add_child(shade)
 		var line := Line2D.new()
-		line.points = PackedVector2Array([poly[0], poly[3], poly[2], poly[1]])
+		var edge := poly.slice(1)  # sem o lado de cima (escondido atrás da fileira)
+		line.points = edge
 		line.width = 2.0 * K
 		line.default_color = _outline
-		line.joint_mode = Line2D.LINE_JOINT_ROUND
+		line.joint_mode = Line2D.LINE_JOINT_SHARP
+		line.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		line.z_index = -5
 		add_child(line)
-		# raízes/pedras penduradas na ponta
-		_tile(self, _blocks, 7, Vector2(cx - TILE * 0.5, yb + depth - 2.0 * K), -6)
-		shape.polygon = PackedVector2Array([top, top + Vector2(width, 0), Vector2(top.x + width, yb),
-			Vector2(cx + tip * 0.5, yb + depth), Vector2(cx - tip * 0.5, yb + depth), Vector2(top.x, yb)])
+		var col_pts := PackedVector2Array([top, top + Vector2(width, 0)])
+		for i in range(poly.size() - 1, 0, -1):
+			col_pts.append(poly[i])
+		shape.polygon = col_pts
 	body.add_child(shape)
 	for side in s.get("ledges", []):
 		var m := Marker2D.new()
@@ -194,6 +216,30 @@ func _build_solid(s: Dictionary) -> void:
 		m.position = Vector2(top.x if side == "l" else top.x + width, top.y)
 		m.name = "Borda%s%d" % [side.to_upper(), get_child_count()]
 		add_child(m)
+
+
+## Contorno da parte de baixo de uma ilha: começa no canto esquerdo de cima,
+## desce em curva (funda no meio, rasa nas pontas, com bicos irregulares) e
+## sobe até o canto direito. Pontos em degraus de 4 pixels de arte.
+func _island_outline(x0: float, width: float, y: float, seed: int) -> PackedVector2Array:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed
+	var depth := clampf(width * 0.26, TILE * 0.9, TILE * 2.2)
+	var step := 4.0 * K
+	var pts := PackedVector2Array([Vector2(x0 + 2.0 * K, y)])
+	var n := maxi(8, int(width / (TILE * 0.5)))
+	for k in n + 1:
+		var t := -1.0 + 2.0 * float(k) / float(n)
+		var prof := pow(1.0 - absf(t), 0.7)
+		var d := (step + (depth - step) * prof)
+		if k % 3 == 0 and prof > 0.2:
+			d *= rng.randf_range(1.05, 1.18)
+		else:
+			d *= rng.randf_range(0.85, 0.97)
+		var px := x0 + width * 0.5 + t * (width * 0.5 - 2.0 * K)
+		pts.append(Vector2(snappedf(px, step), y + snappedf(d, step)))
+	pts.append(Vector2(x0 + width - 2.0 * K, y))
+	return pts
 
 
 ## 0 = canto esquerdo, 1 = meio, 2 = canto direito.
@@ -245,7 +291,27 @@ func _build_moving(top: Vector2, offset: Vector2, period: float, phase: float) -
 	_movers.append({"body": body, "from": top, "offset": offset, "period": period, "phase": phase})
 
 
+## Topo (y da superfície) do terreno que cobre a posição x; NAN se não houver.
+func surface_y(x: float) -> float:
+	var best := NAN
+	for s in LAYOUTS[arena]["solids"]:
+		var x0: float = s["x"]
+		var y: float = s["y"]
+		if s.get("on_top_of_main", false):
+			y = -(NATIVE - _surf) * K
+		if x >= x0 and x <= x0 + s["w"] * TILE and (is_nan(best) or y < best):
+			best = y
+	return best
+
+
 func _decor(x: float, i: int) -> void:
-	# enfeite apoiado na superfície do palco principal (atrás dos lutadores)
-	# o importador encosta o desenho na última linha do bloco: ela fica no chão
-	_tile(self, _blocks, 9 + i, Vector2(x - TILE * 0.5, -TILE + K), -3)
+	# Apoia no terreno que estiver embaixo (o importador encosta o desenho na
+	# última linha do bloco). Sem terreno embaixo, não desenha.
+	var y := surface_y(x)
+	if is_nan(y):
+		push_warning("enfeite fora do terreno em x=%s" % x)
+		return
+	_tile(self, _blocks, 9 + i, Vector2(x - TILE * 0.5, y - TILE + K), -3)
+	var last := get_child(get_child_count() - 1)
+	last.add_to_group("decor")
+	last.set_meta("floor_y", y)

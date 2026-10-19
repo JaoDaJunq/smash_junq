@@ -29,6 +29,13 @@ func _ready() -> void:
 		await _frames(240)
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png(out.path_join(key + "_luta.png"))
+		# Vista inteira (câmera afastada): mostra a ilha até a ponta de baixo.
+		for cam in m.find_children("*", "Camera2D", true, false):
+			cam.min_zoom = 0.42
+			cam.max_zoom = 0.42
+		await _frames(90)
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png(out.path_join(key + "_inteira.png"))
 		print("print: ", key)
 		m.queue_free()
 		await _frames(5)

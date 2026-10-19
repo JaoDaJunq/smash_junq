@@ -28,6 +28,13 @@ func _ready() -> void:
 			var layout: Dictionary = art.LAYOUTS[key]
 			var movers := art.find_children("*", "AnimatableBody2D", true, false).size()
 			_check("%s: plataformas que se movem conforme o formato" % a["name"], movers == layout["moving"].size(), str(movers))
+			var floating := 0
+			for d in art.get_children().filter(func(n: Node) -> bool: return n.is_in_group("decor")):
+				var base: float = d.position.y + 64 * 2.0 - 2.0
+				if absf(base - float(d.get_meta("floor_y"))) > 4.0 or is_nan(art.surface_y(d.position.x + 64.0)):
+					floating += 1
+			_check("%s: enfeites apoiados no terreno" % a["name"], floating == 0, str(floating))
+			_check("%s: todos os enfeites desenhados" % a["name"], art.get_children().filter(func(n: Node) -> bool: return n.is_in_group("decor")).size() == layout["decor"].size(), str(art.get_children().filter(func(n: Node) -> bool: return n.is_in_group("decor")).size()))
 		arena.queue_free()
 		await get_tree().process_frame
 		Game.arena_index = i
