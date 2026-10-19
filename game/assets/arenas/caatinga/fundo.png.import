@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cbv75glfm836m"
-path="res://.godot/imported/fundo_longe.png-549aeee94493081ad4277a6c5831f738.ctex"
+uid="uid://br283vrc42krt"
+path="res://.godot/imported/fundo.png-1075786a0f762baf4931f2498e14ffd5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/arenas/cerrado/fundo_longe.png"
-dest_files=["res://.godot/imported/fundo_longe.png-549aeee94493081ad4277a6c5831f738.ctex"]
+source_file="res://assets/arenas/caatinga/fundo.png"
+dest_files=["res://.godot/imported/fundo.png-1075786a0f762baf4931f2498e14ffd5.ctex"]
 
 [params]
 

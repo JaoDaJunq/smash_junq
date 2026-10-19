@@ -32,10 +32,14 @@ const CHARACTERS: Array[Dictionary] = [
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam
 ## arte importada por tools/importar_arena.py.
 const ARENAS: Array[Dictionary] = [
-	{"name": "Ruínas da Mata", "scene": "res://scenes/arena.tscn"},
-	{"name": "Pantanal", "scene": "res://scenes/arenas/pantanal.tscn"},
-	{"name": "Caatinga", "scene": "res://scenes/arenas/caatinga.tscn"},
-	{"name": "Cerrado", "scene": "res://scenes/arenas/cerrado.tscn"},
+	{"name": "Ruínas da Mata", "scene": "res://scenes/arena.tscn", "preview": "res://assets/arenas/previa_ruinas.png",
+		"desc": "A clássica: palco largo de pedra flutuando no entardecer e duas plataformas no alto."},
+	{"name": "Pantanal", "scene": "res://scenes/arenas/pantanal.tscn", "preview": "res://assets/arenas/pantanal/previa.png",
+		"desc": "Uma ilha de barro no meio da lagoa e duas vitórias-régias que sobem e descem dos lados."},
+	{"name": "Caatinga", "scene": "res://scenes/arenas/caatinga.tscn", "preview": "res://assets/arenas/caatinga/previa.png",
+		"desc": "Chão largo com uma laje de pedra alta à esquerda e tábuas em alturas diferentes."},
+	{"name": "Cerrado", "scene": "res://scenes/arenas/cerrado.tscn", "preview": "res://assets/arenas/cerrado/previa.png",
+		"desc": "Palco compacto e alto, ilhas de terra dos lados e três galhos de ipê em triângulo."},
 ]
 
 const PLAYER_COLORS := {
@@ -84,7 +88,7 @@ func arena_ready(a: Dictionary) -> bool:
 	if not ResourceLoader.exists(a["scene"]):
 		return false
 	var key := String(a["scene"]).get_file().get_basename()
-	return a["scene"] == ARENAS[0]["scene"] or FileAccess.file_exists("res://assets/arenas/%s/arena.json" % key)
+	return a["scene"] == ARENAS[0]["scene"] or FileAccess.file_exists("res://assets/arenas/%s/blocos.png" % key)
 
 
 func arena_name(index: int) -> String:

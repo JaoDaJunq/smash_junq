@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkjg1b0ayf2g5"
-path="res://.godot/imported/fundo_longe.png-81433741e191eec0d9419ba06a9f9ef2.ctex"
+uid="uid://gmbpp0gx6cve"
+path="res://.godot/imported/blocos.png-63a6840b3854bc68ddf996ca48bce584.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/arenas/pantanal/fundo_longe.png"
-dest_files=["res://.godot/imported/fundo_longe.png-81433741e191eec0d9419ba06a9f9ef2.ctex"]
+source_file="res://assets/arenas/caatinga/blocos.png"
+dest_files=["res://.godot/imported/blocos.png-63a6840b3854bc68ddf996ca48bce584.ctex"]
 
 [params]
 

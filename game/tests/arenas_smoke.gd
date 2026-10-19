@@ -18,12 +18,16 @@ func _ready() -> void:
 		var arena := (load(a["scene"]) as PackedScene).instantiate()
 		add_child(arena)
 		await get_tree().process_frame
-		var ledges := arena.find_children("*", "Marker2D").filter(func(n: Node) -> bool: return n.is_in_group("ledges"))
-		_check("%s: duas bordas" % a["name"], ledges.size() == 2, str(ledges.size()))
+		var ledges := arena.find_children("*", "Marker2D", true, false).filter(func(n: Node) -> bool: return n.is_in_group("ledges"))
+		_check("%s: bordas para agarrar" % a["name"], ledges.size() >= 2, str(ledges.size()))
 		_check("%s: pontos de entrada" % a["name"], arena.has_node("SpawnP1") and arena.has_node("SpawnP2"), "")
 		var art := arena.get_node_or_null("ArtArena")
 		if art:
-			_check("%s: palco montado com blocos" % a["name"], art.get_children().filter(func(n: Node) -> bool: return n is Sprite2D).size() >= 7, "")
+			_check("%s: terreno montado com blocos" % a["name"], art.get_children().filter(func(n: Node) -> bool: return n is Sprite2D).size() >= 12, "")
+			var key := String(a["scene"]).get_file().get_basename()
+			var layout: Dictionary = art.LAYOUTS[key]
+			var movers := art.find_children("*", "AnimatableBody2D", true, false).size()
+			_check("%s: plataformas que se movem conforme o formato" % a["name"], movers == layout["moving"].size(), str(movers))
 		arena.queue_free()
 		await get_tree().process_frame
 		Game.arena_index = i

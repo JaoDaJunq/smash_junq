@@ -1,60 +1,16 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/arena/art_arena.gd" id="1_art"]
-
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_stage"]
-size = Vector2(1120, 60)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform"]
-size = Vector2(260, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_platform2"]
-size = Vector2(260, 16)
+[ext_resource type="Script" path="res://scripts/arena/arena_v2.gd" id="1_art"]
 
 [node name="Arena" type="Node2D"]
 
 [node name="ArtArena" type="Node2D" parent="."]
 script = ExtResource("1_art")
+arena = "cerrado"
 folder = "res://assets/arenas/cerrado"
 
-[node name="Stage" type="StaticBody2D" parent="."]
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="Stage"]
-position = Vector2(0, 30)
-shape = SubResource("RectangleShape2D_stage")
-
-[node name="LedgeLeft" type="Marker2D" parent="Stage" groups=["ledges"]]
-position = Vector2(-560, 0)
-metadata/side = -1
-
-[node name="LedgeRight" type="Marker2D" parent="Stage" groups=["ledges"]]
-position = Vector2(560, 0)
-metadata/side = 1
-
-[node name="PlatformLeft" type="StaticBody2D" parent="."]
-position = Vector2(-300, -210)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="PlatformLeft"]
-position = Vector2(0, 8)
-shape = SubResource("RectangleShape2D_platform")
-one_way_collision = true
-
-[node name="PlatformRight" type="StaticBody2D" parent="."]
-position = Vector2(300, -210)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Shape" type="CollisionShape2D" parent="PlatformRight"]
-position = Vector2(0, 8)
-shape = SubResource("RectangleShape2D_platform2")
-one_way_collision = true
-
 [node name="SpawnP1" type="Marker2D" parent="."]
-position = Vector2(-300, -400)
+position = Vector2(-300, -450)
 
 [node name="SpawnP2" type="Marker2D" parent="."]
-position = Vector2(300, -400)
+position = Vector2(300, -450)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1itgs7pnya5g"
-path="res://.godot/imported/fundo_perto.png-d072ef0af89779fbd6d19010ae3d123e.ctex"
+uid="uid://bgddemxuk254a"
+path="res://.godot/imported/fundo.png-aea2f33c3445780c75a34b9016279ff1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/arenas/cerrado/fundo_perto.png"
-dest_files=["res://.godot/imported/fundo_perto.png-d072ef0af89779fbd6d19010ae3d123e.ctex"]
+source_file="res://assets/arenas/cerrado/fundo.png"
+dest_files=["res://.godot/imported/fundo.png-aea2f33c3445780c75a34b9016279ff1.ctex"]
 
 [params]
 

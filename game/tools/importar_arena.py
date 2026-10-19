@@ -66,6 +66,42 @@ def fill_width(tile, index):
     return out
 
 
+def fill_cell(tile, k):
+    """Estica o desenho de um bloco de terreno até as bordas do quadro, para os
+    blocos encostarem sem buraco: os de cima (0-2) do topo do desenho até
+    embaixo, os do corpo (3-5) no quadro todo, os de baixo (6-8) de cima até o
+    fim do desenho. O gerador quase nunca enche a célula inteira."""
+    box = tile.getbbox()
+    if not box:
+        return tile
+    x0, y0, x1, y1 = box
+    # Tira 2 pixels dos lados que emendam com outro bloco (o gerador costuma pôr
+    # contorno ali, e isso vira uma grade no terreno).
+    cut = 2
+    if k in (1, 4, 7) or k in (0, 3, 6):
+        x1 -= cut
+    if k in (1, 4, 7) or k in (2, 5, 8):
+        x0 += cut
+    if k in (3, 4, 5):
+        y0 += cut
+        y1 -= cut
+    elif k < 3:
+        y1 -= cut
+    else:
+        y0 += cut
+    box = (x0, y0, x1, y1)
+    if k < 3:
+        target = (0, y0, NATIVE, NATIVE)
+    elif k < 6:
+        target = (0, 0, NATIVE, NATIVE)
+    else:
+        target = (0, 0, NATIVE, y1)
+    part = tile.crop(box).resize((target[2] - target[0], target[3] - target[1]), Image.NEAREST)
+    out = Image.new("RGBA", (NATIVE, NATIVE), (0, 0, 0, 0))
+    out.paste(part, (target[0], target[1]))
+    return out
+
+
 def surface_row(tile):
     """Primeira linha com pelo menos 40% de pixels desenhados (o chão do bloco)."""
     px = tile.load()
@@ -82,15 +118,6 @@ def main():
     src = os.path.join(root, "art", "arenas", name)
     dst = os.path.join(root, "game", "assets", "arenas", name)
     os.makedirs(dst, exist_ok=True)
-    far = Image.open(os.path.join(src, "fundo_longe.png")).convert("RGB")
-    reduce(far, 4, False).save(os.path.join(dst, "fundo_longe.png"))
-    near = Image.open(os.path.join(src, "fundo_perto.png")).convert("RGB")
-    # Original + cópia espelhada lado a lado: repete na horizontal sem emenda.
-    n = reduce(near, 4, True)
-    wide = Image.new("RGBA", (n.width * 2, n.height), (0, 0, 0, 0))
-    wide.paste(n, (0, 0))
-    wide.paste(n.transpose(Image.FLIP_LEFT_RIGHT), (n.width, 0))
-    wide.save(os.path.join(dst, "fundo_perto.png"))
     sheet = Image.open(os.path.join(src, "palco.png")).convert("RGB")
     tiles = reduce(sheet, 8, True)  # 192x128: 3x2 blocos de 64
     strip = Image.new("RGBA", (NATIVE * 6, NATIVE), (0, 0, 0, 0))
@@ -104,9 +131,26 @@ def main():
         surfaces.append(surface_row(t))
     strip.save(os.path.join(dst, "palco.png"))
     meta = {"superficie": surfaces}
+    # Versão 2 (rodada 4): cenário pintado + blocos de terreno em 9 partes.
+    v2 = os.path.join(src, "v2")
+    if os.path.isdir(v2):
+        Image.open(os.path.join(v2, "fundo.png")).convert("RGB").save(os.path.join(dst, "fundo.png"))
+        blocks = Image.new("RGBA", (NATIVE * 12, NATIVE), (0, 0, 0, 0))
+        for half, sheet_name in enumerate(("blocos_cima.png", "blocos_baixo.png")):
+            cells = reduce(Image.open(os.path.join(v2, sheet_name)).convert("RGB"), 8, True)
+            for i in range(6):
+                c, r = i % 3, i // 3
+                t = cells.crop((c * NATIVE, r * NATIVE, (c + 1) * NATIVE, (r + 1) * NATIVE))
+                k = half * 6 + i
+                if k < 9:
+                    t = fill_cell(t, k)
+                blocks.paste(t, (k * NATIVE, 0))
+        blocks.save(os.path.join(dst, "blocos.png"))
+        meta["superficie_blocos"] = surface_row(blocks.crop((NATIVE, 0, 2 * NATIVE, NATIVE)))
+        meta["versao"] = 2
     with open(os.path.join(dst, "arena.json"), "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)
-    print(f"{name}: superfícies {surfaces} -> {dst}")
+    print(f"{name}: plataformas {surfaces}, terreno {meta.get('superficie_blocos')} -> {dst}")
 
 
 if __name__ == "__main__":

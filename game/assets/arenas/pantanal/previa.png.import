@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2yh6xdu62h53"
-path="res://.godot/imported/fundo_perto.png-5515a4773a81969c0fc461dea103173d.ctex"
+uid="uid://djmwjofrpv7y5"
+path="res://.godot/imported/previa.png-0add95cf50b8fee41bb5d040349457a0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/arenas/caatinga/fundo_perto.png"
-dest_files=["res://.godot/imported/fundo_perto.png-5515a4773a81969c0fc461dea103173d.ctex"]
+source_file="res://assets/arenas/pantanal/previa.png"
+dest_files=["res://.godot/imported/previa.png-0add95cf50b8fee41bb5d040349457a0.ctex"]
 
 [params]
 
