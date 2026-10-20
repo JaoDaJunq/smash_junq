@@ -53,7 +53,7 @@ Pedidos da Alice: a **arara-canga sambista** e a **marianinha-de-cabeça-amarela
 | Tipo | Bicho | Conceito |
 |---|---|---|
 | Rápido | **Beija** (beija-flor) | Pequeno e rapidíssimo, várias bicadas seguidas |
-| Pesado | **Arara-Canga** (arara-vermelha) | Passista de escola de samba com fantasia enorme; requebra, gira e bate com as asas no ritmo da bateria |
+| Pesado | **Dona Canga** (arara-canga) | Passista de escola de samba com fantasia enorme; requebra, gira e bate com as asas no ritmo da bateria |
 | Forte | **Tucão** (tucano) | Bico enorme e pesado, comentarista de várzea que grita "GOOOL" |
 | Versátil | **Marianinha** (marianinha-de-cabeça-amarela) | Pula o tempo todo, como num trampolim: pulos extras, quica nos adversários |
 
@@ -72,5 +72,9 @@ Pedidos da Alice: a **arara-canga sambista** e a **marianinha-de-cabeça-amarela
 | Pesado | **Preguiçoso** (preguiça) | Lento e sonolento, mas pega pesado; luta meio dormindo |
 | Forte | **Bandeira** (tamanduá-bandeira) | Abraço e garras enormes, língua que puxa |
 | Versátil | **Tatu-Peba** (tatu-galinha) | Cava e aparece do outro lado |
+
+**Ideias guardadas (concepts que o João gostou, para personagens futuros):**
+- Marianinha **jogadora de vôlei de praia** e **skatista** (`art/concepts/marianinha/conceito_2_volei.png`, `conceito_3_skatista.png`).
+- **Mestre de obras / pedreiro** (tatu-peba peão de obra, `art/concepts/tatu_peba/conceito_1_peao.png`).
 
 **Para depois:** lobo-guará, anta, boto-cor-de-rosa e outras ideias do criador.

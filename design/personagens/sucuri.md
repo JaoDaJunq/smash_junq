@@ -1,6 +1,6 @@
 # Sucuri · ficha
 
-> **Proposta (19/10/2026).** Depois que o João aprovar esta ficha, a próxima etapa são os 4 concepts.
+> **Aprovado (19/10/2026).** Concept escolhido: **1 · mestra de jiu-jitsu** (`art/concepts/sucuri/escolhido.png`). Nos sprites, o kimono vai **fechado no peito**, sem decote, porque o jogo é para todas as idades.
 
 | | |
 |---|---|

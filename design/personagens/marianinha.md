@@ -1,6 +1,6 @@
 # Marianinha · ficha
 
-> **Proposta (19/10/2026).** Personagem pedida pela Alice: a "marianinha-de-cabeça-amarela que pula". Depois que o João aprovar esta ficha, a próxima etapa são os 4 concepts.
+> **Aprovado (19/10/2026).** Concept escolhido: **1 · ginasta de trampolim** (`art/concepts/marianinha/escolhido.png`).
 
 | | |
 |---|---|

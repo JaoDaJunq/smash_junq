@@ -1,6 +1,6 @@
 # Arara-Canga · ficha
 
-> **Proposta (19/10/2026).** Personagem pedida pela Alice: a "arara-canga sambista". Depois que o João aprovar esta ficha, a próxima etapa são os 4 concepts.
+> **Aprovado (19/10/2026).** Concept escolhido: **2 · baiana da escola** (`art/concepts/arara_canga/escolhido.png`): turbante, bata de renda, saia rodada enorme com babados nas cores da arara, colares de contas e salto plataforma dourado. Os golpes continuam os da ficha; a saia rodada abre nos giros.
 
 | | |
 |---|---|
