@@ -7,7 +7,8 @@ extends Fighter
 ##  - lado "Bote": salto em arco; quem ele pegar fica preso, leva arranhões e é
 ##    arremessado (agarrão, vence o escudo).
 ##  - cima "Salto de parede": dois saltos seguidos em zigue-zague (recuperação).
-##  - baixo "Arranha-chão": gira cravado no chão chutando dos dois lados.
+##  - baixo "Cochilo de gato": deita fingindo dormir; quem bater nele nessa
+##    hora leva um coice duplo (contra-ataque). Sem ninguém bater, só cochila.
 ## Mecânica própria: no ar, encostando na lateral do palco, gruda por um
 ## instante e pode pular de novo dali (pulo de parede).
 
@@ -31,6 +32,15 @@ const CLING_TIME := 0.7
 const CLING_COOLDOWN := 0.5
 const WALL_JUMP := Vector2(520.0, 980.0)
 
+## Cochilo: janela do contra-ataque (do quadro COUNTER_FROM até o fim do startup).
+const COUNTER_FROM := 3
+const COUNTER_RANGE := 260.0
+const COUNTER_MIN_DAMAGE := 9.0
+const COUNTER_DAMAGE_MULT := 1.3
+
+var _countered := false
+var _pending_counter_foe: Fighter = null
+var _pending_counter_data: AttackData = null
 var _charging := false
 var _charge := 0
 var _pounce_timer := 0
@@ -59,9 +69,13 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 		"special_neutral": _leap_step(frame)
 		"special_side": _pounce_step(frame)
 		"special_up": _climb_step(frame)
+		"special_down":
+			if frame == attack.startup + 1 and not _countered:
+				attack_frame = attack.startup + attack.active + 1   # ninguém bateu: só levanta
 
 
 func _on_attack_end(move_id: String) -> void:
+	_countered = false
 	match move_id:
 		"special_neutral":
 			_charging = false
@@ -71,11 +85,54 @@ func _on_attack_end(move_id: String) -> void:
 				_throw()
 
 
+func _physics_process(delta: float) -> void:
+	if _pending_counter_foe != null:
+		_apply_pending_counter()
+	super._physics_process(delta)
+
+
+func counter_active() -> bool:
+	return attack != null and attack_id == "special_down" and not _countered 		and attack_frame >= COUNTER_FROM and attack_frame <= attack.startup
+
+
 func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> bool:
+	if counter_active():
+		_countered = true
+		var foe := attacker as Fighter
+		if foe != null and foe.global_position.distance_to(global_position) <= COUNTER_RANGE:
+			var strike := attack.duplicate() as AttackData
+			strike.damage = maxf(COUNTER_MIN_DAMAGE, data.damage * COUNTER_DAMAGE_MULT)
+			_pending_counter_foe = foe
+			_pending_counter_data = strike
+		attack_frame = attack.startup + 1   # acorda no coice
+		return false
 	_charging = false
 	_charge = 0
 	_cling = 0.0
 	return super(attacker, data, direction_sign)
+
+
+# --- Cochilo de gato (contra-ataque) ---
+
+## O coice sai no começo do próximo quadro (aplicar dentro do golpe do
+## agressor tiraria o golpe dele no meio do processamento).
+func _apply_pending_counter() -> void:
+	var foe := _pending_counter_foe
+	var strike := _pending_counter_data
+	_pending_counter_foe = null
+	_pending_counter_data = null
+	if foe == null or not is_instance_valid(foe) or not foe.can_be_hit():
+		return
+	var side := signi(roundi(foe.global_position.x - global_position.x))
+	if side != 0:
+		facing = side
+	foe.receive_hit(self, strike, facing)
+
+
+func _check_hits() -> void:
+	if attack_id == "special_down":
+		return   # o cochilo só machuca de volta (contra-ataque)
+	super._check_hits()
 
 
 # --- Espreita (bote reto carregável) ---

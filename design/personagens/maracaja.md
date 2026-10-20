@@ -35,7 +35,7 @@
 | Especial neutro | **Espreita**: agacha e mexe o quadril. Segurando o botão, carrega um bote; soltando, salta reto e longe com as garras. Quanto mais carrega, mais longe vai |
 | Especial lado | **Bote**: salta em arco e, se cair em cima do adversário, **prende e arranha** (um agarrão aéreo, que vence o escudo) |
 | Especial cima (recuperação) | **Salto de parede**: sobe em zigue-zague com dois saltos seguidos, como se escalasse um muro invisível |
-| Especial baixo | **Arranha-chão**: crava as garras no chão e gira, chutando os dois lados. Bom para sair de cerco |
+| Especial baixo | **Cochilo de gato** (escolhido pelo João em 19/10): deita fingindo dormir; quem bater nele nessa hora leva um **coice duplo** (contra-ataque). Se ninguém bater, só se espreguiça e levanta |
 | Agarrão e arremesso | Agarra com as patas. Frente: empurrão com os dois pés · trás: rola por cima e joga · cima: lança e dá patada · baixo: prende no chão e arranha |
 
 **Mecânica própria · Gruda na parede:** encostando na lateral do palco no ar, ele **se agarra por um instante** e pode pular de novo dali. Isso o ajuda a voltar ao palco e combina com o parkour. Precisa de 1 sprite a mais: `parede.png`, com 2 quadros.

@@ -94,16 +94,16 @@ knockback_growth = 4.90
 [sub_resource type="Resource" id="Resource_pqh0r"]
 script = ExtResource("1_24tt8")
 id = "special_down"
-startup = 6
-active = 10
-recovery = 16
-landing_lag = 12
-hitbox_offset = Vector2(0, 10)
-hitbox_radius = 62.0
-damage = 6.0
-angle = 50.0
-base_knockback = 260.0
-knockback_growth = 5.60
+startup = 24
+active = 6
+recovery = 20
+landing_lag = 10
+hitbox_offset = Vector2(-30, 0)
+hitbox_radius = 40.0
+damage = 9.0
+angle = 40.0
+base_knockback = 330.0
+knockback_growth = 6.6
 
 [sub_resource type="Resource" id="Resource_gnyn0"]
 script = ExtResource("1_24tt8")

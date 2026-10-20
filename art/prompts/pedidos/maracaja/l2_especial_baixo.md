@@ -15,9 +15,9 @@
 
 ```text
 Folha de animação do Maracajá: jaguatirica humanizada malandra (concept escolhido anexado), magro e comprido, postura um pouco agachada de gato, cauda longa com rosetas, orelhas redondas, pelagem ocre-dourada com rosetas e listras marrom-escuras, barriga e focinho creme, olhos verdes semicerrados; camisa de botão aberta branca com estampa de folhas verdes, corrente dourada fina, faixa branca no antebraço, calça bege dobrada na canela, chinelo de dedo com tira verde-limão, palito no canto da boca, 6 quadros.
-Animação: Arranha-chão giratório
+Animação: Cochilo de gato (finge dormir e contra-ataca com coice duplo)
 Quadros:
-1) agacha e crava as garras de uma mão no chão · 2) gira o corpo em volta da mão · 3) impacto: pernas esticadas girando, chutando para a frente · 4) pernas atrás · 5) terminando o giro · 6) levantando
+1) deitando de lado no chão, preguiçoso · 2) deitado de lado, olhos fechados, cauda enrolada, palito na boca (fingindo dormir) · 3) mesma pose deitada, abrindo UM olho espiando, orelha em pé · 4) impacto: apoiado nas mãos no chão, as DUAS pernas esticadas juntas para a FRENTE (direita) num coice, chinelos na sola · 5) recolhendo as pernas · 6) levantando e se espreguiçando
 
 Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Imagem 1536x1024 com grade de 3 colunas x 2 linhas. Cada célula tem 512x512 e contém UM quadro de 64x64 pixels ampliado 8x (cada pixel vira um quadrado de 8x8). Quadros em ordem da esquerda para a direita, de cima para baixo. Células que sobrarem ficam só com o fundo.

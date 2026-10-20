@@ -92,14 +92,19 @@ func _run() -> void:
 	_check("Salto de parede dá dois impulsos", impulses >= 2, "%d impulsos, subiu %.0f px" % [impulses, y0 - cat.global_position.y])
 	await _frames(90)
 
-	# Arranha-chão acerta dos dois lados
-	for side in [-1, 1]:
-		await _face_off()
-		foe.global_position = cat.global_position + Vector2(55 * side, 0)
-		var b := foe.damage_percent
-		cat.start_special("down")
-		await _frames(30)
-		_check("Arranha-chão acerta do lado %s" % ("esquerdo" if side < 0 else "direito"), foe.damage_percent > b, "")
+	# Cochilo: sem ninguém bater, não machuca; batendo nele, leva o coice
+	await _face_off()
+	cat.start_special("down")
+	await _frames(40)
+	_check("Cochilo sozinho não machuca", foe.damage_percent == 0.0, "%.1f%%" % foe.damage_percent)
+	await _frames(30)
+	await _face_off()
+	cat.start_special("down")
+	await _frames(8)
+	foe.start_attack("ftilt")
+	await _frames(40)
+	_check("Cochilo: quem bate leva o coice e ele não toma dano", foe.damage_percent >= 9.0 and cat.damage_percent == 0.0,
+		"adversário %.1f%%, Maracajá %.1f%%" % [foe.damage_percent, cat.damage_percent])
 
 	# Gruda numa parede (de teste, alta) e pula dela
 	var wall := StaticBody2D.new()
