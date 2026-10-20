@@ -27,6 +27,8 @@ const MIGALHA := 4
 ## personagem -> animação -> índices dos quadros aproveitáveis (na ordem da grade)
 const SELECAO := {
 	"tatu_peba": {"vitoria": [0, 1, 2], "pendurado": [0, 1]},  # restos de pixel na 2ª linha
+	"sucuri": {"jab": [0, 1, 2]},
+	"arara_canga": {"jab": [0, 1, 2], "pendurado": [0, 1]},
 }
 ## Intermediários errados (pose que não está entre os vizinhos): personagem ->
 ## animação -> índices (0 = entre o 1º e o 2º quadro). Viram cópia do quadro anterior.
