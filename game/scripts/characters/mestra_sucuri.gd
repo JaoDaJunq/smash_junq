@@ -19,6 +19,58 @@ const SQUEEZE_DAMAGE := 2.5
 
 
 var _squeeze_timer := 0
+## Cauda esticada do laço: desenhada pelo jogo (o sprite do golpe é compacto e
+## não pode atravessar o quadro de 64). Folha laco_cauda.png: 1 = trecho que se
+## repete, 2 = ponta em laço.
+const LACO_PATH := "res://assets/characters/sucuri/pixel/laco_cauda.png"
+const TAIL_START := Vector2(26, 8)   # onde a cauda sai do corpo (relativo, virado para a direita)
+var _tail: Line2D
+var _tail_tip: Sprite2D
+
+
+func _ready() -> void:
+	super._ready()
+	_tail = Line2D.new()
+	_tail.width = 20.0
+	_tail.texture_mode = Line2D.LINE_TEXTURE_TILE
+	_tail.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_tail.default_color = Color(0.42, 0.48, 0.18)
+	_tail.visible = false
+	_tail.z_index = -1
+	add_child(_tail)
+	_tail_tip = Sprite2D.new()
+	_tail_tip.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_tail_tip.scale = Vector2(2, 2)
+	_tail_tip.visible = false
+	add_child(_tail_tip)
+	if ResourceLoader.exists(LACO_PATH):
+		var sheet: Texture2D = load(LACO_PATH)
+		var seg := AtlasTexture.new()
+		seg.atlas = sheet
+		seg.region = Rect2(0, 0, 64, 64)
+		var img := sheet.get_image()
+		var used := img.get_region(Rect2i(0, 0, 64, 64)).get_used_rect()
+		seg.region = Rect2(used)
+		_tail.texture = seg
+		_tail.width = used.size.y * 2.0
+		_tail.default_color = Color.WHITE
+		var tip := AtlasTexture.new()
+		tip.atlas = sheet
+		tip.region = Rect2(img.get_region(Rect2i(64, 0, 64, 64)).get_used_rect().position + Vector2i(64, 0), img.get_region(Rect2i(64, 0, 64, 64)).get_used_rect().size)
+		_tail_tip.texture = tip
+
+
+func _process(_delta: float) -> void:
+	var show := attack_id == "special_side" and attack != null and attack.is_active(attack_frame)
+	_tail.visible = show and _tail.texture != null
+	_tail_tip.visible = _tail.visible
+	if not _tail.visible:
+		return
+	var from := Vector2(TAIL_START.x * facing, TAIL_START.y)
+	var to := to_local(hitbox_center(attack))
+	_tail.points = PackedVector2Array([from, to])
+	_tail_tip.position = to
+	_tail_tip.flip_h = facing < 0
 
 
 func _on_attack_frame(move_id: String, frame: int) -> void:
