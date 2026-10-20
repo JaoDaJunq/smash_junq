@@ -301,6 +301,13 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 				img.set_pixel(p.x, p.y, Color(0, 0, 0, 0))
 			print("  limpo: %s, célula %d, migalha de %d px em (%d, %d)" % [sheet_name, index + 1, comp.size(), lo.x, lo.y])
 			continue
+		# Pedaço solto encostado na lateral da célula: é do quadro vizinho
+		# (ex.: ponta da cauda do Maracajá entrando no quadro ao lado).
+		if (lo.x <= 0 or hi.x >= NATIVE - 1) and comp.size() * 8 < parts[0].size():
+			for p in comp:
+				img.set_pixel(p.x, p.y, Color(0, 0, 0, 0))
+			print("  limpo: %s, célula %d, pedaço do vizinho de %d px na borda (x=%d)" % [sheet_name, index + 1, comp.size(), lo.x])
+			continue
 		if w <= 2 and h >= 3 and (lo.x <= 5 or hi.x >= NATIVE - 6):
 			var avg := Color(0, 0, 0, 0)
 			for p in comp:
