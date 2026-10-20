@@ -147,3 +147,11 @@ Para importar os sprites: `godot --headless --path game --script res://tools/imp
 - **Ficha de arte (paleta e regras):** `art/prompts/pixel/<id>.md`.
 - **Pedidos de cada lote:** `art/prompts/pedidos/<id>/l<lote>_<folha>.md`.
 - **Candidatos recusados:** `art/pixel/<id>/candidatos/` (nunca entram no jogo).
+
+## Economia do gerador de imagens (regra do João, 20/10/2026)
+O gerador tem limite de ~220 imagens a cada 24 h (plano Plus). O que mais gasta é refazer em massa.
+- **Portão da base:** o Codex entrega só `base.png` + `parado.png` e **para**. O Hermes confere (limpeza, escala, igual ao concept) e só depois manda seguir com o resto. Base ruim nunca vira 50 folhas ruins.
+- No máximo **2 tentativas** por folha: defeito de grade, escala ou sujeira o Hermes corrige com ferramenta (`normalizar_folha.py`, `limpar_bordas.py`).
+- Refação só das folhas que a revisão reprovou, nunca do lote inteiro.
+- No máximo **2 chats do Codex** gerando ao mesmo tempo.
+- Bateu o limite: o Codex **para e avisa**. Nunca monta imagem à mão para completar arquivo.
