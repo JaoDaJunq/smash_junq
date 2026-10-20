@@ -25,7 +25,9 @@ const BASELINE := 59
 ## (laranjinha, coco, castanha) são bem maiores que isso. Playtest 01.
 const MIGALHA := 4
 ## personagem -> animação -> índices dos quadros aproveitáveis (na ordem da grade)
-const SELECAO := {}
+const SELECAO := {
+	"tatu_peba": {"vitoria": [0, 1, 2], "pendurado": [0, 1]},  # restos de pixel na 2ª linha
+}
 ## Intermediários errados (pose que não está entre os vizinhos): personagem ->
 ## animação -> índices (0 = entre o 1º e o 2º quadro). Viram cópia do quadro anterior.
 const MEIO_REPETIR := {
