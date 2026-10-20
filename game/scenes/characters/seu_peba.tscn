@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/seu_peba.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/seu_peba.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="3_attack"]
+[ext_resource type="Script" path="res://scripts/visual/pixel_sprite.gd" id="9_visual"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 28.0
+height = 110.0
+
+[node name="SeuPeba" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Seu Peba"
+moveset = ExtResource("2_moves")
+weight = 105.0
+walk_speed = 320.0
+run_speed = 540.0
+air_speed = 400.0
+gravity = 2650.0
+jump_velocity = 980.0
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("9_visual")
+folder = "res://assets/characters/tatu_peba/pixel"

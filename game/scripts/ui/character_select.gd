@@ -100,7 +100,7 @@ func _build_grid(root: Control, origin: Vector2) -> void:
 
 func _tile(cell: Vector2i, group_color: Color) -> Panel:
 	var info := Roster.slot(cell)
-	var playable := int(info["char"]) >= 0
+	var playable := Game.character_ready(int(info["char"]))
 	var p := Panel.new()
 	p.size = Vector2(TILE, TILE)
 	p.clip_contents = true
@@ -307,7 +307,8 @@ func _process(_delta: float) -> void:
 
 func _set_cursor(slot: String, cell: Vector2i) -> void:
 	cursor[slot] = cell
-	choice[slot] = int(Roster.slot(cell)["char"])
+	var idx := int(Roster.slot(cell)["char"])
+	choice[slot] = idx if Game.character_ready(idx) else -1
 
 
 func _move(slot: String, step: Vector2i) -> void:

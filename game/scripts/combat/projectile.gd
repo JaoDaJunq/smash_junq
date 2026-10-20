@@ -15,6 +15,10 @@ var sprite_scale := 2.0
 var spin_fps := 14.0
 var _frames: Array[Rect2] = []   # recorte de cada quadro (só a parte desenhada)
 var _age := 0.0
+## Bumerangue: depois deste tempo (s) volta para o dono e some ao chegar (-1 = não volta).
+var return_after := -1.0
+var _flight := 0.0
+var _return_speed := 0.0
 
 
 ## Cria o projétil como filho do pai do dono e o posiciona. Retorna o projétil.
@@ -52,6 +56,16 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_flight += delta
+	if return_after >= 0.0 and _flight >= return_after and owner_fighter != null and is_instance_valid(owner_fighter):
+		var to_owner := owner_fighter.global_position + Vector2(0, -20) - global_position
+		if to_owner.length() < 40.0:
+			queue_free()
+			return
+		if _return_speed <= 0.0:
+			_return_speed = velocity.length()
+		velocity = velocity.move_toward(to_owner.normalized() * _return_speed, 4000.0 * delta)
+		lifetime = maxf(lifetime, 0.2)
 	global_position += velocity * delta
 	lifetime -= delta
 	if lifetime <= 0.0 or absf(global_position.x) > 2400.0 or absf(global_position.y) > 1600.0:

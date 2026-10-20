@@ -903,6 +903,22 @@ func throw_data(throw_id: String) -> AttackData:
 	return _default_throws[throw_id]
 
 
+## Fica parado sem dano por um tempo (ex.: hipnose da Mestra Sucuri).
+func hypnotize(seconds: float) -> void:
+	if state in [State.LEDGE, State.HELD, State.RESPAWN, State.HOLDING]:
+		return
+	if attack != null:
+		_on_attack_end(attack_id)
+	attack = null
+	attack_id = ""
+	velocity = Vector2.ZERO
+	_launch = Vector2.ZERO
+	_fall = 0.0
+	_hitstun = seconds
+	_hitstun_total = seconds
+	state = State.HITSTUN
+
+
 func add_damage(amount: float) -> void:
 	damage_percent += amount
 	damage_changed.emit(damage_percent)

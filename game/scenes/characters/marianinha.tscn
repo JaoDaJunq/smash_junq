@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/marianinha.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/marianinha.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="3_attack"]
+[ext_resource type="Script" path="res://scripts/visual/pixel_sprite.gd" id="9_visual"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 28.0
+height = 110.0
+
+[node name="Marianinha" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Marianinha"
+moveset = ExtResource("2_moves")
+weight = 70.0
+walk_speed = 350.0
+run_speed = 600.0
+air_speed = 470.0
+gravity = 2500.0
+jump_velocity = 980.0
+double_jump_velocity = 820.0
+air_jumps = 3
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("9_visual")
+folder = "res://assets/characters/marianinha/pixel"

@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/mestra_sucuri.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/mestra_sucuri.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="3_attack"]
+[ext_resource type="Script" path="res://scripts/visual/pixel_sprite.gd" id="9_visual"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 28.0
+height = 110.0
+
+[sub_resource type="Resource" id="Resource_throw"]
+script = ExtResource("3_attack")
+id = "sucuri_throw"
+damage = 9.0
+angle = 40.0
+base_knockback = 420.0
+knockback_growth = 6.0
+
+[node name="MestraSucuri" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Mestra Sucuri"
+moveset = ExtResource("2_moves")
+lasso_throw_data = SubResource("Resource_throw")
+weight = 110.0
+walk_speed = 290.0
+run_speed = 500.0
+air_speed = 360.0
+gravity = 2700.0
+jump_velocity = 980.0
+grab_hold_base = 2.0
+pummel_damage = 2.5
+grab_reach = Vector2(80, -10)
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("9_visual")
+folder = "res://assets/characters/sucuri/pixel"

@@ -1,0 +1,246 @@
+extends Node
+## Teste de fumaça dos 4 personagens da rodada 7 (Dona Canga, Marianinha, Mestra
+## Sucuri, Seu Peba): golpes básicos acertam e a mecânica de cada um funciona.
+## Personagem sem sprites importados ainda é pulado (aparece como PULADO).
+##   godot --headless --path game res://tests/novos_smoke.tscn [-- <id> ...]
+
+const MATCH := preload("res://scenes/match.tscn")
+
+var results: Array[String] = []
+var failures := 0
+var me: Fighter
+var foe: Fighter
+var _match: Node
+
+
+func _ready() -> void:
+	Game.suppress_scene_changes = true
+	Game.mode = "training"
+	Game.arena_index = 0
+	var only := OS.get_cmdline_user_args()
+	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba"]:
+		if not only.is_empty() and id not in only:
+			continue
+		var idx := -1
+		for i in Game.CHARACTERS.size():
+			if Game.CHARACTERS[i].get("id", "") == id:
+				idx = i
+		_check("%s está no elenco" % id, idx >= 0, str(idx))
+		if idx < 0:
+			continue
+		if not Game.character_ready(idx):
+			results.append("[PULADO] %s: sprites ainda não importados" % id)
+			continue
+		await _start(idx)
+		await _basics(id)
+		match id:
+			"arara_canga": await _canga()
+			"marianinha": await _marianinha()
+			"sucuri": await _sucuri()
+			"tatu_peba": await _peba()
+		_match.queue_free()
+		await _frames(5)
+	print("\n".join(results))
+	print("RESULTADO: %s (%d falha(s))" % ["OK" if failures == 0 else "FALHOU", failures])
+	get_tree().quit(failures)
+
+
+func _start(idx: int) -> void:
+	Game.set_character("p1", idx)
+	Game.set_character("p2", 0)
+	_match = MATCH.instantiate()
+	add_child(_match)
+	await _frames(240)
+	for f in _match.find_children("*", "Fighter", true, false):
+		if f.player_id == "p1":
+			me = f
+		else:
+			foe = f
+	_check("%s com arte" % me.display_name, me.has_art, "")
+
+
+func _basics(id: String) -> void:
+	for mv in ["jab", "ftilt", "dtilt"]:
+		await _face_off()
+		me.start_attack(mv)
+		await _frames(45)
+		_check("%s: %s acerta" % [id, mv], foe.damage_percent > 0.0, "%.1f%%" % foe.damage_percent)
+	for kind in ["neutral", "side", "up", "down"]:
+		await _face_off()
+		me.start_special(kind)
+		await _frames(90)
+		_check("%s: especial %s roda sem travar" % [id, kind], me.state != Fighter.State.ATTACK or me.attack_frame < 400, Fighter.State.keys()[me.state])
+
+
+func _canga() -> void:
+	var c := me as DonaCanga
+	# Pandeiro vai e volta
+	await _face_off(600.0)
+	foe.global_position = Vector2(3000, -3000)
+	c.start_special("neutral")
+	var far := 0.0
+	var came_back := false
+	for i in 240:
+		await get_tree().physics_frame
+		var ps := get_tree().get_nodes_in_group("match_cleanup").filter(func(n: Node) -> bool: return n is Projectile)
+		if not ps.is_empty():
+			far = maxf(far, absf((ps[0] as Node2D).global_position.x - c.global_position.x))
+		elif far > 100.0:
+			came_back = true
+			break
+	_check("Canga: pandeiro vai longe e volta", came_back and far > 250.0, "%.0f px" % far)
+	# No ritmo: o mesmo golpe na batida tira mais
+	var off := await _jab_damage(false)
+	var on := await _jab_damage(true)
+	_check("Canga: golpe na batida tira mais", on > off * 1.15, "%.1f x %.1f" % [on, off])
+	# Voo de alegoria: sobe e depois cai planando
+	await _place(c, Vector2(-200, -300))
+	c.start_special("up")
+	await _frames(60)
+	var vy := 0.0
+	for i in 40:
+		await get_tree().physics_frame
+		vy = maxf(vy, c.velocity.y)
+	_check("Canga: depois do voo cai planando", vy <= DonaCanga.GLIDE_FALL + 1.0, "%.0f" % vy)
+
+
+func _jab_damage(on_beat: bool) -> float:
+	await _face_off()
+	var c := me as DonaCanga
+	# acerta a batida (ou o meio entre duas) exatamente no primeiro quadro ativo
+	var lead := float(c.moveset.ftilt.startup + 1) / 60.0
+	c._beat_clock = fposmod((0.0 if on_beat else DonaCanga.BEAT * 0.5) - lead, DonaCanga.BEAT)
+	c.start_attack("ftilt")
+	await _frames(45)
+	return foe.damage_percent
+
+
+func _marianinha() -> void:
+	var m := me
+	_check("Marianinha: 3 pulos no ar", m.air_jumps == 3, str(m.air_jumps))
+	# Quique: cai em cima da cabeça do outro e sobe de novo
+	await _face_off(0.0)
+	await _frames(20)
+	m.global_position = foe.global_position + Vector2(0, -170)
+	m.velocity = Vector2(0, 400)
+	m.state = Fighter.State.AIR
+	m.jumps_left = 0
+	var bounced := false
+	for i in 40:
+		await get_tree().physics_frame
+		if m.velocity.y < -500.0:
+			bounced = true
+			break
+	_check("Marianinha: quica na cabeça e recupera os pulos", bounced and m.jumps_left == 3 and foe.damage_percent > 0.0,
+		"quicou=%s pulos=%d dano=%.1f" % [bounced, m.jumps_left, foe.damage_percent])
+	# Sementes: no máximo 3 por pulo
+	await _place(m, Vector2(-200, -900))
+	foe.global_position = Vector2(3000, -3000)
+	var shots := 0
+	for i in 5:
+		m.global_position = Vector2(-200, -900)   # fica no ar (sem pousar)
+		m.velocity = Vector2.ZERO
+		var before := get_tree().get_nodes_in_group("match_cleanup").filter(func(n: Node) -> bool: return n is Projectile).size()
+		m.start_special("neutral")
+		await _frames(8)
+		var after := get_tree().get_nodes_in_group("match_cleanup").filter(func(n: Node) -> bool: return n is Projectile).size()
+		if after > before:
+			shots += 1
+		await _frames(22)
+	_check("Marianinha: até 3 sementes por pulo", shots == 3, str(shots))
+
+
+func _sucuri() -> void:
+	var s := me as MestraSucuri
+	# Hipnose: quem está à frente fica parado sem dano
+	await _face_off(150.0)
+	s.start_special("neutral")
+	await _frames(16)
+	_check("Sucuri: hipnose para o adversário sem dano", foe.state == Fighter.State.HITSTUN and foe.damage_percent == 0.0, Fighter.State.keys()[foe.state])
+	await _frames(60)
+	# Laço: pega de longe e puxa para o agarrão
+	await _face_off(170.0)
+	s.start_special("side")
+	var grabbed := false
+	for i in 40:
+		await get_tree().physics_frame
+		if s.state == Fighter.State.HOLDING and s.holding == foe:
+			grabbed = true
+			break
+	_check("Sucuri: laço pega de longe e puxa para o agarrão", grabbed and absf(foe.global_position.x - s.global_position.x) < 120.0,
+		"%s, dist %.0f" % [Fighter.State.keys()[s.state], absf(foe.global_position.x - s.global_position.x)])
+	# Aperto: segura bastante e cada Ataque tira mais
+	if grabbed:
+		var d0 := foe.damage_percent
+		for i in 3:
+			Input.action_press("p1_attack")
+			await _frames(2)
+			Input.action_release("p1_attack")
+			await _frames(18)
+		_check("Sucuri: apertos tiram dano", foe.damage_percent >= d0 + 5.0, "%.1f -> %.1f" % [d0, foe.damage_percent])
+	await _frames(240)
+	# Abraço: quem encosta fica preso e é apertado
+	await _face_off(50.0)
+	s.start_special("down")
+	await _frames(14)
+	_check("Sucuri: abraço prende quem encosta", s.holding == foe, str(s.holding))
+	await _frames(80)
+	_check("Sucuri: abraço aperta e arremessa", foe.damage_percent >= 8.0 and s.holding == null, "%.1f%%" % foe.damage_percent)
+
+
+func _peba() -> void:
+	# Casco: pelas costas tira metade
+	await _face_off()
+	me.facing = -1   # de costas para o adversário (que está à direita)
+	foe.start_attack("ftilt")
+	await _frames(40)
+	var back := me.damage_percent
+	await _face_off()
+	foe.start_attack("ftilt")
+	await _frames(40)
+	var front := me.damage_percent
+	_check("Peba: pelas costas o casco segura metade", back > 0.0 and back <= front * 0.6, "costas %.1f x frente %.1f" % [back, front])
+	# Toca: reaparece mais à frente sem sair do palco
+	await _place(me, Vector2(-200, -60), 1)
+	foe.global_position = Vector2(3000, -3000)
+	await _frames(15)
+	var x0 := me.global_position.x
+	me.start_special("down")
+	await _frames(60)
+	_check("Peba: toca reaparece mais à frente, no chão", me.global_position.x > x0 + 120.0 and me.is_on_floor() and me.visible,
+		"%.0f px, chão=%s" % [me.global_position.x - x0, me.is_on_floor()])
+
+
+func _face_off(gap := 70.0) -> void:
+	await _place(me, Vector2(-200, -60), 1)
+	await _place(foe, Vector2(-200 + gap, -60), -1)
+	await _frames(20)
+	me.damage_percent = 0.0
+	foe.damage_percent = 0.0
+
+
+func _place(f: Fighter, pos: Vector2, face := 1) -> void:
+	f.release_hold()
+	f.release_held()
+	f.global_position = pos
+	f.velocity = Vector2.ZERO
+	f.attack = null
+	f.attack_id = ""
+	f.helpless = false
+	f._hitstop = 0
+	f._hitstun = 0.0
+	f.state = Fighter.State.AIR
+	f.facing = face
+	f.visible = true
+	await _frames(2)
+
+
+func _frames(n: int) -> void:
+	for i in n:
+		await get_tree().physics_frame
+
+
+func _check(name: String, ok: bool, detail: String) -> void:
+	results.append(("[OK] " if ok else "[FALHA] ") + name + " — " + detail)
+	if not ok:
+		failures += 1

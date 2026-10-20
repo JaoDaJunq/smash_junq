@@ -26,21 +26,21 @@ const GROUPS: Array[Dictionary] = [
 	]},
 	{"name": "Aves", "color": Color("e8503a"), "slots": [
 		{"name": "Beija", "animal": "beija-flor", "char": -1},
-		{"name": "Arara-Canga", "animal": "arara-vermelha", "char": -1},
+		{"name": "Dona Canga", "animal": "arara-vermelha", "char": 3},
 		{"name": "Tucão", "animal": "tucano", "char": -1},
-		{"name": "Marianinha", "animal": "marianinha-de-cabeça-amarela", "char": -1},
+		{"name": "Marianinha", "animal": "marianinha-de-cabeça-amarela", "char": 4},
 	]},
 	{"name": "Répteis", "color": Color("6fbf4a"), "slots": [
 		{"name": "Calango", "animal": "calango", "char": -1},
 		{"name": "Papo-Amarelo", "animal": "jacaré-de-papo-amarelo", "char": -1},
-		{"name": "Sucuri", "animal": "sucuri", "char": -1},
+		{"name": "Mestra Sucuri", "animal": "sucuri", "char": 5},
 		{"name": "Seu Jabuti", "animal": "jabuti", "char": -1},
 	]},
 	{"name": "Cascudos", "color": Color("a58c6a"), "slots": [
 		{"name": "Bolinha", "animal": "tatu-bola", "char": -1},
 		{"name": "Preguiçoso", "animal": "preguiça", "char": -1},
 		{"name": "Bandeira", "animal": "tamanduá-bandeira", "char": -1},
-		{"name": "Tatu-Peba", "animal": "tatu-galinha", "char": -1},
+		{"name": "Seu Peba", "animal": "tatu-galinha", "char": 6},
 	]},
 ]
 

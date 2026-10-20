@@ -39,6 +39,38 @@ const CHARACTERS: Array[Dictionary] = [
 		"id": "maracaja",
 		"stats": {"Velocidade": 5, "Força": 2, "Peso": 2, "Volta ao palco": 4},
 	},
+	{
+		"name": "Dona Canga",
+		"scene": "res://scenes/characters/dona_canga.tscn",
+		"desc": "Arara-canga baiana da escola de samba. Pesada que dança:\nno ritmo da bateria o golpe bate mais forte.",
+		"weight": "Pesado",
+		"id": "arara_canga",
+		"stats": {"Velocidade": 2, "Força": 4, "Peso": 5, "Volta ao palco": 3},
+	},
+	{
+		"name": "Marianinha",
+		"scene": "res://scenes/characters/marianinha.tscn",
+		"desc": "Ginasta de trampolim, pequena e elétrica:\n3 pulos no ar e quica na cabeça dos outros.",
+		"weight": "Muito leve",
+		"id": "marianinha",
+		"stats": {"Velocidade": 4, "Força": 2, "Peso": 1, "Volta ao palco": 5},
+	},
+	{
+		"name": "Mestra Sucuri",
+		"scene": "res://scenes/characters/mestra_sucuri.tscn",
+		"desc": "Sucuri faixa-preta de jiu-jitsu. A rainha dos agarrões:\nlaça de longe, hipnotiza e aperta.",
+		"weight": "Pesado",
+		"id": "sucuri",
+		"stats": {"Velocidade": 2, "Força": 5, "Peso": 4, "Volta ao palco": 2},
+	},
+	{
+		"name": "Seu Peba",
+		"scene": "res://scenes/characters/seu_peba.tscn",
+		"desc": "Tatu-peba sanfoneiro de forró. Versátil e cascudo:\nnas costas o casco segura metade do golpe.",
+		"weight": "Médio",
+		"id": "tatu_peba",
+		"stats": {"Velocidade": 3, "Força": 3, "Peso": 4, "Volta ao palco": 3},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam
@@ -135,3 +167,10 @@ func go_menu() -> void:
 ## Só um jogador humano escolhe os dois lutadores (contra a CPU ou treino).
 func is_single_player() -> bool:
 	return mode == "cpu" or mode == "training"
+
+
+## O lutador já tem os sprites importados (senão aparece como "?" na grade).
+func character_ready(index: int) -> bool:
+	if index < 0 or index >= CHARACTERS.size():
+		return false
+	return FileAccess.file_exists("res://assets/characters/%s/pixel/animacoes.json" % CHARACTERS[index].get("id", ""))
