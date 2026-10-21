@@ -15,7 +15,7 @@ const RULES := {
 	],
 	"seu_capivas": [
 		{"on": "impact", "move": "special_down", "fx": "fx_tchibum", "at": "feet", "time": 0.55},
-		{"on": "charging", "move": "special_neutral", "fx": "fx_bufada", "at": "nose", "every": 18, "time": 0.4},
+		{"on": "charging", "move": "special_neutral", "fx": "fx_bufada", "at": "front", "every": 18, "time": 0.4},
 		{"on": "rest", "fx": "fx_boia", "at": "feet", "time": 0.0},
 	],
 	"maracaja": [
@@ -153,7 +153,6 @@ func _pos(at: String, target: Fighter) -> Vector2:
 		# folhas de chão têm a base na linha ~58 do quadro de 64 (2x): centro 56 px acima dos pés
 		"feet": return f.global_position + Vector2(0, half - 56)
 		"front": return f.global_position + Vector2(f.facing * 50.0, -30)
-		"nose": return f.global_position + Vector2(f.facing * 56.0, -half + 14)
 		"behind": return f.global_position + Vector2(-f.facing * 30.0, -20)
 		"head": return f.global_position + Vector2(f.facing * 20.0, -half - 10)
 		"below": return f.global_position + Vector2(0, half - 10)

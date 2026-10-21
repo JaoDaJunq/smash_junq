@@ -53,13 +53,13 @@ func _physics_process(delta: float) -> void:
 		apoteose = maxf(apoteose - delta, 0.0)
 		_confete_t -= delta
 		if _confete_t <= 0.0:
-			_confete_t = 1.2
-			_fx("fx_confete", global_position + Vector2(randf_range(-30, 30), -110), 0.4, false, 1.5)
+			_confete_t = 0.45
+			_fx("fx_confete", global_position + Vector2(randf_range(-40, 40), -110), 0.5)
 		if apoteose <= 0.0:
 			note = 0.0
 	# Pulso de plumas no chão a cada batida (o jogador VÊ o ritmo).
 	if _beat_clock < before and is_on_floor() and visible and state != State.RESPAWN:
-		_fx("fx_plumas", global_position + Vector2(0, HEIGHT * 0.5 - 56), 0.3, true, 1.4)
+		_fx("fx_plumas", global_position + Vector2(0, HEIGHT * 0.5 - 56), 0.45, false, 2.0)
 	super._physics_process(delta)
 	if _gliding:
 		if is_on_floor() or state != State.AIR:
@@ -84,14 +84,6 @@ func _fx(fx_name: String, at: Vector2, time: float, behind := false, px := 2.0) 
 		var fx := PixelFx.spawn(get_parent(), load(path), at, time, px)
 		if behind:
 			fx.z_index = -1
-
-
-## Enquanto a roda gira, a folha do especial roda em loop (sem isso, o quadro de
-## impacto ficava parado porque o giro reinicia attack_frame a cada passo).
-func anim_override() -> Array:
-	if attack_id == "special_neutral" and attack != null and attack_frame > attack.startup:
-		return ["especial_neutro", 14.0]
-	return []
 
 
 func _on_attack_frame(move_id: String, frame: int) -> void:
@@ -121,7 +113,7 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 			if frame == 1 and not _attack_in_air:
 				Music.paradinha(PARADINHA_SILENCE)
 			if frame == attack.startup:
-				_fx("fx_confete", global_position + Vector2(0, -40), 0.45, false, 1.5)
+				_fx("fx_confete", global_position + Vector2(0, -40), 0.6)
 
 
 ## Roda de baiana: gira, puxa, acerta várias vezes e rebate projéteis.
@@ -175,7 +167,7 @@ func _on_hit_landed(_target: Fighter, _move_id: String) -> void:
 		if note >= 100.0:
 			apoteose = APOTEOSE_TIME
 			_confete_t = 0.0
-			_fx("fx_confete", global_position + Vector2(0, -70), 0.45, false, 1.5)
+			_fx("fx_confete", global_position + Vector2(0, -70), 0.7)
 
 
 func _on_attack_end(move_id: String) -> void:

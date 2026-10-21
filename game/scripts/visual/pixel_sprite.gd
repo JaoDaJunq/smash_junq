@@ -105,9 +105,6 @@ func _ready() -> void:
 		for a in wide:
 			_textures[a] = load(folder.path_join(a + ".png"))
 			_counts[a] = int(wide[a]["quadros"])
-			# "visivel": mostra só os N px da esquerda de cada quadro (encurta fita/laço sem redesenhar)
-			if wide[a].has("visivel"):
-				_textures[a] = _crop_frames(_textures[a], _counts[a], int(wide[a]["visivel"]))
 			_factor[a] = 1
 			_impact[a] = 1
 	_sprite = Sprite2D.new()
@@ -233,18 +230,6 @@ func _show(a: String, f: int) -> void:
 		_sprite.hframes = int(_counts[a])
 	frame = f
 	_sprite.frame = f
-
-
-static func _crop_frames(tex: Texture2D, count: int, keep: int) -> Texture2D:
-	var img := tex.get_image()
-	if img.is_compressed():
-		img.decompress()
-	var fw := img.get_width() / count
-	keep = mini(keep, fw)
-	var out := Image.create(keep * count, img.get_height(), false, img.get_format())
-	for i in count:
-		out.blit_rect(img, Rect2i(i * fw, 0, keep, img.get_height()), Vector2i(i * keep, 0))
-	return ImageTexture.create_from_image(out)
 
 
 ## Índice na tira de um quadro da folha original (conta os intermediários).
