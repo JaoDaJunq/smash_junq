@@ -1,6 +1,7 @@
 {
   "fita": {
     "quadros": 2,
-    "largura": 320
+    "largura": 320,
+    "visivel": 176
   }
 }
