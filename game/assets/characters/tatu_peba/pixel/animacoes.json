@@ -65,9 +65,9 @@
     "impacto": 3
   },
   "especial_cima": {
-    "quadros": 6,
-    "fator": 1,
-    "impacto": 3
+    "quadros": 11,
+    "fator": 2,
+    "impacto": 6
   },
   "especial_lado": {
     "quadros": 6,
