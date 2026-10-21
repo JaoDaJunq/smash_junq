@@ -1,8 +1,8 @@
 {
   "aereo_baixo": {
-    "quadros": 9,
-    "fator": 2,
-    "impacto": 4
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
   },
   "aereo_cima": {
     "quadros": 5,
@@ -20,9 +20,9 @@
     "impacto": 2
   },
   "aereo_tras": {
-    "quadros": 9,
-    "fator": 2,
-    "impacto": 4
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
   },
   "agarrar": {
     "quadros": 6,
@@ -55,9 +55,9 @@
     "impacto": 3
   },
   "dor": {
-    "quadros": 3,
-    "fator": 1,
-    "impacto": 1
+    "quadros": 7,
+    "fator": 2,
+    "impacto": 4
   },
   "especial_baixo": {
     "quadros": 11,
@@ -95,9 +95,9 @@
     "impacto": 2
   },
   "golpe_frente": {
-    "quadros": 5,
-    "fator": 1,
-    "impacto": 2
+    "quadros": 9,
+    "fator": 2,
+    "impacto": 4
   },
   "jab": {
     "quadros": 3,
@@ -110,7 +110,12 @@
     "impacto": 1
   },
   "jab_c": {
-    "quadros": 3,
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "laco_cauda": {
+    "quadros": 2,
     "fator": 1,
     "impacto": 1
   },

@@ -44,20 +44,24 @@ func _ready() -> void:
 	_tail_tip.visible = false
 	add_child(_tail_tip)
 	if ResourceLoader.exists(LACO_PATH):
-		var sheet: Texture2D = load(LACO_PATH)
-		var seg := AtlasTexture.new()
-		seg.atlas = sheet
-		seg.region = Rect2(0, 0, 64, 64)
-		var img := sheet.get_image()
-		var used := img.get_region(Rect2i(0, 0, 64, 64)).get_used_rect()
-		seg.region = Rect2(used)
-		_tail.texture = seg
-		_tail.width = used.size.y * 2.0
+		var img: Image = (load(LACO_PATH) as Texture2D).get_image()
+		img.convert(Image.FORMAT_RGBA8)
+		var seg := img.get_region(img.get_region(Rect2i(0, 0, 64, 64)).get_used_rect())
+		var tip_rect := img.get_region(Rect2i(64, 0, 64, 64)).get_used_rect()
+		var tip := img.get_region(Rect2i(tip_rect.position + Vector2i(64, 0), tip_rect.size))
+		for im in [seg, tip]:
+			for y in im.get_height():
+				for x in im.get_width():
+					var c: Color = im.get_pixel(x, y)
+					if c.r > 0.7 and c.b > 0.7 and c.g < 0.45:   # franja magenta
+						im.set_pixel(x, y, Color(0, 0, 0, 0))
+		# Line2D estica a textura ao longo da linha: altura da textura = grossura.
+		seg = seg.get_region(Rect2i(1, 0, seg.get_width() - 2, seg.get_height()))
+		_tail.texture = ImageTexture.create_from_image(seg)
+		_tail.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		_tail.width = seg.get_height() * 2.0
 		_tail.default_color = Color.WHITE
-		var tip := AtlasTexture.new()
-		tip.atlas = sheet
-		tip.region = Rect2(img.get_region(Rect2i(64, 0, 64, 64)).get_used_rect().position + Vector2i(64, 0), img.get_region(Rect2i(64, 0, 64, 64)).get_used_rect().size)
-		_tail_tip.texture = tip
+		_tail_tip.texture = ImageTexture.create_from_image(tip)
 
 
 func _process(_delta: float) -> void:
