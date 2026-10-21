@@ -38,6 +38,8 @@ const MEIO_REPETIR := {
 ## Animações que não se alinham pelos pés (ficam como vieram; ex.: pendurado na
 ## borda, que o jogo prende pela mão).
 const SEM_ALINHAR := ["pendurado"]
+## Efeitos (fx_*) e objetos soltos ficam como vieram (centrados), sem alinhar pelos pés.
+const OBJETOS := ["castanha", "pandeiro", "semente", "nota", "laco_cauda", "estandarte", "arco", "cama_elastica"]
 ## Animações em loop (recebem também o intermediário entre o último e o primeiro).
 const LOOPS := ["parado", "andar", "correr", "vitoria", "tonto", "descanso", "pendurado"]
 ## Folhas com mais de uma animação: folha -> {animação: quadros}.
@@ -56,8 +58,12 @@ func _initialize() -> void:
 	var src := ProjectSettings.globalize_path("res://").path_join("../art/pixel").path_join(who)
 	var dst := ProjectSettings.globalize_path("res://assets/characters").path_join(who).path_join("pixel")
 	DirAccess.make_dir_recursive_absolute(dst)
+	# Folhas largas (tools/importar_largo.py) não são deste importador: não apagar.
+	var _wide := {}
+	if FileAccess.file_exists(dst.path_join("largos.json")):
+		_wide = JSON.parse_string(FileAccess.get_file_as_string(dst.path_join("largos.json")))
 	for old in DirAccess.get_files_at(dst):
-		if old.ends_with(".png"):
+		if old.ends_with(".png") and not _wide.has(old.get_basename()):
 			DirAccess.remove_absolute(dst.path_join(old))
 	var meta := {}
 	var rejected: Array[String] = []
@@ -66,7 +72,7 @@ func _initialize() -> void:
 		if not file.ends_with(".png") or anim == "base" or anim.ends_with("_meio"):
 			continue
 		var frames := _read(src.path_join(file), SELECAO.get(who, {}).get(anim, []))
-		if anim not in SEM_ALINHAR:
+		if anim not in SEM_ALINHAR and anim not in OBJETOS and not anim.begins_with("fx_"):
 			frames = _align(frames)
 		if DIVIDIR.has(anim):
 			for part in DIVIDIR[anim]:

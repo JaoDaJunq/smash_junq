@@ -2,7 +2,8 @@
 cauda esticada) para o jogo. Cada folha 1536x1024 tem 2 linhas = 2 quadros de 192x64
 ampliados 8x. O corpo fica nos 64 px da esquerda, no mesmo lugar dos quadros normais.
 
-  python game/tools/importar_largo.py <personagem> <animacao> <folha1.png> [folha2.png ...]
+  python game/tools/importar_largo.py <personagem> <animacao> art/pixel/<id>/largos/<folha1.png> [...]
+(as folhas largas ficam em art/pixel/<id>/largos/, fora do importar_pixel.gd)
 
 Grava game/assets/characters/<id>/pixel/<animacao>.png (quadros lado a lado) e
 acrescenta a animação em largos.json (o importar_pixel.gd não mexe nesse arquivo).
