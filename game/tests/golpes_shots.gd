@@ -79,6 +79,9 @@ func _shoot(mv: String) -> void:
 			foe.global_position = me.global_position + Vector2(70, 0)
 			Input.action_press("p1_grab")
 		_:
+			if mv == "special_down":
+				foe.global_position = me.global_position + Vector2(55, 0)
+				await _frames(3)
 			if mv.begins_with("special_"):
 				me.start_special(mv.substr(8))
 			else:
