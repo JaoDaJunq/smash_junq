@@ -36,12 +36,69 @@ def frame(sheet, row):
     return out
 
 
+def frames_free(sheet, cid):
+    """Folha fora do formato: acha cada linha pelo fundo, mede o corpo (1/4 da
+    esquerda) e reduz para a altura do parado do personagem."""
+    from PIL import Image as I
+    px = sheet.load()
+    w, h = sheet.size
+    rows, start = [], None
+    for y in range(h):
+        filled = any(not bg(px[x, y]) for x in range(0, w, 3))
+        if filled and start is None:
+            start = y
+        elif not filled and start is not None:
+            if y - start > 20:
+                rows.append((start, y))
+            start = None
+    if start is not None:
+        rows.append((start, h))
+    par = I.open(os.path.join(os.path.dirname(__file__), "..", "assets", "characters", cid, "pixel", "parado.png")).crop((0, 0, 64, 64)).getbbox()
+    body_native = par[3] - par[1]
+    out = []
+    for (a, b) in rows:
+        row = sheet.crop((0, a, w, b))
+        rp = row.load()
+        cols = [x for x in range(w) if any(not bg(rp[x, y]) for y in range(0, b - a, 2))]
+        x0 = cols[0]
+        body = row.crop((x0, 0, x0 + (cols[-1] - x0) // 4, b - a))
+        bb = I.new("RGB", body.size)
+        bp = body.load()
+        ys = [y for y in range(body.size[1]) if any(not bg(bp[x, y]) for x in range(0, body.size[0], 2))]
+        scale = (ys[-1] - ys[0] + 1) / body_native
+        crop = row.crop((x0, 0, cols[-1] + 1, b - a))
+        nw, nh = max(1, round(crop.size[0] / scale)), max(1, round(crop.size[1] / scale))
+        small = crop.resize((nw, nh), I.NEAREST)
+        sp = small.load()
+        tmp = Image.new("RGBA", small.size, (0, 0, 0, 0))
+        tp = tmp.load()
+        for y in range(nh):
+            for x in range(nw):
+                if not bg(sp[x, y]):
+                    tp[x, y] = (*sp[x, y][:3], 255)
+        bbox = tmp.getbbox()
+        tmp = tmp.crop(bbox)
+        global W
+        W = max(W, ((par[0] + tmp.size[0] + 4 + 31) // 32) * 32)
+        out.append((tmp, par[0]))
+    frames = []
+    for tmp, x in out:
+        fr = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        fr.paste(tmp, (x, BASE + 1 - tmp.size[1]))
+        frames.append(fr)
+    return frames
+    return out
+
+
 def main():
     cid, anim, files = sys.argv[1], sys.argv[2], sys.argv[3:]
     frames = []
     for f in files:
         sheet = Image.open(f).convert("RGB")
-        assert sheet.size == (1536, 1024), f"{f}: {sheet.size}"
+        if sheet.size != (1536, 1024):
+            print(f"{f}: {sheet.size} fora do formato; ajustando pela altura do parado")
+            frames += frames_free(sheet, cid)
+            continue
         for row in range(2):
             fr = frame(sheet, row)
             if fr.getbbox():

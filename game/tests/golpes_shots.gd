@@ -81,10 +81,12 @@ func _shoot(mv: String) -> void:
 		_:
 			if mv == "special_down":
 				foe.global_position = me.global_position + Vector2(55, 0)
-			if mv == "special_side":
-				foe.global_position = me.global_position + Vector2(280, 0)
+			if mv == "special_side" or (mv == "special_neutral" and me.display_name == "Marianinha"):
+				foe.global_position = me.global_position + Vector2(260, 0)
 			if mv in ["special_down", "special_side"]:
 				await _frames(3)
+			if mv == "special_neutral":
+				Input.action_press("p1_special")
 			if mv.begins_with("special_"):
 				me.start_special(mv.substr(8))
 			else:
@@ -94,7 +96,7 @@ func _shoot(mv: String) -> void:
 		if i % EVERY == 0:
 			await RenderingServer.frame_post_draw
 			shots.append(_crop())
-	for a in ["p1_right", "p1_shield", "p1_grab"]:
+	for a in ["p1_right", "p1_shield", "p1_grab", "p1_special"]:
 		Input.action_release(a)
 	var w := shots[0].get_width()
 	var strip := Image.create(w * shots.size(), shots[0].get_height(), false, Image.FORMAT_RGBA8)

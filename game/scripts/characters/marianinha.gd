@@ -91,7 +91,7 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 		"special_neutral":
 			_ribbon_step(frame)
 		"special_side":
-			if frame == attack.startup:
+			if frame == attack.startup + 1:   # quando a mão já soltou (quadro de impacto)
 				_throw_hoop()
 		"special_up":
 			if frame == attack.startup:
@@ -112,10 +112,26 @@ func _ribbon_step(frame: int) -> void:
 		_hit_targets.clear()
 	# A fita girando destrói projéteis que encostam nela.
 	var tip := hitbox_center(attack)
+	var base := global_position + Vector2(facing * 30.0, tip.y - global_position.y)
 	for n in get_tree().get_nodes_in_group("match_cleanup"):
 		var p := n as Projectile
-		if p != null and p.owner_fighter != self and p.global_position.distance_to(tip) < attack.hitbox_radius + 30.0:
-			p.queue_free()
+		if p == null or p.owner_fighter == self:
+			continue
+		for k in [0.3, 0.65, 1.0]:
+			if p.global_position.distance_to(base.lerp(tip, k)) < attack.hitbox_radius:
+				p.queue_free()
+				break
+	# A fita acerta ao longo dela toda, não só na ponta.
+	for f in get_tree().get_nodes_in_group("fighters"):
+		var foe := f as Fighter
+		if foe == self or not foe.can_be_hit() or _hit_targets.has(foe):
+			continue
+		for k in [0.35, 0.65]:
+			if Combat.circle_hits_rect(base.lerp(tip, k), attack.hitbox_radius * 0.7, foe.hurtbox()):
+				_hit_targets.append(foe)
+				if foe.receive_hit(self, attack, facing):
+					_on_hit_landed(foe, "special_neutral")
+				break
 
 
 func _throw_hoop() -> void:

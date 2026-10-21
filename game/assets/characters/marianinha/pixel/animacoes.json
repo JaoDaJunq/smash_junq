@@ -34,7 +34,17 @@
     "fator": 2,
     "impacto": 6
   },
+  "arco": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
   "arrancar": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
+  },
+  "cama_elastica": {
     "quadros": 3,
     "fator": 1,
     "impacto": 1
@@ -83,6 +93,11 @@
     "quadros": 3,
     "fator": 1,
     "impacto": 1
+  },
+  "fx_magnesio": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
   },
   "golpe_baixo": {
     "quadros": 9,

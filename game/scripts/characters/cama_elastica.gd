@@ -14,6 +14,8 @@ var _age := 0.0
 var _squash := 0.0
 var _tex: Texture2D
 var _cool := {}
+var _fall_v := 0.0
+var _grounded := false
 
 
 static func place(by: Fighter, at: Vector2) -> CamaElastica:
@@ -39,6 +41,20 @@ func _physics_process(delta: float) -> void:
 	if _age >= LIFETIME:
 		queue_free()
 		return
+	# Sem chão embaixo, a cama cai até achar o palco (ou some lá embaixo).
+	if not _grounded:
+		var space := get_world_2d().direct_space_state
+		var q := PhysicsRayQueryParameters2D.create(global_position + Vector2(0, -4), global_position + Vector2(0, maxf(_fall_v * delta, 2.0) + 4.0), Fighter.LAYER_STAGE)
+		var hit := space.intersect_ray(q)
+		if hit.is_empty():
+			_fall_v = minf(_fall_v + 2600.0 * delta, 1600.0)
+			global_position.y += _fall_v * delta
+			if global_position.y > 1600.0:
+				queue_free()
+				return
+		else:
+			global_position.y = hit.position.y
+			_grounded = true
 	for k in _cool.keys():
 		_cool[k] -= delta
 	for f in get_tree().get_nodes_in_group("fighters"):
