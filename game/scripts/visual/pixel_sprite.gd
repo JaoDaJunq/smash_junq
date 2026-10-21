@@ -98,6 +98,15 @@ func _ready() -> void:
 			_counts[a] = int(m)
 			_factor[a] = 1
 			_impact[a] = 1 if int(m) <= 3 else (2 if int(m) <= 5 else 3)
+	# Folhas largas (quadros > 64 px, corpo nos 64 da esquerda): tools/importar_largo.py
+	var wide_path := folder.path_join("largos.json")
+	if FileAccess.file_exists(wide_path):
+		var wide: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(wide_path))
+		for a in wide:
+			_textures[a] = load(folder.path_join(a + ".png"))
+			_counts[a] = int(wide[a]["quadros"])
+			_factor[a] = 1
+			_impact[a] = 1
 	_sprite = Sprite2D.new()
 	_sprite.name = "Quadro"
 	_sprite.centered = false
@@ -266,8 +275,8 @@ func _pick() -> Array:
 	if fighter.has_method("anim_override"):
 		var o: Array = fighter.anim_override()
 		if not o.is_empty() and has_anim(o[0]):
-			if float(o[1]) < 0.0:   # quadro fixo
-				return [o[0], mini(int(-float(o[1])), int(_counts[o[0]]) - 1)]
+			if o.size() > 2 and o[2]:   # [animação, quadro, true] = quadro fixo
+				return [o[0], mini(int(o[1]), int(_counts[o[0]]) - 1)]
 			return _loop(o[0], o[1])
 	var grounded := fighter.state in [S.IDLE, S.WALK, S.RUN]
 	if grounded and _turn < TURN_TIME and has_anim("virar"):

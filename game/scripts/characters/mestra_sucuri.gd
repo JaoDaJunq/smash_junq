@@ -27,6 +27,10 @@ const TAIL_START := Vector2(40, 12)  # onde a cauda sai do rabo enrolado (virada
 const TAIL_OUT := 6                  # quadros para a cauda esticar até o alvo
 const TAIL_BACK := 10                # quadros para recolher
 var _hidden_foe: Fighter
+const LASSO_HOLD := 8    # quadros com a argola fechada no alvo
+const LASSO_PULL := 12   # quadros puxando de volta
+var _lasso_t := 0
+var _lasso_from := Vector2.ZERO
 var _tail: Line2D
 var _tail_tip: Sprite2D
 
@@ -90,15 +94,34 @@ func _process(_delta: float) -> void:
 func anim_override() -> Array:
 	if attack_id == "special_down" and holding != null:
 		return ["abraco", 6.0]
-	if _tail.visible:
-		return ["especial_lado", -3.0]   # segura a pose do laço enquanto a cauda está fora
+	# Laço desenhado à mão (folha larga laco_largo): 0 saindo, 1 esticada, 2 laçou, 3 puxando.
+	if attack_id == "special_side" and attack != null:
+		var f := attack_frame - attack.startup
+		if f >= 0 and f <= attack.active + TAIL_BACK:
+			var i := 0 if f < TAIL_OUT / 2 else 1
+			if f > attack.active:
+				i = 3
+			elif holding != null:
+				# a ponta da cauda acompanha o laçado: escolhe a pose pela distância
+				var d := absf(holding.global_position.x - global_position.x)
+				if d > 250.0:
+					i = 2
+				elif d > 170.0:
+					i = 3
+				else:
+					return ["especial_lado", 3, true]   # cauda já recolhida
+			return ["laco_largo", i, true]
 	return []
 
 
-## Cauda do laço: sai do rabo, afina até a ponta, ondula e se estica até o alvo;
+func _has_wide() -> bool:
+	return ResourceLoader.exists("res://assets/characters/sucuri/pixel/laco_largo.png")
+
+
+## (Reserva, sem a folha larga.) Cauda do laço: sai do rabo, afina até a ponta, ondula e se estica até o alvo;
 ## depois recolhe (puxando quem foi laçado).
 func _update_tail() -> void:
-	var on := attack_id == "special_side" and attack != null and _tail.texture != null
+	var on := attack_id == "special_side" and attack != null and _tail.texture != null and not _has_wide()
 	var ext := 0.0
 	if on:
 		var f := attack_frame - attack.startup
@@ -145,12 +168,25 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 				_hypnotize()
 		"special_side":
 			if holding != null:
-				# Puxa o laçado para perto e passa para o agarrão normal.
+				# Laçou: mostra a argola fechada, depois puxa o laçado de volta
+				# aos poucos (acompanhando a cauda) e passa para o agarrão normal.
+				_lasso_t += 1
 				var target := holding
-				release_hold()
-				attack_frame = attack.total_frames()
-				_pull_into_grab(target)
+				var near := global_position + Vector2(facing * (RADIUS * 2.0 + 10.0), 0)
+				if _lasso_t == 1:
+					_lasso_from = target.global_position
+				if _lasso_t > LASSO_HOLD:
+					var k := minf(float(_lasso_t - LASSO_HOLD) / LASSO_PULL, 1.0)
+					target.global_position = _lasso_from.lerp(near, k * k)
+				if _lasso_t >= LASSO_HOLD + LASSO_PULL:
+					release_hold()
+					_lasso_t = 0
+					attack_frame = attack.total_frames()
+					_pull_into_grab(target)
+					return
+				attack_frame = attack.startup + 1   # segura o golpe enquanto puxa
 				return
+			_lasso_t = 0
 			_catch_in_hitbox()
 		"special_up":
 			if frame == attack.startup:
@@ -177,14 +213,17 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 func _catch_in_hitbox() -> bool:
 	if not attack.is_active(attack_frame):
 		return false
-	var center := hitbox_center(attack)
+	var tip := hitbox_center(attack)
+	var base := global_position + Vector2(facing * RADIUS, tip.y - global_position.y)
 	for f in get_tree().get_nodes_in_group("fighters"):
 		var target := f as Fighter
 		if target == self or not target.can_be_hit():
 			continue
-		if Combat.circle_hits_rect(center, attack.hitbox_radius, target.hurtbox()):
-			hold(target)
-			return true
+		# a cauda pega em qualquer ponto do corpo dela até a ponta
+		for k in [0.35, 0.55, 0.75, 1.0]:
+			if Combat.circle_hits_rect(base.lerp(tip, k), attack.hitbox_radius, target.hurtbox()):
+				hold(target)
+				return true
 	return false
 
 
@@ -223,3 +262,12 @@ func _check_hits() -> void:
 func _on_attack_end(move_id: String) -> void:
 	if move_id == "special_down" and holding != null:
 		throw_held(lasso_throw_data if lasso_throw_data != null else moveset.special_down, facing)
+
+
+## No laço, o laçado fica onde a cauda está (longe) até ser puxado.
+func _update_holding() -> void:
+	if attack_id == "special_side" and holding != null and is_instance_valid(holding) and holding.held_by == self:
+		if _lasso_t == 0:
+			_lasso_from = holding.global_position
+		return
+	super._update_holding()

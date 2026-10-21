@@ -81,6 +81,9 @@ func _shoot(mv: String) -> void:
 		_:
 			if mv == "special_down":
 				foe.global_position = me.global_position + Vector2(55, 0)
+			if mv == "special_side":
+				foe.global_position = me.global_position + Vector2(280, 0)
+			if mv in ["special_down", "special_side"]:
 				await _frames(3)
 			if mv.begins_with("special_"):
 				me.start_special(mv.substr(8))
