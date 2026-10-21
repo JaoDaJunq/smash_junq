@@ -262,6 +262,13 @@ func _once(a: String, elapsed: float, time: float) -> Array:
 
 func _pick() -> Array:
 	var S := Fighter.State
+	# Personagem com folha especial para um momento (ex.: abraço da Sucuri).
+	if fighter.has_method("anim_override"):
+		var o: Array = fighter.anim_override()
+		if not o.is_empty() and has_anim(o[0]):
+			if float(o[1]) < 0.0:   # quadro fixo
+				return [o[0], mini(int(-float(o[1])), int(_counts[o[0]]) - 1)]
+			return _loop(o[0], o[1])
 	var grounded := fighter.state in [S.IDLE, S.WALK, S.RUN]
 	if grounded and _turn < TURN_TIME and has_anim("virar"):
 		return _once("virar", _turn, TURN_TIME)

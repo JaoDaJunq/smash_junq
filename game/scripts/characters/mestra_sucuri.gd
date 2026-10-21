@@ -23,7 +23,10 @@ var _squeeze_timer := 0
 ## não pode atravessar o quadro de 64). Folha laco_cauda.png: 1 = trecho que se
 ## repete, 2 = ponta em laço.
 const LACO_PATH := "res://assets/characters/sucuri/pixel/laco_cauda.png"
-const TAIL_START := Vector2(26, 8)   # onde a cauda sai do corpo (relativo, virado para a direita)
+const TAIL_START := Vector2(40, 12)  # onde a cauda sai do rabo enrolado (virada para a direita)
+const TAIL_OUT := 6                  # quadros para a cauda esticar até o alvo
+const TAIL_BACK := 10                # quadros para recolher
+var _hidden_foe: Fighter
 var _tail: Line2D
 var _tail_tip: Sprite2D
 
@@ -37,10 +40,16 @@ func _ready() -> void:
 	_tail.default_color = Color(0.42, 0.48, 0.18)
 	_tail.visible = false
 	_tail.z_index = -1
+	_tail.joint_mode = Line2D.LINE_JOINT_ROUND
+	var taper := Curve.new()
+	taper.add_point(Vector2(0.0, 1.0))
+	taper.add_point(Vector2(0.7, 0.85))
+	taper.add_point(Vector2(1.0, 0.6))
+	_tail.width_curve = taper
 	add_child(_tail)
 	_tail_tip = Sprite2D.new()
 	_tail_tip.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	_tail_tip.scale = Vector2(2, 2)
+	_tail_tip.scale = Vector2(1.1, 1.1)
 	_tail_tip.visible = false
 	add_child(_tail_tip)
 	if ResourceLoader.exists(LACO_PATH):
@@ -59,21 +68,73 @@ func _ready() -> void:
 		seg = seg.get_region(Rect2i(1, 0, seg.get_width() - 2, seg.get_height()))
 		_tail.texture = ImageTexture.create_from_image(seg)
 		_tail.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-		_tail.width = seg.get_height() * 2.0
+		_tail.width = seg.get_height() * 1.6
 		_tail.default_color = Color.WHITE
 		_tail_tip.texture = ImageTexture.create_from_image(tip)
 
 
 func _process(_delta: float) -> void:
-	var show := attack_id == "special_side" and attack != null and attack.is_active(attack_frame)
-	_tail.visible = show and _tail.texture != null
+	_update_tail()
+	# Abraço: o adversário fica escondido dentro da espiral (folha abraco.png).
+	var wrapping := attack_id == "special_down" and holding != null and has_art
+	if wrapping and _hidden_foe == null:
+		_hidden_foe = holding
+		_hidden_foe.visible = false
+	elif not wrapping and _hidden_foe != null:
+		if is_instance_valid(_hidden_foe):
+			_hidden_foe.visible = true
+		_hidden_foe = null
+
+
+## Folha especial para o abraço (o sprite pergunta antes de escolher a animação).
+func anim_override() -> Array:
+	if attack_id == "special_down" and holding != null:
+		return ["abraco", 6.0]
+	if _tail.visible:
+		return ["especial_lado", -3.0]   # segura a pose do laço enquanto a cauda está fora
+	return []
+
+
+## Cauda do laço: sai do rabo, afina até a ponta, ondula e se estica até o alvo;
+## depois recolhe (puxando quem foi laçado).
+func _update_tail() -> void:
+	var on := attack_id == "special_side" and attack != null and _tail.texture != null
+	var ext := 0.0
+	if on:
+		var f := attack_frame - attack.startup
+		var stop := attack.active + TAIL_BACK
+		if f < 0 or f > stop:
+			on = false
+		elif f <= TAIL_OUT:
+			ext = float(f) / TAIL_OUT
+		elif f <= attack.active:
+			ext = 1.0
+		else:
+			ext = 1.0 - float(f - attack.active) / TAIL_BACK
+	_tail.visible = on and ext > 0.05
 	_tail_tip.visible = _tail.visible
 	if not _tail.visible:
 		return
+	ext = ext * ext * (3.0 - 2.0 * ext)   # suave
 	var from := Vector2(TAIL_START.x * facing, TAIL_START.y)
-	var to := to_local(hitbox_center(attack))
-	_tail.points = PackedVector2Array([from, to])
-	_tail_tip.position = to
+	var target := to_local(hitbox_center(attack))
+	var to := from.lerp(target, ext)
+	var dir := (to - from)
+	var length := dir.length()
+	var normal := Vector2(-dir.y, dir.x).normalized()
+	var pts := PackedVector2Array()
+	var n := 14
+	var phase := float(attack_frame) * 0.6
+	for i in n + 1:
+		var t := float(i) / n
+		# arco para cima + onda que diminui até a ponta (cobra de verdade)
+		var arc := sin(t * PI) * minf(length * 0.18, 26.0)
+		var wave := sin(t * TAU * 1.5 - phase) * 7.0 * (1.0 - t) * ext
+		pts.append(from + dir * t - normal * (arc * facing) + normal * wave)
+	_tail.points = pts
+	var last := pts[n] - pts[n - 1]
+	_tail_tip.position = pts[n]
+	_tail_tip.rotation = last.angle() if facing > 0 else last.angle() + PI
 	_tail_tip.flip_h = facing < 0
 
 

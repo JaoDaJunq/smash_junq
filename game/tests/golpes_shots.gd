@@ -5,8 +5,8 @@ extends Node
 ##   godot --path game --resolution 1920x1080 res://tests/golpes_shots.tscn -- <indice_personagem> [movimento ...]
 
 const MATCH := preload("res://scenes/match.tscn")
-const BOX := 220
-const EVERY := 3
+const BOX := 320
+const EVERY := 2
 const MOVES := [
 	"parado", "andar", "correr", "pulo", "jab", "ftilt", "utilt", "dtilt",
 	"nair", "fair", "bair", "uair", "dair",
