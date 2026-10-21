@@ -65,24 +65,39 @@
     "impacto": 6
   },
   "especial_cima": {
-    "quadros": 11,
-    "fator": 2,
-    "impacto": 6
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
   },
   "especial_lado": {
-    "quadros": 11,
-    "fator": 2,
-    "impacto": 6
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
   },
   "especial_neutro": {
-    "quadros": 11,
-    "fator": 2,
-    "impacto": 6
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "estandarte": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
   },
   "frear": {
     "quadros": 3,
     "fator": 1,
     "impacto": 1
+  },
+  "fx_confete": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "fx_plumas": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
   },
   "golpe_baixo": {
     "quadros": 9,

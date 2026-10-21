@@ -59,7 +59,7 @@ func _physics_process(delta: float) -> void:
 			note = 0.0
 	# Pulso de plumas no chão a cada batida (o jogador VÊ o ritmo).
 	if _beat_clock < before and is_on_floor() and visible and state != State.RESPAWN:
-		_fx("fx_plumas", global_position + Vector2(0, HEIGHT * 0.5 - 24), 0.35)
+		_fx("fx_plumas", global_position + Vector2(0, HEIGHT * 0.5 - 18), 0.35, true, 1.5)
 	super._physics_process(delta)
 	if _gliding:
 		if is_on_floor() or state != State.AIR:
@@ -78,10 +78,12 @@ func on_beat() -> bool:
 	return _beat_clock <= BEAT_WINDOW or _beat_clock >= BEAT - BEAT_WINDOW
 
 
-func _fx(fx_name: String, at: Vector2, time: float) -> void:
+func _fx(fx_name: String, at: Vector2, time: float, behind := false, px := 2.0) -> void:
 	var path := PIX + fx_name + ".png"
 	if has_art and ResourceLoader.exists(path):
-		PixelFx.spawn(get_parent(), load(path), at, time)
+		var fx := PixelFx.spawn(get_parent(), load(path), at, time, px)
+		if behind:
+			fx.z_index = -1
 
 
 func _on_attack_frame(move_id: String, frame: int) -> void:
@@ -149,7 +151,7 @@ func _spin_step(frame: int) -> void:
 func _plant_flag() -> void:
 	if _estandarte != null and is_instance_valid(_estandarte):
 		_estandarte.knock_down()
-	var at := global_position + Vector2(facing * 60.0, HEIGHT * 0.5)
+	var at := global_position + Vector2(facing * 110.0, HEIGHT * 0.5)
 	var q := PhysicsRayQueryParameters2D.create(at + Vector2(0, -60), at + Vector2(0, 400), LAYER_STAGE)
 	var hit := get_world_2d().direct_space_state.intersect_ray(q)
 	if not hit.is_empty():

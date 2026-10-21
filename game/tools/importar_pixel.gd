@@ -135,7 +135,8 @@ func _read(path: String, pick: Array) -> Array[Image]:
 		for c in 3:
 			var f := _cell(sheet, c, r, scale)
 			if f != null:
-				frames.append(_clean_slivers(f, path.get_file(), frames.size()))
+				# Efeitos são feitos de pedacinhos soltos de propósito (confete, gotas).
+				frames.append(f if path.get_file().begins_with("fx_") else _clean_slivers(f, path.get_file(), frames.size()))
 	if not pick.is_empty():
 		var chosen: Array[Image] = []
 		for i in pick:
