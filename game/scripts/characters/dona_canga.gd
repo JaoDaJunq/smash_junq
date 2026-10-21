@@ -59,7 +59,7 @@ func _physics_process(delta: float) -> void:
 			note = 0.0
 	# Pulso de plumas no chão a cada batida (o jogador VÊ o ritmo).
 	if _beat_clock < before and is_on_floor() and visible and state != State.RESPAWN:
-		_fx("fx_plumas", global_position + Vector2(0, HEIGHT * 0.5 - 18), 0.35, true, 1.5)
+		_fx("fx_plumas", global_position + Vector2(0, HEIGHT * 0.5 - 56), 0.45, false, 2.0)
 	super._physics_process(delta)
 	if _gliding:
 		if is_on_floor() or state != State.AIR:

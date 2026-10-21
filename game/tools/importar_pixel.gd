@@ -239,6 +239,14 @@ func _cell(sheet: Image, col: int, row: int, scale: int) -> Image:
 			var c := sheet.get_pixel((col * NATIVE + x) * scale + scale / 2, (row * NATIVE + y) * scale + scale / 2)
 			if c.r > 0.85 and c.b > 0.85 and c.g < 0.2:
 				continue
+			# franja do fundo (magenta misturado na borda do desenho): também é fundo.
+			# Rosa da Marianinha (#FF8CB8, #E8508A) fica: verde alto ou azul baixo.
+			if c.r > 0.7 and c.b > 0.7 and c.g < 0.45 and absf(c.r - c.b) < 0.3:
+				continue
+			# franja escura (contorno misturado com magenta): roxo com azul quase igual ao vermelho.
+			# O rosa-sombra da Marianinha (#B03068) tem azul bem menor que o vermelho e fica.
+			if c.r > 0.35 and c.b > 0.3 and c.g < 0.2 and c.b > c.r * 0.72:
+				continue
 			img.set_pixel(x, y, Color(c.r, c.g, c.b, 1.0))
 			count += 1
 	return img if count > 40 else null

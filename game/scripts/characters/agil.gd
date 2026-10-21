@@ -142,7 +142,8 @@ func _apply_pending_counter() -> void:
 	var side := signi(roundi(foe.global_position.x - global_position.x))
 	if side != 0:
 		facing = side
-	foe.receive_hit(self, strike, facing)
+	if foe.receive_hit(self, strike, facing) and move_fx != null:
+		move_fx.on_hit_landed(foe, "special_down")   # brilho da ginga
 
 
 ## Arco do contra-ataque e rastro do teletransporte: marcas provisórias do

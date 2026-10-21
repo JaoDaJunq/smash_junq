@@ -193,7 +193,7 @@ func _draw() -> void:
 	if score <= NOTE_MIN and not _perfect_ready:
 		return
 	# Plaquinha do jurado acima da cabeça.
-	var y := -HEIGHT * 0.5 - 62.0
+	var y := -HEIGHT * 0.5 - 86.0   # acima da setinha "P1"
 	var col := Color(1.0, 0.85, 0.2) if _perfect_ready else Color(1, 1, 1)
 	draw_rect(Rect2(-17, y, 34, 22), Color(0.16, 0.06, 0.1, 0.9))
 	draw_rect(Rect2(-15, y + 2, 30, 18), col)
