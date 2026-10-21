@@ -89,6 +89,21 @@
     "fator": 1,
     "impacto": 1
   },
+  "fx_boia": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
+  },
+  "fx_bufada": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "fx_tchibum": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
   "golpe_baixo": {
     "quadros": 9,
     "fator": 2,

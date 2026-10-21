@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cght2p7sikb5w"
-path="res://.godot/imported/laco_largo.png-e272a058b680892170f49eb86ef84cc2.ctex"
+uid="uid://lf3pm22uj3a0"
+path="res://.godot/imported/fx_lufada.png-9fddbf99611d8810bd10bc29f3aaeb14.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/characters/sucuri/pixel/laco_largo.png"
-dest_files=["res://.godot/imported/laco_largo.png-e272a058b680892170f49eb86ef84cc2.ctex"]
+source_file="res://assets/characters/tatu_peba/pixel/fx_lufada.png"
+dest_files=["res://.godot/imported/fx_lufada.png-9fddbf99611d8810bd10bc29f3aaeb14.ctex"]
 
 [params]
 

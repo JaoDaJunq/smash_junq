@@ -280,6 +280,18 @@ func _area(img: Image) -> int:
 ## 6 px da lateral esquerda ou direita. Efeitos de propósito (linhas de
 ## velocidade horizontais, poeira, faíscas, objetos) não têm esse formato, e
 ## lasquinhas brancas ou bem claras (linhas de tremida e de impacto) são mantidas.
+func _near_body(comp: Array, body: Array, dist: int) -> bool:
+	var b := {}
+	for p in body:
+		b[p] = true
+	for p in comp:
+		for dy in range(-dist, dist + 1):
+			for dx in range(-dist, dist + 1):
+				if b.has(p + Vector2i(dx, dy)):
+					return true
+	return false
+
+
 func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 	var seen := {}
 	var parts := []
@@ -313,6 +325,9 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 			hi = hi.max(p)
 		var w := hi.x - lo.x + 1
 		var h := hi.y - lo.y + 1
+		# Detalhe fino colado no corpo (palito do Maracajá, bigode): fica.
+		if comp.size() <= MIGALHA and _near_body(comp, parts[0], 2) and lo.x > 0 and hi.x < NATIVE - 1:
+			continue
 		if comp.size() <= MIGALHA:
 			for p in comp:
 				img.set_pixel(p.x, p.y, Color(0, 0, 0, 0))

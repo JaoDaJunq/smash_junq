@@ -29,6 +29,8 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 			shell.damage *= SHELL_DAMAGE
 			shell.base_knockback *= SHELL_KNOCKBACK
 			shell.knockback_growth *= SHELL_KNOCKBACK
+			if move_fx != null:
+				move_fx.on_shell_block()
 			return super(attacker, shell, direction_sign)
 	return super(attacker, data, direction_sign)
 

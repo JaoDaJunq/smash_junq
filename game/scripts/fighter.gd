@@ -162,8 +162,14 @@ var controls: FighterControls = null
 var brain: CpuBrain = null
 
 
+var move_fx: MoveFx
+
+
 func _ready() -> void:
 	add_to_group("fighters")
+	var vis := get_node_or_null("Visual")
+	if vis != null and "folder" in vis and vis.folder != "":
+		move_fx = MoveFx.attach(self, String(vis.folder).get_base_dir().get_file())
 	if controls == null:
 		controls = FighterControls.new(player_id)
 	collision_layer = 0
@@ -576,6 +582,8 @@ func _check_hits() -> void:
 			var move_id := attack_id
 			if target.receive_hit(self, attack, facing):
 				_on_hit_landed(target, move_id)
+				if move_fx != null:
+					move_fx.on_hit_landed(target, move_id)
 			if state != State.ATTACK:
 				return  # o gancho pode ter encerrado o golpe
 

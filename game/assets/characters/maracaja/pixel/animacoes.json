@@ -84,6 +84,21 @@
     "fator": 1,
     "impacto": 1
   },
+  "fx_garra": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "fx_reboco": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "fx_sono": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
   "golpe_baixo": {
     "quadros": 9,
     "fator": 2,

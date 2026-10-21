@@ -84,6 +84,26 @@
     "fator": 1,
     "impacto": 1
   },
+  "fx_faisca": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
+  },
+  "fx_lufada": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "fx_montinho": {
+    "quadros": 3,
+    "fator": 1,
+    "impacto": 1
+  },
+  "fx_terra": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
   "golpe_baixo": {
     "quadros": 9,
     "fator": 2,

@@ -89,6 +89,16 @@
     "fator": 1,
     "impacto": 1
   },
+  "fx_aperto": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "fx_hipnose": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
   "golpe_baixo": {
     "quadros": 5,
     "fator": 1,

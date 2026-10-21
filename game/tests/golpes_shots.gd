@@ -79,6 +79,8 @@ func _shoot(mv: String) -> void:
 			foe.global_position = me.global_position + Vector2(70, 0)
 			Input.action_press("p1_grab")
 		_:
+			if mv in ["special_down", "special_side", "special_neutral"] and foe.global_position.x > me.global_position.x + 300.0:
+				foe.global_position = me.global_position + Vector2(90, 0)
 			if mv == "special_down":
 				foe.global_position = me.global_position + Vector2(55, 0)
 			if mv == "special_side" or (mv == "special_neutral" and me.display_name == "Marianinha"):

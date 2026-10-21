@@ -106,7 +106,7 @@ func anim_override() -> Array:
 				var d := absf(holding.global_position.x - global_position.x)
 				if d > 250.0:
 					i = 2
-				elif d > 170.0:
+				elif d > 95.0:
 					i = 3
 				else:
 					return ["especial_lado", 3, true]   # cauda já recolhida
@@ -177,7 +177,7 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 					_lasso_from = target.global_position
 				if _lasso_t > LASSO_HOLD:
 					var k := minf(float(_lasso_t - LASSO_HOLD) / LASSO_PULL, 1.0)
-					target.global_position = _lasso_from.lerp(near, k * k)
+					target.global_position = _lasso_from.lerp(near, k)   # puxão contínuo (acompanha a cauda)
 				if _lasso_t >= LASSO_HOLD + LASSO_PULL:
 					release_hold()
 					_lasso_t = 0
@@ -251,6 +251,8 @@ func _hypnotize() -> void:
 		var d := foe.global_position - global_position
 		if absf(d.x) <= HYPNO_RANGE and absf(d.y) < 90.0 and signf(d.x) == float(facing):
 			foe.hypnotize(HYPNO_TIME)
+			if move_fx != null:
+				move_fx.on_hypnotized(foe)
 
 
 func _check_hits() -> void:

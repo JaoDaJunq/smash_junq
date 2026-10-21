@@ -99,6 +99,16 @@
     "fator": 1,
     "impacto": 3
   },
+  "fx_ginga": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "fx_poeira_folhas": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
   "golpe_baixo": {
     "quadros": 9,
     "fator": 2,
