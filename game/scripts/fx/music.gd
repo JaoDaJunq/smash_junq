@@ -79,3 +79,12 @@ func stop() -> void:
 	current = ""
 	for p in _players:
 		p.stop()
+
+
+## Para a música por um instante (Paradinha da bateria da Dona Canga) e volta.
+func paradinha(seconds: float) -> void:
+	for p in _players:
+		p.stream_paused = true
+	await get_tree().create_timer(seconds, true, false, true).timeout
+	for p in _players:
+		p.stream_paused = false

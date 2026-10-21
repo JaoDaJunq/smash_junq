@@ -148,11 +148,17 @@ func _read(path: String, pick: Array) -> Array[Image]:
 ## linha 59), mantendo pulos e quedas relativos entre eles.
 func _align(frames: Array[Image]) -> Array[Image]:
 	var lowest := 0
+	var highest := NATIVE
 	for f in frames:
 		lowest = maxi(lowest, _bottom(f))
+		var u := f.get_used_rect()
+		if u.size.y > 0:
+			highest = mini(highest, u.position.y)
+	# Nunca empurra o desenho para fora do quadro (cortava o chapéu do Peba nos pulos).
+	var dy := maxi(BASELINE - lowest, -highest)
 	var out: Array[Image] = []
 	for f in frames:
-		out.append(_moved(f, Vector2i(0, BASELINE - lowest)))
+		out.append(_moved(f, Vector2i(0, dy)))
 	return out
 
 

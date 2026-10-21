@@ -74,26 +74,53 @@ func _basics(id: String) -> void:
 
 func _canga() -> void:
 	var c := me as DonaCanga
-	# Pandeiro vai e volta
-	await _face_off(600.0)
-	foe.global_position = Vector2(3000, -3000)
+	# Roda de baiana: puxa quem está perto e rebate projétil
+	await _face_off(200.0)
+	var x0 := foe.global_position.x
+	Input.action_press("p1_special")
 	c.start_special("neutral")
-	var far := 0.0
-	var came_back := false
-	for i in 240:
-		await get_tree().physics_frame
-		var ps := get_tree().get_nodes_in_group("match_cleanup").filter(func(n: Node) -> bool: return n is Projectile)
-		if not ps.is_empty():
-			far = maxf(far, absf((ps[0] as Node2D).global_position.x - c.global_position.x))
-		elif far > 100.0:
-			came_back = true
-			break
-	_check("Canga: pandeiro vai longe e volta", came_back and far > 250.0, "%.0f px" % far)
-	# No ritmo: o mesmo golpe na batida tira mais
+	await _frames(40)
+	_check("Canga: roda de baiana puxa o adversário", foe.global_position.x < x0 - 20.0 or foe.damage_percent > 0.0,
+		"%.0f px, %.1f%%" % [x0 - foe.global_position.x, foe.damage_percent])
+	foe.global_position = Vector2(3000, -3000)   # longe: o rebatido não acerta ninguém
+	var shot := AttackData.new()
+	shot.damage = 3.0
+	shot.hitbox_radius = 10.0
+	var p := Projectile.spawn(load("res://scenes/combat/projectile.tscn"), foe, shot, c.global_position + Vector2(120, -20), Vector2(-500, 0), 2.0)
+	await _frames(12)
+	_check("Canga: roda rebate projétil", is_instance_valid(p) and p.owner_fighter == c and p.velocity.x > 0.0, "")
+	await _frames(130)
+	Input.action_release("p1_special")
+	_check("Canga: girar demais deixa tonta", c.state == Fighter.State.HITSTUN or c.state == Fighter.State.IDLE, Fighter.State.keys()[c.state])
+	await _frames(70)
+	# Estandarte: fica no palco e perto dele todo golpe é na batida
+	await _face_off(300.0)
+	c.start_special("side")
+	await _frames(40)
+	var flags := get_tree().get_nodes_in_group("estandartes").filter(func(e: Node) -> bool: return e._fall < 0.0)
+	_check("Canga: estandarte fincado no palco", flags.size() == 1, str(flags.size()))
+	c._beat_clock = DonaCanga.BEAT * 0.5
+	_check("Canga: perto do estandarte está sempre no ritmo", c.on_beat(), "")
+	# Golpe na batida tira mais
 	var off := await _jab_damage(false)
 	var on := await _jab_damage(true)
 	_check("Canga: golpe na batida tira mais", on > off * 1.15, "%.1f x %.1f" % [on, off])
-	# Voo de alegoria: sobe e depois cai planando
+	# Apoteose: 4 golpes na batida enchem a nota
+	for e in get_tree().get_nodes_in_group("estandartes"):
+		e.queue_free()
+	await _frames(2)
+	c.note = 0.0
+	for i in 4:
+		await _jab_damage(true)
+	_check("Canga: 4 golpes na batida = Apoteose", c.apoteose > 0.0, "nota %.0f" % c.note)
+	c.apoteose = 0.0
+	c.note = 0.0
+	# Paradinha: roda sem travar e lança
+	await _face_off(80.0)
+	c.start_special("down")
+	await _frames(70)
+	_check("Canga: paradinha lança quem está perto", foe.damage_percent > 0.0, "%.1f%%" % foe.damage_percent)
+	# Esplendor: sobe e depois cai planando
 	await _place(c, Vector2(-200, -300))
 	c.start_special("up")
 	await _frames(60)
@@ -101,12 +128,16 @@ func _canga() -> void:
 	for i in 40:
 		await get_tree().physics_frame
 		vy = maxf(vy, c.velocity.y)
-	_check("Canga: depois do voo cai planando", vy <= DonaCanga.GLIDE_FALL + 1.0, "%.0f" % vy)
+	_check("Canga: depois do esplendor cai planando", vy <= DonaCanga.GLIDE_FALL + 1.0, "%.0f" % vy)
 
 
 func _jab_damage(on_beat: bool) -> float:
 	await _face_off()
 	var c := me as DonaCanga
+	if not on_beat:
+		for e in get_tree().get_nodes_in_group("estandartes"):
+			e.queue_free()
+		await _frames(2)
 	# acerta a batida (ou o meio entre duas) exatamente no primeiro quadro ativo
 	var lead := float(c.moveset.ftilt.startup + 1) / 60.0
 	c._beat_clock = fposmod((0.0 if on_beat else DonaCanga.BEAT * 0.5) - lead, DonaCanga.BEAT)
