@@ -185,6 +185,7 @@ func set_cpu(new_brain: CpuBrain) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	slip_time = maxf(slip_time - delta, 0.0)
 	_clock += delta
 	if brain != null:
 		controls.begin_frame()
@@ -293,10 +294,10 @@ func _process_ground(dir: float, run_trigger: bool, delta: float) -> void:
 		elif state != State.RUN:
 			state = State.WALK
 		var target := (run_speed if state == State.RUN else walk_speed) * signf(dir)
-		velocity.x = move_toward(velocity.x, target, ground_accel * delta)
+		velocity.x = move_toward(velocity.x, target, ground_accel * delta * (0.12 if slip_time > 0.0 else 1.0))
 	else:
 		state = State.IDLE
-		velocity.x = move_toward(velocity.x, 0.0, ground_friction * delta)
+		velocity.x = move_toward(velocity.x, 0.0, ground_friction * delta * (0.05 if slip_time > 0.0 else 1.0))
 	velocity.y = 0.0
 
 
@@ -901,6 +902,15 @@ func throw_data(throw_id: String) -> AttackData:
 			data.knockback_growth = table[id][3]
 			_default_throws[id] = data
 	return _default_throws[throw_id]
+
+
+## Chão escorregadio (magnésio da Marianinha): quase sem atrito nem controle.
+var slip_time := 0.0
+
+
+func slip(seconds: float, push: float) -> void:
+	slip_time = maxf(slip_time, seconds)
+	velocity.x += push
 
 
 ## Fica parado sem dano por um tempo (ex.: hipnose da Mestra Sucuri).

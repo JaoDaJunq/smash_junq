@@ -147,7 +147,7 @@ func _jab_damage(on_beat: bool) -> float:
 
 
 func _marianinha() -> void:
-	var m := me
+	var m := me as Marianinha
 	_check("Marianinha: 3 pulos no ar", m.air_jumps == 3, str(m.air_jumps))
 	# Quique: cai em cima da cabeça do outro e sobe de novo
 	await _face_off(0.0)
@@ -164,21 +164,68 @@ func _marianinha() -> void:
 			break
 	_check("Marianinha: quica na cabeça e recupera os pulos", bounced and m.jumps_left == 3 and foe.damage_percent > 0.0,
 		"quicou=%s pulos=%d dano=%.1f" % [bounced, m.jumps_left, foe.damage_percent])
-	# Sementes: no máximo 3 por pulo
-	await _place(m, Vector2(-200, -900))
+	# Fita: alcance longo e vários toques
+	await _face_off(140.0)
+	Input.action_press("p1_special")
+	m.start_special("neutral")
+	await _frames(5)
+	var started := "%s me=%s foe=%s %s hit=%s inv=%.2f" % [m.attack_id, m.global_position.round(), foe.global_position.round(), Fighter.State.keys()[foe.state], foe.can_be_hit(), foe.invincible_time]
+	await _frames(45)
+	Input.action_release("p1_special")
+	await _frames(30)
+	_check("Marianinha: fita acerta de longe várias vezes", foe.damage_percent >= 5.0, "%.1f%% (%s)" % [foe.damage_percent, started])
+	# Arco: no chão rola e volta
+	await _face_off(600.0)
 	foe.global_position = Vector2(3000, -3000)
-	var shots := 0
-	for i in 5:
-		m.global_position = Vector2(-200, -900)   # fica no ar (sem pousar)
-		m.velocity = Vector2.ZERO
-		var before := get_tree().get_nodes_in_group("match_cleanup").filter(func(n: Node) -> bool: return n is Projectile).size()
-		m.start_special("neutral")
-		await _frames(8)
-		var after := get_tree().get_nodes_in_group("match_cleanup").filter(func(n: Node) -> bool: return n is Projectile).size()
-		if after > before:
-			shots += 1
-		await _frames(22)
-	_check("Marianinha: até 3 sementes por pulo", shots == 3, str(shots))
+	m.start_special("side")
+	var far := 0.0
+	var back := false
+	for i in 200:
+		await get_tree().physics_frame
+		var ps := get_tree().get_nodes_in_group("match_cleanup").filter(func(n: Node) -> bool: return n is Projectile)
+		if not ps.is_empty():
+			far = maxf(far, absf((ps[0] as Node2D).global_position.x - m.global_position.x))
+		elif far > 100.0:
+			back = true
+			break
+	_check("Marianinha: arco vai e volta", back and far > 200.0, "%.0f px" % far)
+	# Cama elástica: fica no palco e lança quem pisar
+	await _face_off(400.0)
+	m.start_special("up")
+	await _frames(10)
+	var camas := get_tree().get_nodes_in_group("camas_elasticas")
+	_check("Marianinha: cama elástica no palco", camas.size() == 1, str(camas.size()))
+	if camas.size() == 1:
+		var cama := camas[0] as Node2D
+		await _frames(60)
+		foe.global_position = cama.global_position + Vector2(0, -Fighter.HEIGHT * 0.5 - 60)
+		foe.velocity = Vector2(0, 300)
+		foe.state = Fighter.State.AIR
+		var launched := false
+		for i in 30:
+			await get_tree().physics_frame
+			if foe.velocity.y < -900.0:
+				launched = true
+				break
+		_check("Marianinha: adversário que pisa na cama é lançado", launched, "%.0f" % foe.velocity.y)
+	await _frames(60)
+	# Magnésio: quem está perto escorrega
+	await _face_off(70.0)
+	m.start_special("down")
+	await _frames(20)
+	_check("Marianinha: magnésio faz escorregar", foe.slip_time > 0.5, "%.2f" % foe.slip_time)
+	# Nota dos jurados: golpes diferentes sobem a nota
+	m.score = Marianinha.NOTE_MIN
+	m._last_scored = ""
+	for mv in ["jab", "ftilt", "dtilt"]:
+		await _face_off()
+		m.start_attack(mv)
+		await _frames(45)
+	_check("Marianinha: 3 golpes diferentes = nota 10", m.score == 10 and m._perfect_ready, "nota %d" % m.score)
+	await _face_off()
+	m.start_attack("jab")
+	await _frames(45)
+	_check("Marianinha: nota 10 dá golpe turbinado", foe.damage_percent > 3.0, "%.1f%%" % foe.damage_percent)
 
 
 func _sucuri() -> void:
@@ -243,6 +290,8 @@ func _peba() -> void:
 
 
 func _face_off(gap := 70.0) -> void:
+	for n in get_tree().get_nodes_in_group("camas_elasticas") + get_tree().get_nodes_in_group("estandartes"):
+		n.queue_free()
 	await _place(me, Vector2(-200, -60), 1)
 	await _place(foe, Vector2(-200 + gap, -60), -1)
 	await _frames(20)
@@ -263,6 +312,7 @@ func _place(f: Fighter, pos: Vector2, face := 1) -> void:
 	f.state = Fighter.State.AIR
 	f.facing = face
 	f.visible = true
+	f.slip_time = 0.0
 	await _frames(2)
 
 
