@@ -9,7 +9,7 @@ Anexe em todo pedido: `art/concepts/onca/escolhido.png`, `art/pixel/onca/base.pn
 ## 0 · Base `base.png`
 
 ```text
-Sprite base do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho.
+Sprite base do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho.
 Uma imagem 1024x1024 com UM quadro de 64x64 pixels ampliado 16x. Pose: parada em guarda de braços meio abertos, patas com garras à mostra, queixo erguido, cara de quem manda, de perfil para a direita. Personagem com cerca de 54 pixels de altura; base 4 pixels acima da borda de baixo. Fundo magenta chapado #FF00FF. Sem anti-aliasing, contorno de 1 pixel #2A0F12, só as cores da paleta, sem chão, sem efeitos, sem texto.
 LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 Paleta da Dona Onça (use só estas cores):
@@ -29,7 +29,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `parado.png` (4 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
 Animação: Guarda de delegada (loop)
 Quadros:
 1) guarda, ombros largos · 2) respira, sobe um pouco · 3) inclina à frente encarando · 4) volta
@@ -60,7 +60,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `andar.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Andar pesado e confiante (loop)
 Quadros:
 1) a 6) passos firmes e lentos, ombros balançando, rabo acompanhando
@@ -91,7 +91,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `correr.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Correr (loop)
 Quadros:
 1) contato, corpo inclinado · 2) corpo baixo · 3) impulso, perna de trás esticada · 4) no ar · 5) contato da outra perna · 6) impulso
@@ -122,7 +122,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `pulo.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Pulo, queda e pouso
 Quadros:
 1) agachado preparando · 2) impulso saindo do chão · 3) subindo, pernas encolhidas · 4) topo · 5) caindo, braços para cima · 6) pouso agachado
@@ -153,7 +153,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `transicoes_a.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Virar e arrancar (duas animações na mesma folha)
 Quadros:
 VIRAR: 1) começando a girar o tronco · 2) de frente para a câmera no meio do giro · 3) de perfil para a direita de novo. ARRANCAR: 4) joga o peso para trás · 5) explode para a frente, corpo baixo · 6) primeira passada da corrida
@@ -184,7 +184,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `transicoes_b.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Frear e pouso (duas animações na mesma folha)
 Quadros:
 FREAR: 1) corpo jogado para trás, pés deslizando · 2) quase parando · 3) voltando à guarda. POUSO: 4) tocando o chão, joelhos dobrando · 5) agachado absorvendo · 6) levantando para a guarda
@@ -215,7 +215,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `defesa_esquiva.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Escudo e esquiva
 Quadros:
 ESCUDO: 1) encolhido, braços cruzados na frente do rosto · 2) mesma pose, olhos apertados. ESQUIVA: 3) se jogando de lado · 4) rolando encolhido · 5) saindo do rolamento · 6) levantando na guarda
@@ -246,7 +246,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `dor.png` (4 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
 Animação: Levando golpe
 Quadros:
 1) tranco para trás, olhos apertados · 2) corpo dobrado · 3) lançado de costas no ar · 4) lançado girando de cabeça para baixo
@@ -277,7 +277,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `jab.png` (3 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 3 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 3 quadros.
 Animação: Ataque básico 1: patada curta
 Quadros:
 1) pata recolhida · 2) patada à frente · 3) volta
@@ -308,7 +308,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `jab_b.png` (3 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 3 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 3 quadros.
 Animação: Ataque básico 2: outra patada
 Quadros:
 1) outra pata recolhida · 2) patada · 3) volta
@@ -339,7 +339,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `jab_c.png` (4 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
 Animação: Ataque básico 3: cabeçada
 Quadros:
 1) recua a cabeça · 2) avançando · 3) impacto: cabeça à frente · 4) volta
@@ -370,7 +370,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `golpe_frente.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Patada de varrer
 Quadros:
 1) pata erguida atrás · 2) avançando · 3) impacto: pata esticada à frente, garras abertas · 4) voltando · 5) guarda
@@ -403,7 +403,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `tonto.png` (4 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
 Animação: Tonto depois do escudo quebrar (loop)
 Quadros:
 1) cambaleando, olhos em espiral · 2) inclinado para um lado · 3) inclinado para o outro · 4) volta ao meio
@@ -434,7 +434,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `agarrar.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Agarrão e arremesso
 Quadros:
 1) estica as mãos à frente · 2) segurando algo invisível na altura do peito · 3) puxando para trás · 4) girando o corpo · 5) arremessando à frente · 6) guarda
@@ -465,7 +465,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `golpe_cima.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Rabada para cima
 Quadros:
 1) vira um pouco · 2) rabo subindo · 3) impacto: rabo esticado acima da cabeça · 4) descendo · 5) guarda
@@ -496,7 +496,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `golpe_baixo.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Patada rasteira
 Quadros:
 1) agacha · 2) pata varrendo · 3) impacto: pata rente ao chão à frente · 4) recolhendo · 5) levanta
@@ -527,7 +527,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `aereo_neutro.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Giro com garras
 Quadros:
 1) encolhida · 2) girando · 3) impacto: braços abertos com garras · 4) terminando · 5) encolhida
@@ -558,7 +558,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `aereo_frente.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Bote no ar
 Quadros:
 1) patas para trás · 2) avançando · 3) impacto: as duas patas à frente · 4) voltando · 5) recolhida
@@ -589,7 +589,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `aereo_tras.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Coice para trás
 Quadros:
 1) olhando para trás · 2) perna recolhida · 3) impacto: pé esticado para TRÁS (esquerda) · 4) voltando · 5) recolhida
@@ -620,7 +620,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `aereo_cima.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Mordida para cima
 Quadros:
 1) cabeça baixa · 2) subindo · 3) impacto: boca aberta mordendo para cima · 4) fechando · 5) recolhida
@@ -651,7 +651,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `aereo_baixo.png` (5 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 5 quadros.
 Animação: Pisão da onça
 Quadros:
 1) encolhida · 2) pés para baixo · 3) impacto: os dois pés juntos para baixo · 4) quicando · 5) recolhida
@@ -682,7 +682,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `especial_neutro.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Rugido
 Quadros:
 1) inspira, peito estufado · 2) cabeça para trás · 3) abrindo a boca · 4) impacto: rugindo com a boca enorme aberta à frente (sem onda desenhada) · 5) fechando · 6) volta
@@ -713,7 +713,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `especial_lado.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Patada carregada
 Quadros:
 1) agacha puxando a pata para trás · 2) carregando, corpo torcido · 3) avança · 4) impacto: patada enorme à frente, corpo esticado · 5) recuperando · 6) guarda
@@ -744,7 +744,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `especial_cima.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Salto da onça
 Quadros:
 1) agacha bem baixo · 2) impulso · 3) impacto: subindo esticada, garras para cima · 4) subindo · 5) topo · 6) abrindo os braços
@@ -775,7 +775,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `especial_baixo.png` (6 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 6 quadros.
 Animação: Batida do distintivo
 Quadros:
 1) tira o distintivo do cinto · 2) ergue acima da cabeça · 3) descendo · 4) impacto: agachada batendo o distintivo no chão · 5) levantando · 6) guarda
@@ -806,7 +806,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `pendurado.png` (2 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 2 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 2 quadros.
 Animação: Pendurada pela garra
 Quadros:
 1) pendurada por uma pata no alto do quadro (à direita) · 2) balançando. Sem desenhar a borda
@@ -837,7 +837,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `descanso.png` (4 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 4 quadros.
 Animação: Anotando no caderninho (loop)
 Quadros:
 1) caderninho na mão · 2) anotando · 3) olha por cima dos óculos · 4) volta
@@ -868,7 +868,7 @@ olhos: #5FB04A, pupila #1A1008
 ### `vitoria.png` (3 quadros)
 
 ```text
-Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 3 quadros.
+Folha de animação do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, 3 quadros.
 Animação: Comemoração (3 poses)
 Quadros:
 1) braços cruzados, satisfeita · 2) mostra o distintivo à frente · 3) pose final: ajeita os óculos escuros e sorri
@@ -901,11 +901,11 @@ olhos: #5FB04A, pupila #1A1008
 ### `retrato_onca.png`
 
 ```text
-Retrato em pixel art (busto) do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho. Virado em 3/4 olhando para a direita, sorriso de canto confiante por cima dos óculos escuros. Imagem 1024x1024, fundo magenta #FF00FF, busto ocupando o quadro, cortado reto embaixo. Pixel art de 128x128 ampliado 8x, contorno vinho-escuro, cel shading em 2 tons, sem anti-aliasing, sem texto. Mesmo estilo de art/ui/retrato_juba.png.
+Retrato em pixel art (busto) do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho. Virado em 3/4 olhando para a direita, sorriso de canto confiante por cima dos óculos escuros. Imagem 1024x1024, fundo magenta #FF00FF, busto ocupando o quadro, cortado reto embaixo. Pixel art de 128x128 ampliado 8x, contorno vinho-escuro, cel shading em 2 tons, sem anti-aliasing, sem texto. Mesmo estilo de art/ui/retrato_juba.png.
 ```
 
 ### `apresentacao_onca.png`
 
 ```text
-Arte de apresentação (splash art cartoon de jogo de luta) do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, calça escura, distintivo dourado no cinto, óculos escuros, caderninho, IGUAL ao concept anexado. Pose: mostrando o distintivo à frente com uma pata e a outra na cintura, óculos escuros, cara de quem já sabe de tudo. Virado em 3/4 para a DIREITA, corpo inteiro. Imagem 1024x1536, fundo magenta chapado #FF00FF, contorno vinho-escuro grosso, cel shading em 2-3 tons, bordas nítidas, sem sombra no chão, sem efeitos, sem texto. Mesmo estilo de art/ui/apresentacao_juba.png.
+Arte de apresentação (splash art cartoon de jogo de luta) do Dona Onça: onça-pintada humanizada, DELEGADA de bairro grandona e robusta (concept escolhido anexado): pelagem amarela com rosetas pretas, cabeça grande, mandíbula forte, olhos verdes, patas grandes, rabo grosso com ponta preta; blazer escuro fechado, camisa clara ABOTOADA até o pescoço (sem decote), calça escura, distintivo dourado no cinto, óculos escuros, caderninho, IGUAL ao concept anexado. Pose: mostrando o distintivo à frente com uma pata e a outra na cintura, óculos escuros, cara de quem já sabe de tudo. Virado em 3/4 para a DIREITA, corpo inteiro. Imagem 1024x1536, fundo magenta chapado #FF00FF, contorno vinho-escuro grosso, cel shading em 2-3 tons, bordas nítidas, sem sombra no chão, sem efeitos, sem texto. Mesmo estilo de art/ui/apresentacao_juba.png.
 ```
