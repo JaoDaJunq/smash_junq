@@ -1,6 +1,6 @@
 # Dona Onça
 
-> **Proposta aprovada em conceito pelo João (21/10/2026, rodada 10).** Ficha para os 4 concept arts; o João escolhe 1 antes dos sprites.
+> **Aprovado (22/10/2026).** Concept escolhido: **2 · delegada** (`art/concepts/onca/escolhido.png`). A ficha foi ajustada à direção escolhida.
 
 | | |
 |---|---|
@@ -8,14 +8,14 @@
 | **Nome** | **Dona Onça** |
 | **Bicho** | onça-pintada (*Panthera onca*): o maior felino das Américas, forte e atarracado, pelagem amarela com rosetas pretas, cabeça grande e mandíbula poderosa |
 | **Grupo · Tipo** | Felinos · **Pesado** |
-| **Profissão / papel** | **Síndica do prédio**: manda em tudo, conhece todo mundo, aplica multa por qualquer coisa |
+| **Profissão / papel** | **Delegada do bairro**: conhece todo mundo, anota tudo no caderninho e não deixa passar nada |
 | **Personalidade** | Mandona, dramática, ciumenta do condomínio, mas protege os moradores |
-| **Acessório de assinatura** | **Roupão, bobes no cabelo e prancheta** com caneta |
+| **Acessório de assinatura** | **Blazer escuro, distintivo dourado no cinto, óculos escuros e caderninho** |
 | **Cores** | pelagem amarela `#E5A63A` com rosetas pretas, roupão rosa-chá `#E8A0B0`, bobes azuis · contorno vinho `#2a0f12` |
-| **Mecânica própria** | **Multa!**: cada patada carimba uma multa no adversário; na 3ª multa o próximo golpe dela cobra tudo com juros (dano extra e lançamento enorme) |
+| **Mecânica própria** | **Ficha corrida**: cada patada anota uma ficha no adversário (um carimbo aparece nele); na 3ª, o próximo golpe dela é a **voz de prisão**: dano extra e lançamento enorme |
 
-## Especiais (ideia)
-Neutro: rugido que faz o adversário recuar · Lado: patada carregada · Cima: salto da onça (recuperação) · Baixo: "reunião de condomínio", bate a prancheta no chão (onda curta)
+## Especiais
+Neutro: **rugido** que faz o adversário recuar · Lado: **patada carregada** · Cima: **salto da onça** (recuperação) · Baixo: **batida do distintivo** no chão (onda curta)
 
 ## 4 direções de concept
 1. **sindica**: Direção síndica: roupão rosa-chá amarrado (comportado), bobes no cabelo, chinelo de pelúcia, prancheta e caneta, óculos de leitura na correntinha. Pose: apontando a caneta, aplicando uma multa.

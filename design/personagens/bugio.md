@@ -1,6 +1,6 @@
 # Berrante
 
-> **Proposta aprovada em conceito pelo João (21/10/2026, rodada 10).** Ficha para os 4 concept arts; o João escolhe 1 antes dos sprites.
+> **Aprovado (22/10/2026).** Concept escolhido: **2 · radialista** (`art/concepts/bugio/escolhido.png`). A ficha foi ajustada à direção escolhida.
 
 | | |
 |---|---|
@@ -8,14 +8,14 @@
 | **Nome** | **Berrante** |
 | **Bicho** | bugio (bugio-ruivo, *Alouatta guariba*): macaco grande de pelo ruivo-avermelhado, barba cheia, papo inchado (o osso da garganta que faz o berro), rabo comprido que segura nas coisas |
 | **Grupo · Tipo** | Macacos · **Forte** |
-| **Profissão / papel** | **Locutor de carro de som** da cidade: anuncia promoção do mercado, festa e comício. Fala alto, sempre |
+| **Profissão / papel** | **Radialista de rádio AM** e locutor de rua: fone de ouvido no pescoço, microfone na mão e megafone para quando o rádio não basta |
 | **Personalidade** | Escandaloso, simpático, fofoqueiro. Não sabe falar baixo |
-| **Acessório de assinatura** | **Megafone** pendurado no peito e caixa de som no ombro |
+| **Acessório de assinatura** | **Fone de ouvido grande, óculos escuros, camisa estampada de folhas com suspensório** e microfone/megafone |
 | **Cores** | pelo ruivo `#B5432A`, barba ruiva escura `#7A2A1A`, rosto preto `#2A1A14` · contorno vinho `#2a0f12` |
 | **Mecânica própria** | **Volume**: cada berro enche a barra de volume e deixa os golpes mais fortes; no máximo ele fica **rouco** e perde o berro por uns segundos |
 
-## Especiais (ideia)
-Neutro: berro em onda que empurra · Lado: investida com megafone · Cima: berro para baixo que o impulsiona (recuperação) · Baixo: "teste do som", quem está perto pula de susto
+## Especiais
+Neutro: **berro em onda** que empurra · Lado: **investida com megafone** · Cima: berro para baixo que o impulsiona (recuperação) · Baixo: **"teste do som"**, quem está perto pula de susto
 
 ## 4 direções de concept
 1. **locutor**: Direção locutor de carro de som: camisa social de botão aberta no peito, calça de tergal, sapato social, megafone no peito, caixa de som no ombro. Pose: anunciando no megafone, braço aberto para a plateia.

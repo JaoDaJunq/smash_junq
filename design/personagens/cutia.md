@@ -1,6 +1,6 @@
 # Cutia Ligeira
 
-> **Proposta aprovada em conceito pelo João (21/10/2026, rodada 10).** Ficha para os 4 concept arts; o João escolhe 1 antes dos sprites.
+> **Aprovado (22/10/2026).** Concept escolhido: **2 · feirante** (`art/concepts/cutia/escolhido.png`). A ficha foi ajustada à direção escolhida.
 
 | | |
 |---|---|
@@ -8,14 +8,14 @@
 | **Nome** | **Cutia Ligeira** |
 | **Bicho** | cutia (*Dasyprocta*): roedor de pernas finas e compridas, pelo dourado-alaranjado, bumbum arredondado, orelhas pequenas e redondas, quase sem rabo. Famosa por **enterrar castanhas** e espalhar sementes da floresta |
 | **Grupo · Tipo** | Roedores · **Rápido** |
-| **Profissão / papel** | **Entregadora de app de bicicleta**: faz entrega na cidade inteira, sempre correndo contra o relógio |
+| **Profissão / papel** | **Vendedora de castanha na feira**: corre a feira inteira com o carrinho e o avental cheio de castanhas |
 | **Personalidade** | Elétrica, apressada, esperta. Fala rápido e já está indo embora |
-| **Acessório de assinatura** | **Mochila térmica de entrega** nas costas e capacete de bike |
+| **Acessório de assinatura** | **Lenço estampado de folhas na cabeça, avental verde com bolsos cheios de castanha** e saquinho de papel |
 | **Cores** | pelo dourado-alaranjado `#D98A3A`, barriga creme `#F2D8A8`, mochila azul-turquesa `#1FA3A8` · contorno vinho `#2a0f12` |
 | **Mecânica própria** | **Esconde castanha**: enterra castanhas no palco; viram armadilhas que estouram quando o adversário pisa, e ela pode desenterrar para arremessar |
 
-## Especiais (ideia)
-Neutro: joga a encomenda (caixa que quica) · Lado: entrega expressa de bike atropelando · Cima: pedalada no ar (recuperação) · Baixo: enterra castanha
+## Especiais
+Neutro: **saquinho de castanha** arremessado (quica) · Lado: **carrinhada** (investida empurrando o carrinho de mão) · Cima: **pulo de cutia** (recuperação) · Baixo: **enterra castanha**
 
 ## 4 direções de concept
 1. **entregadora**: Direção entregadora de app: capacete de bike, mochila térmica azul-turquesa nas costas, jaqueta corta-vento, bermuda de ciclista até o joelho, tênis, celular preso no braço. Pose: chegando apressada com uma caixa na mão.
