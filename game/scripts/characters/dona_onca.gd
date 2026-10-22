@@ -43,7 +43,7 @@ func set_ficha(f: Fighter, n: int) -> void:
 
 
 func _on_attack_frame(move_id: String, frame: int) -> void:
-	if frame == 0:
+	if frame == 1:
 		_boosted_target = null
 		# Alguém com ficha cheia: este golpe vira a voz de prisão.
 		for f in fichas:

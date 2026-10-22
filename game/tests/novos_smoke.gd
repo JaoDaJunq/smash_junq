@@ -39,6 +39,7 @@ func _ready() -> void:
 			"sucuri": await _sucuri()
 			"tatu_peba": await _peba()
 			"tucano": await _tucao()
+			"onca": await _onca()
 		_match.queue_free()
 		await _frames(5)
 	print("\n".join(results))
@@ -320,6 +321,31 @@ func _tucao() -> void:
 	me.start_special("up")
 	await _frames(20)
 	_check("Tucão: voo de bico sobe", me.global_position.y < y0 - 120.0, "%.0f px" % (y0 - me.global_position.y))
+
+
+func _onca() -> void:
+	var o := me as DonaOnca
+	# Ficha corrida: patada carimba ficha
+	await _face_off()
+	o.set_ficha(foe, 0)
+	me.start_attack("ftilt")
+	await _frames(40)
+	var normal := foe.damage_percent
+	_check("Onça: patada carimba ficha", o.ficha_de(foe) == 1, str(o.ficha_de(foe)))
+	# Com 3 fichas, a voz de prisão bate mais forte e zera
+	await _face_off()
+	o.set_ficha(foe, 3)
+	me.start_attack("ftilt")
+	await _frames(40)
+	_check("Onça: voz de prisão bate mais forte e zera a ficha", foe.damage_percent > normal * 1.3 and o.ficha_de(foe) == 0,
+		"%.1f x %.1f, ficha %d" % [foe.damage_percent, normal, o.ficha_de(foe)])
+	# Rugido empurra para trás
+	await _face_off(150.0)
+	var x0 := foe.global_position.x
+	me.start_special("neutral")
+	await _frames(40)
+	_check("Onça: rugido empurra", foe.global_position.x > x0 + 60.0, "%.0f px" % (foe.global_position.x - x0))
+	o.set_ficha(foe, 0)
 
 
 func _face_off(gap := 70.0) -> void:

@@ -80,6 +80,14 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "tucano",
 		"stats": {"Velocidade": 3, "Força": 5, "Peso": 4, "Volta ao palco": 3},
 	},
+	{
+		"name": "Dona Onça",
+		"scene": "res://scenes/characters/dona_onca.tscn",
+		"desc": "Onça-pintada delegada do bairro. Pesada e implacável:\ncada patada vai pra ficha, na 3ª é voz de prisão.",
+		"weight": "Pesado",
+		"id": "onca",
+		"stats": {"Velocidade": 3, "Força": 5, "Peso": 5, "Volta ao palco": 2},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam
