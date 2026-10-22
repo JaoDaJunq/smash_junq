@@ -14,8 +14,8 @@
 | **Cores** | pelo cinza-amarronzado `#8A7A62`, máscara escura nos olhos `#3A2E22`, camisa bege de fiscal `#C9B98A` · contorno vinho `#2a0f12` |
 | **Mecânica própria** | **Moleza**: cria uma bolha de câmera lenta onde todo mundo (e os projéteis) fica lento, menos ele; se ninguém bate, cochila e recupera dano devagar |
 
-## Especiais
-Neutro: **bolha de moleza** · Lado: **abraço lento que puxa** · Cima: **pendura no galho** invisível e sobe (recuperação) · Baixo: **cochilo** que cura
+## Especiais (revisados 22/10, design/revisao/novos_personagens.md)
+Neutro: **bolha de moleza** (câmera lenta) · Lado: **carona** (gruda nas costas do adversário e deixa ele lento) · Cima: **pendura no galho** · Baixo: **hora do cafezinho** (cura enquanto bebe)
 
 ## 4 direções de concept
 1. **fiscal**: Direção fiscal da prefeitura: camisa bege de manga curta com bolso, crachá no pescoço, calça social, prancheta, garrafa térmica de café. Pose: anotando uma multa bem devagar, bocejando.

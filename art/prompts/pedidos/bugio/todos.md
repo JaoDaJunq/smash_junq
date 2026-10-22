@@ -714,9 +714,9 @@ boca: #C0303A, dentes #FAF6EE
 
 ```text
 Folha de animação do Berrante: bugio-ruivo humanizado, RADIALISTA grandalhão (concept escolhido anexado): pelo ruivo-avermelhado volumoso, barba ruiva cheia e papo inchado na garganta, rosto e mãos marrom-escuros, braços longos, rabo comprido enrolado em espiral; fone de ouvido preto e dourado, óculos escuros, camisa creme estampada de folhas verdes e laranja, suspensório marrom, calça verde-oliva dobrada, pés descalços, 6 quadros.
-Animação: Investida com megafone
+Animação: Fio do microfone (gira o microfone pelo fio e lança à frente)
 Quadros:
-1) puxa o megafone · 2) agacha · 3) impulso · 4) impacto: corpo esticado à frente, megafone na frente · 5) freando · 6) guarda
+1) segura o microfone pelo fio · 2) gira o microfone pelo fio acima da cabeça · 3) girando, corpo inclinado · 4) impacto: braço esticado à frente LANÇANDO, o microfone já saiu da mão (o fio esticado e o microfone voando NÃO aparecem: o jogo desenha) · 5) puxando o fio de volta · 6) pega o microfone, guarda
 
 Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Imagem 1536x1024 com grade de 3 colunas x 2 linhas. Cada célula tem 512x512 e contém UM quadro de 64x64 pixels ampliado 8x (cada pixel vira um quadrado de 8x8). Quadros em ordem da esquerda para a direita, de cima para baixo. Células que sobrarem ficam só com o fundo.

@@ -737,9 +737,9 @@ olhos: #1A1008
 
 ```text
 Folha de animação do Seu Preguiçoso: bicho-preguiça-de-três-dedos humanizado, FISCAL da prefeitura gordinho e sonolento (concept escolhido anexado): pelo marrom-acinzentado desgrenhado, máscara escura em volta dos olhos, focinho escuro pequeno, olhos sempre meio fechados, braços compridos com três garras grandes creme; camisa bege de manga curta com bolso, crachá no pescoço, cinto, calça verde-oliva, botina marrom, prancheta, 6 quadros.
-Animação: Abraço lento
+Animação: Carona (gruda nas costas de alguém)
 Quadros:
-1) braços abertos para trás · 2) inclinando à frente · 3) braços vindo · 4) impacto: braços compridos fechando à frente num abraço · 5) puxando para si · 6) guarda
+1) estica as garras à frente devagar · 2) inclina pegando algo · 3) pula para a frente · 4) impacto: agarrado nas costas de alguém INVISÍVEL, abraçando no ar, pernas encolhidas · 5) dá um tapinha de leve, ainda agarrado · 6) solta e volta à guarda
 
 Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Imagem 1536x1024 com grade de 3 colunas x 2 linhas. Cada célula tem 512x512 e contém UM quadro de 64x64 pixels ampliado 8x (cada pixel vira um quadrado de 8x8). Quadros em ordem da esquerda para a direita, de cima para baixo. Células que sobrarem ficam só com o fundo.
@@ -801,9 +801,9 @@ olhos: #1A1008
 
 ```text
 Folha de animação do Seu Preguiçoso: bicho-preguiça-de-três-dedos humanizado, FISCAL da prefeitura gordinho e sonolento (concept escolhido anexado): pelo marrom-acinzentado desgrenhado, máscara escura em volta dos olhos, focinho escuro pequeno, olhos sempre meio fechados, braços compridos com três garras grandes creme; camisa bege de manga curta com bolso, crachá no pescoço, cinto, calça verde-oliva, botina marrom, prancheta, 6 quadros.
-Animação: Cochilo
+Animação: Hora do cafezinho
 Quadros:
-1) boceja · 2) senta no chão · 3) deita de lado · 4) impacto: dormindo de olhos fechados, sorrindo · 5) acordando · 6) levanta em guarda
+1) senta no chão devagar · 2) tira a garrafa térmica · 3) serve na tampa · 4) impacto: bebendo de olhos fechados, satisfeito · 5) suspira · 6) levanta em guarda
 
 Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Imagem 1536x1024 com grade de 3 colunas x 2 linhas. Cada célula tem 512x512 e contém UM quadro de 64x64 pixels ampliado 8x (cada pixel vira um quadrado de 8x8). Quadros em ordem da esquerda para a direita, de cima para baixo. Células que sobrarem ficam só com o fundo.

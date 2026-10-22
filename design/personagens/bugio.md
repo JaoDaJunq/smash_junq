@@ -14,8 +14,8 @@
 | **Cores** | pelo ruivo `#B5432A`, barba ruiva escura `#7A2A1A`, rosto preto `#2A1A14` · contorno vinho `#2a0f12` |
 | **Mecânica própria** | **Volume**: cada berro enche a barra de volume e deixa os golpes mais fortes; no máximo ele fica **rouco** e perde o berro por uns segundos |
 
-## Especiais
-Neutro: **berro em onda** que empurra · Lado: **investida com megafone** · Cima: berro para baixo que o impulsiona (recuperação) · Baixo: **"teste do som"**, quem está perto pula de susto
+## Especiais (revisados 22/10, design/revisao/novos_personagens.md)
+Lado: **fio do microfone** (gira e lança; no ar, pendura na borda) · Cima: berro para baixo (altura = volume) · Baixo: **teste do som** sem dano (todo mundo perto pula de susto, acorda e solta hipnose) · Neutro: berro em onda (cresce com o volume)
 
 ## 4 direções de concept
 1. **locutor**: Direção locutor de carro de som: camisa social de botão aberta no peito, calça de tergal, sapato social, megafone no peito, caixa de som no ombro. Pose: anunciando no megafone, braço aberto para a plateia.
