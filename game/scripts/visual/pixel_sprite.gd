@@ -212,8 +212,9 @@ func set_mood(face: String, seconds := 1.5) -> void:
 ## Pixel opaco mais alto do 1º quadro (a ponta dos dedos de quem está pendurado).
 func _top_pixel(tex: Texture2D) -> Vector2:
 	var img := tex.get_image()
+	var fw := img.get_width() / maxi(1, int(_counts.get("pendurado", 1)))
 	for y in NATIVE:
-		for x in NATIVE:
+		for x in fw:
 			if img.get_pixel(x, y).a > 0.5:
 				return Vector2(x + 0.5, y)
 	return Vector2(-1, -1)

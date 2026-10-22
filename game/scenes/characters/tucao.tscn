@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/tucao.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/tucao.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/visual/pixel_sprite.gd" id="9_visual"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 30.0
+height = 116.0
+
+[node name="Tucao" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Tucão"
+moveset = ExtResource("2_moves")
+weight = 112.0
+walk_speed = 300.0
+run_speed = 520.0
+air_speed = 390.0
+gravity = 2600.0
+jump_velocity = 1000.0
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("9_visual")
+folder = "res://assets/characters/tucano/pixel"
+center_x = 40.0

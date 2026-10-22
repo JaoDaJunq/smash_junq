@@ -19,6 +19,11 @@ extends SceneTree
 ## Ajustes por folha (quadros a usar, quando a IA errou a grade) ficam em SELECAO.
 
 const NATIVE := 64
+## Personagens com quadros mais largos que 64 (bico/cauda que passa da célula):
+## margem extra de cada lado. As folhas dele vêm de tools/recentrar_folha.py --margem N
+## (3 células de 64+2N). No jogo, center_x da cena = 32 + N.
+const MARGEM := {"tucano": 8, "onca": 10}
+var FW := NATIVE  # largura do quadro nativo deste personagem
 const BASELINE := 59
 ## Pedaço solto com até este número de pixels (separado do personagem) é migalha
 ## da célula vizinha ou da redução de escala e é apagado. Objetos de propósito
@@ -55,6 +60,7 @@ const IMPACTO := {
 
 func _initialize() -> void:
 	var who: String = OS.get_cmdline_user_args()[0]
+	FW = NATIVE + 2 * int(MARGEM.get(who, 0))
 	var src := ProjectSettings.globalize_path("res://").path_join("../art/pixel").path_join(who)
 	var dst := ProjectSettings.globalize_path("res://assets/characters").path_join(who).path_join("pixel")
 	DirAccess.make_dir_recursive_absolute(dst)
@@ -129,7 +135,7 @@ func _initialize() -> void:
 func _read(path: String, pick: Array) -> Array[Image]:
 	var sheet := Image.load_from_file(path)
 	sheet.convert(Image.FORMAT_RGBA8)
-	var scale := sheet.get_width() / (NATIVE * 3)
+	var scale := sheet.get_width() / (FW * 3)
 	var frames: Array[Image] = []
 	for r in sheet.get_height() / (NATIVE * scale):
 		for c in 3:
@@ -176,8 +182,8 @@ func _between(a: Image, b: Image, mid: Image) -> Array:
 
 
 func _moved(f: Image, d: Vector2i) -> Image:
-	var out := Image.create(NATIVE, NATIVE, false, Image.FORMAT_RGBA8)
-	out.blit_rect(f, Rect2i(0, 0, NATIVE, NATIVE), d)
+	var out := Image.create(FW, NATIVE, false, Image.FORMAT_RGBA8)
+	out.blit_rect(f, Rect2i(0, 0, FW, NATIVE), d)
 	return out
 
 
@@ -185,7 +191,7 @@ func _centroid(img: Image) -> Vector2:
 	var sum := Vector2.ZERO
 	var n := 0
 	for y in NATIVE:
-		for x in NATIVE:
+		for x in FW:
 			if img.get_pixel(x, y).a > 0.5:
 				sum += Vector2(x, y)
 				n += 1
@@ -194,9 +200,9 @@ func _centroid(img: Image) -> Vector2:
 func _save(dst: String, anim: String, frames: Array[Image], factor: int, meta: Dictionary, who: String) -> void:
 	if frames.is_empty():
 		return
-	var strip := Image.create(NATIVE * frames.size(), NATIVE, false, Image.FORMAT_RGBA8)
+	var strip := Image.create(FW * frames.size(), NATIVE, false, Image.FORMAT_RGBA8)
 	for i in frames.size():
-		strip.blit_rect(frames[i], Rect2i(0, 0, NATIVE, NATIVE), Vector2i(i * NATIVE, 0))
+		strip.blit_rect(frames[i], Rect2i(0, 0, FW, NATIVE), Vector2i(i * FW, 0))
 	strip.save_png(dst.path_join(anim + ".png"))
 	var n0 := frames.size() if factor == 1 else (frames.size() + 1) / 2
 	var impact: int = IMPACTO.get(who, {}).get(anim, 1 if n0 <= 3 else (2 if n0 <= 5 else 3))
@@ -208,35 +214,35 @@ func _save(dst: String, anim: String, frames: Array[Image], factor: int, meta: D
 ## (descarta fatias de quadros vizinhos que invadiram a célula).
 func _widest_block(img: Image) -> Image:
 	var used := []
-	for x in NATIVE:
+	for x in FW:
 		var any := false
 		for y in NATIVE:
 			if img.get_pixel(x, y).a > 0.5:
 				any = true
 				break
 		used.append(any)
-	var best := Vector2i(0, NATIVE)
+	var best := Vector2i(0, FW)
 	var start := -1
-	for x in NATIVE + 1:
-		var on: bool = x < NATIVE and used[x]
+	for x in FW + 1:
+		var on: bool = x < FW and used[x]
 		if on and start < 0:
 			start = x
 		elif not on and start >= 0:
-			if x - start > best.y - best.x or best == Vector2i(0, NATIVE):
+			if x - start > best.y - best.x or best == Vector2i(0, FW):
 				best = Vector2i(start, x)
 			start = -1
-	var out := Image.create(NATIVE, NATIVE, false, Image.FORMAT_RGBA8)
+	var out := Image.create(FW, NATIVE, false, Image.FORMAT_RGBA8)
 	out.blit_rect(img, Rect2i(best.x, 0, best.y - best.x, NATIVE), Vector2i(best.x, 0))
 	return out
 
 
 ## Um quadro nativo 64x64 (ou null se a célula está vazia ou só tem sujeira).
 func _cell(sheet: Image, col: int, row: int, scale: int) -> Image:
-	var img := Image.create(NATIVE, NATIVE, false, Image.FORMAT_RGBA8)
+	var img := Image.create(FW, NATIVE, false, Image.FORMAT_RGBA8)
 	var count := 0
 	for y in NATIVE:
-		for x in NATIVE:
-			var c := sheet.get_pixel((col * NATIVE + x) * scale + scale / 2, (row * NATIVE + y) * scale + scale / 2)
+		for x in FW:
+			var c := sheet.get_pixel((col * FW + x) * scale + scale / 2, (row * NATIVE + y) * scale + scale / 2)
 			if c.r > 0.85 and c.b > 0.85 and c.g < 0.2:
 				continue
 			# franja do fundo (magenta misturado na borda do desenho): também é fundo.
@@ -254,7 +260,7 @@ func _cell(sheet: Image, col: int, row: int, scale: int) -> Image:
 
 func _bottom(img: Image) -> int:
 	for y in range(NATIVE - 1, -1, -1):
-		for x in NATIVE:
+		for x in FW:
 			if img.get_pixel(x, y).a > 0.5:
 				return y
 	return 0
@@ -276,7 +282,7 @@ func _scale_drift(frames: Array[Image], mids: Array[Image]) -> String:
 func _area(img: Image) -> int:
 	var n := 0
 	for y in NATIVE:
-		for x in NATIVE:
+		for x in FW:
 			if img.get_pixel(x, y).a > 0.5:
 				n += 1
 	return n
@@ -304,7 +310,7 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 	var seen := {}
 	var parts := []
 	for y in NATIVE:
-		for x in NATIVE:
+		for x in FW:
 			var start := Vector2i(x, y)
 			if seen.has(start) or img.get_pixel(x, y).a < 0.5:
 				continue
@@ -317,7 +323,7 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 				for dy in [-1, 0, 1]:
 					for dx in [-1, 0, 1]:
 						var q := p + Vector2i(dx, dy)
-						if q.x < 0 or q.y < 0 or q.x >= NATIVE or q.y >= NATIVE or seen.has(q):
+						if q.x < 0 or q.y < 0 or q.x >= FW or q.y >= NATIVE or seen.has(q):
 							continue
 						if img.get_pixel(q.x, q.y).a < 0.5:
 							continue
@@ -326,7 +332,7 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 			parts.append(comp)
 	parts.sort_custom(func(a, b) -> bool: return a.size() > b.size())
 	for comp in parts.slice(1):
-		var lo := Vector2i(NATIVE, NATIVE)
+		var lo := Vector2i(FW, NATIVE)
 		var hi := Vector2i(-1, -1)
 		for p in comp:
 			lo = lo.min(p)
@@ -334,7 +340,7 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 		var w := hi.x - lo.x + 1
 		var h := hi.y - lo.y + 1
 		# Detalhe fino colado no corpo (palito do Maracajá, bigode): fica.
-		if comp.size() <= MIGALHA and _near_body(comp, parts[0], 2) and lo.x > 0 and hi.x < NATIVE - 1:
+		if comp.size() <= MIGALHA and _near_body(comp, parts[0], 2) and lo.x > 0 and hi.x < FW - 1:
 			continue
 		if comp.size() <= MIGALHA:
 			for p in comp:
@@ -343,12 +349,12 @@ func _clean_slivers(img: Image, sheet_name: String, index: int) -> Image:
 			continue
 		# Pedaço solto encostado na lateral da célula: é do quadro vizinho
 		# (ex.: ponta da cauda do Maracajá entrando no quadro ao lado).
-		if (lo.x <= 0 or hi.x >= NATIVE - 1) and comp.size() * 8 < parts[0].size():
+		if (lo.x <= 0 or hi.x >= FW - 1) and comp.size() * 8 < parts[0].size():
 			for p in comp:
 				img.set_pixel(p.x, p.y, Color(0, 0, 0, 0))
 			print("  limpo: %s, célula %d, pedaço do vizinho de %d px na borda (x=%d)" % [sheet_name, index + 1, comp.size(), lo.x])
 			continue
-		if w <= 2 and h >= 3 and (lo.x <= 5 or hi.x >= NATIVE - 6):
+		if w <= 2 and h >= 3 and (lo.x <= 5 or hi.x >= FW - 6):
 			var avg := Color(0, 0, 0, 0)
 			for p in comp:
 				avg += img.get_pixel(p.x, p.y) / comp.size()

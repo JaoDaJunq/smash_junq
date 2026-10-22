@@ -27,7 +27,7 @@ const GROUPS: Array[Dictionary] = [
 	{"name": "Aves", "color": Color("e8503a"), "slots": [
 		{"name": "Beija", "animal": "beija-flor", "char": -1},
 		{"name": "Dona Canga", "animal": "arara-vermelha", "char": 3},
-		{"name": "Tucão", "animal": "tucano", "char": -1},
+		{"name": "Tucão", "animal": "tucano", "char": 7},
 		{"name": "Marianinha", "animal": "marianinha-de-cabeça-amarela", "char": 4},
 	]},
 	{"name": "Répteis", "color": Color("6fbf4a"), "slots": [

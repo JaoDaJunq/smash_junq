@@ -71,6 +71,15 @@ const CHARACTERS: Array[Dictionary] = [
 		"id": "tatu_peba",
 		"stats": {"Velocidade": 3, "Força": 3, "Peso": 4, "Volta ao palco": 3},
 	},
+	{
+		"name": "Tucão",
+		"scene": "res://scenes/characters/tucao.tscn",
+		"desc": "Tucano pipoqueiro do estádio. Forte e cabeçudo:
+de bico ninguém interrompe, aguenta o tranco e bate.",
+		"weight": "Pesado",
+		"id": "tucano",
+		"stats": {"Velocidade": 3, "Força": 5, "Peso": 4, "Volta ao palco": 3},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

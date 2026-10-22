@@ -18,7 +18,7 @@ func _ready() -> void:
 	Game.mode = "training"
 	Game.arena_index = 0
 	var only := OS.get_cmdline_user_args()
-	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba"]:
+	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba", "tucano", "onca"]:
 		if not only.is_empty() and id not in only:
 			continue
 		var idx := -1
@@ -38,6 +38,7 @@ func _ready() -> void:
 			"marianinha": await _marianinha()
 			"sucuri": await _sucuri()
 			"tatu_peba": await _peba()
+			"tucano": await _tucao()
 		_match.queue_free()
 		await _frames(5)
 	print("\n".join(results))
@@ -287,6 +288,38 @@ func _peba() -> void:
 	await _frames(60)
 	_check("Peba: toca reaparece mais à frente, no chão", me.global_position.x > x0 + 120.0 and me.is_on_floor() and me.visible,
 		"%.0f px, chão=%s" % [me.global_position.x - x0, me.is_on_floor()])
+
+
+func _tucao() -> void:
+	# Bico blindado: apanha durante a bicada forte, mas não é interrompido
+	await _face_off(70.0)
+	me.start_attack("ftilt")
+	await _frames(1)
+	foe.facing = -1
+	foe.start_attack("jab")
+	await _frames(6)
+	_check("Tucão: bico blindado aguenta o golpe sem parar", me.damage_percent > 0.0 and me.attack_id == "ftilt",
+		"dano %.1f, golpe=%s" % [me.damage_percent, me.attack_id])
+	# Fora do bico, apanha normal
+	await _face_off()
+	foe.start_attack("ftilt")
+	await _frames(20)
+	_check("Tucão: fora do bico apanha normal", me.state == Fighter.State.HITSTUN or me.damage_percent > 0.0, Fighter.State.keys()[me.state])
+	# Pipoca: 3 pipocas em leque
+	await _face_off(400.0)
+	me.start_special("neutral")
+	await _frames(16)
+	var n := 0
+	for c in _match.find_children("*", "Projectile", true, false):
+		if c.owner_fighter == me:
+			n += 1
+	_check("Tucão: punhado solta 3 pipocas", n == 3, str(n))
+	# Voo de bico sobe
+	await _face_off(400.0)
+	var y0 := me.global_position.y
+	me.start_special("up")
+	await _frames(20)
+	_check("Tucão: voo de bico sobe", me.global_position.y < y0 - 120.0, "%.0f px" % (y0 - me.global_position.y))
 
 
 func _face_off(gap := 70.0) -> void:
