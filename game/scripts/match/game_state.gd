@@ -88,6 +88,14 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "onca",
 		"stats": {"Velocidade": 3, "Força": 5, "Peso": 5, "Volta ao palco": 2},
 	},
+	{
+		"name": "Cutia Ligeira",
+		"scene": "res://scenes/characters/cutia.tscn",
+		"desc": "Cutia vendedora de castanha da feira. Rápida e esperta:\nenterra castanhas que estouram em quem pisar.",
+		"weight": "Leve",
+		"id": "cutia",
+		"stats": {"Velocidade": 5, "Força": 2, "Peso": 2, "Volta ao palco": 4},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

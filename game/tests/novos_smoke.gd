@@ -18,7 +18,7 @@ func _ready() -> void:
 	Game.mode = "training"
 	Game.arena_index = 0
 	var only := OS.get_cmdline_user_args()
-	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba", "tucano", "onca"]:
+	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba", "tucano", "onca", "cutia", "calango"]:
 		if not only.is_empty() and id not in only:
 			continue
 		var idx := -1
@@ -40,6 +40,7 @@ func _ready() -> void:
 			"tatu_peba": await _peba()
 			"tucano": await _tucao()
 			"onca": await _onca()
+			"cutia": await _cutia()
 		_match.queue_free()
 		await _frames(5)
 	print("\n".join(results))
@@ -346,6 +347,29 @@ func _onca() -> void:
 	await _frames(40)
 	_check("Onça: rugido empurra", foe.global_position.x > x0 + 60.0, "%.0f px" % (foe.global_position.x - x0))
 	o.set_ficha(foe, 0)
+
+
+func _cutia() -> void:
+	# Enterra castanha: vira armadilha que estoura quando o adversário pisa
+	await _face_off(400.0)
+	me.start_special("down")
+	await _frames(40)
+	var n := get_tree().get_nodes_in_group("castanhas_enterradas").size()
+	_check("Cutia: enterra castanha", n == 1, str(n))
+	await _frames(30)
+	var trap: Node2D = get_tree().get_nodes_in_group("castanhas_enterradas")[0] if n > 0 else null
+	if trap != null:
+		await _place(foe, Vector2(trap.global_position.x, -60), -1)
+		await _frames(25)
+		_check("Cutia: castanha estoura em quem pisa", foe.damage_percent > 0.0 and get_tree().get_nodes_in_group("castanhas_enterradas").is_empty(),
+			"%.1f%%" % foe.damage_percent)
+	# Saquinho voa em arco e acerta de longe
+	await _face_off(260.0)
+	me.start_special("neutral")
+	await _frames(60)
+	_check("Cutia: saquinho acerta de longe", foe.damage_percent > 0.0, "%.1f%%" % foe.damage_percent)
+	for c in get_tree().get_nodes_in_group("castanhas_enterradas"):
+		c.queue_free()
 
 
 func _face_off(gap := 70.0) -> void:

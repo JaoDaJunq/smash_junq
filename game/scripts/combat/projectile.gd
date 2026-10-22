@@ -18,6 +18,9 @@ var _age := 0.0
 ## Bumerangue: depois deste tempo (s) volta para o dono e some ao chegar (-1 = não volta).
 var return_after := -1.0
 var _flight := 0.0
+## Arco: gravidade (px/s²) e quiques no chão/plataforma antes de sumir (0 = linha reta).
+var gravity := 0.0
+var bounces := 0
 var _return_speed := 0.0
 
 
@@ -66,6 +69,21 @@ func _physics_process(delta: float) -> void:
 			_return_speed = velocity.length()
 		velocity = velocity.move_toward(to_owner.normalized() * _return_speed, 4000.0 * delta)
 		lifetime = maxf(lifetime, 0.2)
+	if gravity > 0.0:
+		velocity.y += gravity * delta
+		var to := global_position + velocity * delta
+		if velocity.y > 0.0:
+			var q := PhysicsRayQueryParameters2D.create(global_position, to + Vector2(0, 6), Fighter.LAYER_STAGE | Fighter.LAYER_PLATFORM)
+			var hit := get_world_2d().direct_space_state.intersect_ray(q)
+			if not hit.is_empty():
+				if bounces <= 0:
+					queue_free()
+					return
+				bounces -= 1
+				global_position = hit["position"] - Vector2(0, 6)
+				velocity.y = -absf(velocity.y) * 0.6
+				velocity.x *= 0.85
+				return
 	global_position += velocity * delta
 	lifetime -= delta
 	if lifetime <= 0.0 or absf(global_position.x) > 2400.0 or absf(global_position.y) > 1600.0:

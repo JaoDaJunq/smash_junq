@@ -12,10 +12,13 @@ meta = json.load(open(f"{d}/animacoes.json", encoding="utf-8"))
 PROPS = {"pandeiro", "semente", "nota", "castanha"}
 
 
+FW = 64  # largura do quadro (personagens com MARGEM no importador têm quadros mais largos)
+
+
 def comps(px, x0):
     seen, out = set(), []
     for y in range(64):
-        for x in range(64):
+        for x in range(FW):
             if (x, y) in seen or px[x0 + x, y][3] == 0:
                 continue
             st, c = [(x, y)], []
@@ -26,7 +29,7 @@ def comps(px, x0):
                 for dx in (-1, 0, 1):
                     for dy in (-1, 0, 1):
                         nx, ny = cx + dx, cy + dy
-                        if 0 <= nx < 64 and 0 <= ny < 64 and (nx, ny) not in seen and px[x0 + nx, ny][3] > 0:
+                        if 0 <= nx < FW and 0 <= ny < 64 and (nx, ny) not in seen and px[x0 + nx, ny][3] > 0:
                             seen.add((nx, ny))
                             st.append((nx, ny))
             out.append(c)
@@ -39,10 +42,11 @@ for anim in sorted(meta):
         continue
     im = Image.open(f"{d}/{anim}.png").convert("RGBA")
     px = im.load()
-    n = im.width // 64
+    n = int(meta[anim]["quadros"]) if isinstance(meta.get(anim), dict) else im.width // 64
+    FW = im.width // n  # noqa
     areas, probs = [], []
     for f in range(n):
-        cs = comps(px, f * 64)
+        cs = comps(px, f * FW)
         area = sum(len(c) for c in cs)
         areas.append(area)
         if not cs:
@@ -51,7 +55,7 @@ for anim in sorted(meta):
         big = max(cs, key=len)
         xs = [x for x, _ in big]
         ys = [y for _, y in big]
-        edges = [s for s, ok in (("esq", min(xs) == 0), ("dir", max(xs) == 63), ("topo", min(ys) == 0 and anim != "pendurado")) if ok]
+        edges = [s for s, ok in (("esq", min(xs) == 0), ("dir", max(xs) == FW - 1), ("topo", min(ys) == 0 and anim != "pendurado")) if ok]
         if edges:
             probs.append(f"{f+1}:CORTADO({'/'.join(edges)})")
         loose = [len(c) for c in cs if c is not big and len(c) > 6]
