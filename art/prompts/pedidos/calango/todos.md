@@ -11,6 +11,7 @@ Anexe em todo pedido: `art/concepts/calango/escolhido.png`, `art/pixel/calango/b
 ```text
 Sprite base do Calango: calango (lagarto do sertão) humanizado, VENDEDOR AMBULANTE de praia magrelo e ágil (concept escolhido anexado): escamas verde-oliva com pintas creme, barriga amarelada, cabeça triangular com olhos amarelos espertos, dedos compridos, cauda MUITO comprida e fina com pintas; chapéu de palha largo, regata branca, bermuda azul com flores laranja, chinelo, isopor branco com faixa vermelha a tiracolo.
 Uma imagem 1024x1024 com UM quadro de 64x64 pixels ampliado 16x. Pose: em guarda inclinado para a frente, pronto para correr, cauda comprida esticada para trás, chapéu de palha, de perfil para a direita. Personagem com cerca de 46 pixels de altura; base 4 pixels acima da borda de baixo. Fundo magenta chapado #FF00FF. Sem anti-aliasing, contorno de 1 pixel #2A0F12, só as cores da paleta, sem chão, sem efeitos, sem texto.
+LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 Paleta do Calango (use só estas cores):
 contorno #2A0F12
 escamas: luz #A8A84A, base #8A8A3A, sombra #5E5E22
@@ -42,6 +43,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -73,6 +75,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -104,6 +107,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -135,6 +139,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -166,6 +171,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -197,6 +203,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -228,6 +235,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -259,6 +267,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -290,6 +299,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -321,6 +331,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -352,6 +363,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -383,6 +395,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -416,6 +429,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -447,6 +461,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -478,6 +493,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -509,6 +525,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -540,6 +557,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -571,6 +589,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -602,6 +621,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -633,6 +653,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -664,6 +685,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -695,6 +717,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -726,6 +749,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -757,6 +781,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -788,6 +813,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -819,6 +845,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -850,6 +877,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -881,6 +909,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -912,6 +941,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
@@ -943,6 +973,7 @@ Regras desta imagem (pixel art de verdade para um jogo de luta 2D):
 - Mesma escala, paleta, contorno e proporção do sprite base e do quadro "parado" anexados (cerca de 46 pixels de altura). Só a pose muda.
 - Cada quadro tem SÓ o personagem (e o que ele segura). Proibido: chão, plataforma, parede, borda ou cenário; linhas de velocidade, rastros, borrão de movimento, poeira, ondas de som, notas musicais, brilhos, confete ou auras (o jogo faz os efeitos).
 - Espaço vazio generoso em volta do personagem em cada célula: nada encosta na borda da célula, e nenhum pedaço de um quadro aparece na célula vizinha.
+- LIMPEZA (obrigatório): pixel art de 64x64 DE VERDADE, simples e legível como art/pixel/juba/parado.png e art/pixel/seu_capivas/parado.png (anexe os dois). Cada pixel lógico é um bloco grande e visível (16x16 na base, 8x8 nas folhas); NÃO desenhe ilustração detalhada fina com cara de pixel. Formas grandes de cor chapada, no máximo 2-3 tons por material, contorno contínuo de 1 px sem falhas, nenhum pixel solto, sem textura de ruído. O rosto se lê de longe. O personagem NÃO enche a imagem: ocupa só a altura pedida, com folga em volta.
 - Sem texto, números, linhas de grade ou moldura. Roupa sempre comportada (personagem para todas as idades).
 
 Paleta do Calango (use só estas cores):
