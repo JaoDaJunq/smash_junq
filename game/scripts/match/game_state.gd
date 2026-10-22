@@ -96,6 +96,14 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "cutia",
 		"stats": {"Velocidade": 5, "Força": 2, "Peso": 2, "Volta ao palco": 4},
 	},
+	{
+		"name": "Calango",
+		"scene": "res://scenes/characters/calango.tscn",
+		"desc": "Calango ambulante da praia. O mais ligeiro da areia:\nperde o rabo pra escapar e esquenta no sol.",
+		"weight": "Leve",
+		"id": "calango",
+		"stats": {"Velocidade": 5, "Força": 2, "Peso": 2, "Volta ao palco": 4},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

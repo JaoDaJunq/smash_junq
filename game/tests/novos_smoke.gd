@@ -41,6 +41,7 @@ func _ready() -> void:
 			"tucano": await _tucao()
 			"onca": await _onca()
 			"cutia": await _cutia()
+			"calango": await _calango()
 		_match.queue_free()
 		await _frames(5)
 	print("\n".join(results))
@@ -370,6 +371,36 @@ func _cutia() -> void:
 	_check("Cutia: saquinho acerta de longe", foe.damage_percent > 0.0, "%.1f%%" % foe.damage_percent)
 	for c in get_tree().get_nodes_in_group("castanhas_enterradas"):
 		c.queue_free()
+
+
+func _calango() -> void:
+	var c := me as Calango
+	# Areia: o próximo golpe do adversário erra
+	await _face_off(120.0)
+	me.start_special("neutral")
+	await _frames(30)
+	_check("Calango: areia nos olhos", foe.sand_time > 0.0, "%.1f s" % foe.sand_time)
+	await _face_off()
+	foe.sand_time = 2.0
+	foe.facing = -1
+	foe.start_attack("ftilt")
+	await _frames(40)
+	_check("Calango: com areia o golpe erra", me.damage_percent == 0.0, "%.1f%%" % me.damage_percent)
+	# Rabo solto: golpe forte com dano alto não lança
+	await _face_off()
+	c.tail_ready = true
+	me.damage_percent = 150.0
+	foe.facing = -1
+	foe.start_attack("ftilt")
+	await _frames(30)
+	_check("Calango: rabo solto segura o lançamento", not c.tail_ready and absf(me.global_position.x + 200.0) < 200.0,
+		"rabo=%s x=%.0f" % [c.tail_ready, me.global_position.x])
+	# Tomar sol: fica mais rápido
+	await _face_off(400.0)
+	var base: float = c._base_speeds.y
+	me.start_special("down")
+	await _frames(40)
+	_check("Calango: sol acelera", c.has_sun() and me.run_speed > base * 1.2, "%.0f -> %.0f" % [base, me.run_speed])
 
 
 func _face_off(gap := 70.0) -> void:

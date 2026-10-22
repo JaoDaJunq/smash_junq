@@ -129,6 +129,8 @@ var holding: Fighter = null
 const HOLD_OFFSET := Vector2(62, 0)
 ## Segundos sem poder ser atingido (ex.: depois de voltar de um KO).
 var invincible_time := 0.0
+## Areia nos olhos (Calango): enquanto > 0, o próximo golpe que ia acertar erra (e limpa).
+var sand_time := 0.0
 ## Quando false, quem controla a partida cuida de KO e retorno (ver T16).
 var auto_respawn := true
 
@@ -197,6 +199,7 @@ func _physics_process(delta: float) -> void:
 		controls.begin_frame()
 		brain.think(self, delta)
 	invincible_time = maxf(invincible_time - delta, 0.0)
+	sand_time = maxf(sand_time - delta, 0.0)
 	_escape_wait = maxf(_escape_wait - delta, 0.0)
 	var shield_down := controls.pressed("shield")
 	_shield_tap = shield_down and not _shield_was_down
@@ -579,6 +582,9 @@ func _check_hits() -> void:
 			continue
 		if Combat.circle_hits_rect(center, attack.hitbox_radius, target.hurtbox()):
 			_hit_targets.append(target)
+			if sand_time > 0.0:
+				sand_time = 0.0   # areia nos olhos: este golpe erra
+				continue
 			var move_id := attack_id
 			if target.receive_hit(self, attack, facing):
 				_on_hit_landed(target, move_id)

@@ -22,7 +22,7 @@ const NATIVE := 64
 ## Personagens com quadros mais largos que 64 (bico/cauda que passa da célula):
 ## margem extra de cada lado. As folhas dele vêm de tools/recentrar_folha.py --margem N
 ## (3 células de 64+2N). No jogo, center_x da cena = 32 + N.
-const MARGEM := {"tucano": 8, "onca": 10, "cutia": 16}
+const MARGEM := {"tucano": 8, "onca": 10, "cutia": 16, "calango": 16}
 var FW := NATIVE  # largura do quadro nativo deste personagem
 const BASELINE := 59
 ## Pedaço solto com até este número de pixels (separado do personagem) é migalha
