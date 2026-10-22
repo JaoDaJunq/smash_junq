@@ -29,6 +29,11 @@
     "fator": 1,
     "impacto": 3
   },
+  "andar": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
   "arrancar": {
     "quadros": 3,
     "fator": 1,
