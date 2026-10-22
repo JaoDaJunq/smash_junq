@@ -14,10 +14,53 @@ const INK := Color("2a0f12")     # contorno vinho-escuro (bíblia visual)
 const GOLD := Color("ffc83d")
 const CREAM := Color("fff1d0")
 const RIBBON := Color("2fa84f")   # verde da faixa de campeonato
+const PANEL_BG := Color(0.11, 0.07, 0.06, 0.88)
 
 
 static func tex(path: String) -> Texture2D:
 	return load(path) if ResourceLoader.exists(path) else null
+
+
+## Arte de apresentação (pintada, corpo inteiro, fundo transparente) do lutador.
+static func splash(char_id: String) -> Texture2D:
+	return tex("res://assets/ui/apresentacao_%s.png" % char_id)
+
+
+## Retrato quadrado em pixel art; sem ele, o rosto do 1º quadro do "parado".
+static func portrait(char_id: String) -> Texture2D:
+	var t := tex("res://assets/characters/%s/retrato_pixel.png" % char_id)
+	if t != null:
+		return t
+	var sheet := tex("res://assets/characters/%s/pixel/parado.png" % char_id)
+	if sheet == null:
+		return null
+	var a := AtlasTexture.new()
+	a.atlas = sheet
+	a.region = Rect2(14, 4, 36, 36)
+	return a
+
+
+## Índice em Game.CHARACTERS do lutador (pela cena dele); -1 se não achar.
+static func char_index_of(fighter: Node) -> int:
+	if fighter != null:
+		for i in Game.CHARACTERS.size():
+			if Game.CHARACTERS[i]["scene"] == fighter.scene_file_path:
+				return i
+	return -1
+
+
+## Texto com quebras de linha manuais vira um parágrafo só (o autowrap quebra).
+static func flat(text: String) -> String:
+	return text.replace("\r", "").replace(":\n", ": ").replace("\n", " ")
+
+
+## Maior tamanho de fonte (até size) em que o texto cabe em width.
+static func fit_size(l: Label, size: int, width: float, min_size := 18) -> void:
+	var font := l.get_theme_font("font")
+	var s := size
+	while s > min_size and font.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, s).x > width:
+		s -= 2
+	l.add_theme_font_size_override("font_size", s)
 
 
 ## Fundo pintado cobrindo a tela (escurecido por "dim"), com um zoom lento de
@@ -75,7 +118,7 @@ static func plank(focused := false, radius := 10) -> StyleBoxFlat:
 ## Painel escuro com borda de madeira (cartões de informação).
 static func panel(border := INK, width := 4) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.11, 0.07, 0.06, 0.88)
+	s.bg_color = PANEL_BG
 	s.border_color = border
 	s.set_border_width_all(width)
 	s.set_corner_radius_all(12)
@@ -95,6 +138,10 @@ static func style_button(b: Button, font_size := 34) -> void:
 	b.add_theme_color_override("font_color", CREAM)
 	b.add_theme_color_override("font_focus_color", GOLD)
 	b.add_theme_color_override("font_hover_color", GOLD)
+	b.add_theme_color_override("font_pressed_color", GOLD)
+	b.add_theme_color_override("font_hover_pressed_color", GOLD)
+	b.add_theme_color_override("font_disabled_color", Color(CREAM, 0.4))
+	b.add_theme_stylebox_override("hover_pressed", plank(true))
 	b.add_theme_color_override("font_outline_color", INK)
 	b.add_theme_constant_override("outline_size", 8)
 	b.add_theme_font_size_override("font_size", font_size)

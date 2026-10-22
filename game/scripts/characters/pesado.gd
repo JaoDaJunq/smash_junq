@@ -23,6 +23,9 @@ const UP_WINDUP := 8
 const UP_RISE := 1300.0
 ## Especial para baixo no ar: quadros parado antes de despencar.
 const DIVE_WINDUP := 10
+## Efeitos próprios (design/efeitos-especiais.md): tchibum, bufada, gotas.
+const PIX := "res://assets/characters/seu_capivas/pixel/"
+const BUFADA_EVERY := 10
 
 var _charging := false
 var _charge := 0
@@ -62,6 +65,7 @@ func _on_attack_end(move_id: String) -> void:
 			_diving = false
 			if impact and moveset != null:
 				_pound_hit(moveset.special_down)  # pousou do mergulho: onda de impacto
+				_tchibum(3.0, 0.6)                 # o tchibum de verdade, no pouso (maior)
 
 
 func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> bool:
@@ -79,6 +83,8 @@ func _charge_step(frame: int) -> void:
 	if controls.pressed("special") and _charge < MAX_CHARGE:
 		_charge += 1
 		attack_frame = attack.startup - 1  # fica no quadro de carga
+		if _charge % BUFADA_EVERY == 1:
+			_bufada(float(_charge) / MAX_CHARGE)
 		return
 	_charging = false
 	if _charge > 0:
@@ -125,18 +131,36 @@ func _up_step(frame: int) -> void:
 		if _attack_in_air:
 			velocity.y = 0.0  # no ar, agacha parado
 	elif frame == UP_WINDUP:
+		if is_on_floor():
+			_tchibum(1.4, 0.4, true)   # sai do chão como quem pula da piscina
 		velocity.y = -UP_RISE
 		_attack_in_air = true  # sai do chão com física de ar
+	elif velocity.y > 0.0 and not is_on_floor():
+		# já passou do topo e ainda está no golpe: pode agarrar a quina na descida
+		# (antes ele passava do lado da quina sem pegar e caía)
+		_try_grab_ledge()
+		if state == State.LEDGE:
+			attack = null
+			attack_id = ""
 
 
 # --- Pisão ---
 
 func _down_step(frame: int) -> void:
 	if not _attack_in_air:
+		if frame == attack.startup:
+			_tchibum(2.4, 0.55)   # pisão no chão: espirro de água e lama
 		return  # no chão é o golpe normal (ver _check_hits)
 	if _diving:
 		fast_falling = true
 		attack_frame = attack.startup  # segue despencando até pousar
+		# Sem chão embaixo (mergulhou fora do palco): ainda pode agarrar a quina.
+		if velocity.y > 0.0 and not _floor_below(1400.0):
+			_try_grab_ledge()
+			if state == State.LEDGE:
+				_diving = false
+				attack = null
+				attack_id = ""
 		return
 	if frame < DIVE_WINDUP:
 		velocity.y = 0.0
@@ -166,7 +190,37 @@ func _pound_hit(data: AttackData) -> void:
 			target.receive_hit(self, data, side if side != 0 else facing)
 
 
+func _floor_below(dist: float) -> bool:
+	var q := PhysicsRayQueryParameters2D.create(global_position, global_position + Vector2(0, dist), LAYER_STAGE | LAYER_PLATFORM)
+	return not get_world_2d().direct_space_state.intersect_ray(q).is_empty()
+
+
 # --- Visual ---
+
+func _fx(fx_name: String, at: Vector2, time: float, px := 2.0, behind := false) -> PixelFx:
+	var path := PIX + fx_name + ".png"
+	if not has_art or not ResourceLoader.exists(path):
+		return null
+	var fx := PixelFx.spawn(get_parent(), load(path), at, time, px)
+	if behind:   # atrás dele mas na frente do cenário
+		fx.z_index = 0
+		get_parent().move_child(fx, get_index())
+	if facing < 0:
+		fx.scale.x = -1.0
+	return fx
+
+
+## Tchibum: espirro de água e lama com a base da folha (linha 60 de 64) no chão.
+func _tchibum(px: float, time: float, behind := false) -> void:
+	var feet := global_position + Vector2(0, HEIGHT * 0.5)
+	_fx("fx_tchibum", feet - Vector2(0, 28.0 * px), time, px, behind)
+
+
+## Bufada: vapor saindo do focinho, maior quanto mais carga.
+func _bufada(ratio: float) -> void:
+	_fx("fx_bufada", global_position + Vector2(facing * 56.0, -HEIGHT * 0.5 + 14.0), 0.4, 1.6 + 1.4 * ratio)
+
+
 
 func _draw() -> void:
 	super()

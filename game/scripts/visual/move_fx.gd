@@ -14,8 +14,7 @@ const RULES := {
 		{"on": "hit", "move": "special_down", "fx": "fx_ginga", "at": "target", "time": 0.45},
 	],
 	"seu_capivas": [
-		{"on": "impact", "move": "special_down", "fx": "fx_tchibum", "at": "feet", "time": 0.55},
-		{"on": "charging", "move": "special_neutral", "fx": "fx_bufada", "at": "nose", "every": 18, "time": 0.4},
+		# tchibum (pisão) e bufada (carga) saem do pesado.gd: o pisão aéreo prende o quadro de impacto
 		{"on": "rest", "fx": "fx_boia", "at": "feet", "time": 0.0},
 	],
 	"maracaja": [

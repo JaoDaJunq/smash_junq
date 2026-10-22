@@ -303,10 +303,12 @@ func end_match(winner: String) -> void:
 func result_data(winner: String) -> Dictionary:
 	var labels := {}
 	var names := {}
+	var indices := {}   # índice em Game.CHARACTERS (retrato/arte na tela de resultado)
 	for pid in IDS:
 		labels[pid] = Game.player_label(pid)
 		names[pid] = (fighters[pid] as Fighter).display_name
-	return {"winner": winner, "kos": kos.duplicate(), "labels": labels, "characters": names}
+		indices[pid] = UiArt.char_index_of(fighters[pid])
+	return {"winner": winner, "kos": kos.duplicate(), "labels": labels, "characters": names, "indices": indices}
 
 
 ## Muda o rosto do boneco de um jogador por um tempo (se ele tiver expressões).

@@ -9,10 +9,19 @@ var match_manager: Node
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	var col := build_column("Pausa", "", true)
+	var col := build_column("", "", true)
+	col.add_theme_constant_override("separation", 18)
+	col.add_child(UiArt.ribbon("PAUSA", 56))
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 16)
+	col.add_child(gap)
 	add_button(col, "Continuar", close, true)
 	add_button(col, "Reiniciar", _restart)
 	add_button(col, "Sair para o menu", _quit_to_menu, true)
+	for b in buttons:
+		b.custom_minimum_size = Vector2(460, 76)
+		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		UiArt.style_button(b)
 	visible = false
 
 

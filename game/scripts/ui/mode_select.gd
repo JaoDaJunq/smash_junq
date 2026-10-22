@@ -3,11 +3,21 @@ extends MenuScreen
 
 
 func _ready() -> void:
-	var col := build_column("Modo de jogo")
+	var col := build_column("")
+	col.add_theme_constant_override("separation", 18)
+	var title := UiArt.ribbon("MODO DE JOGO", 50)
+	col.add_child(title)
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 20)
+	col.add_child(gap)
 	add_button(col, "2 jogadores", func() -> void: _choose("versus"))
 	add_button(col, "Contra a CPU", func() -> void: _choose("cpu"))
 	add_button(col, "Treino", func() -> void: _choose("training"))
 	add_button(col, "Voltar", func() -> void: Game.go_menu(), true)
+	for b in buttons:
+		b.custom_minimum_size = Vector2(460, 76)
+		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		UiArt.style_button(b)
 	focus_first()
 
 

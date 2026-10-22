@@ -13,6 +13,10 @@ const GAP := 10.0
 const GROUP_W := 190.0
 const WAITING := Color("6b7390")
 const LOCKED_TILE := Color(0.05, 0.04, 0.07)
+const STAGE := Vector2(460, 340)
+const NAME_SIZE := 46
+## Fração da altura da arte de apresentação que aparece (do topo; corta no joelho).
+const SPLASH_SHOWN := 0.74
 
 ## Índice em Game.CHARACTERS do lutador sob o cursor (-1 = "?", em breve).
 var choice := {"p1": 0, "p2": 1}
@@ -172,24 +176,33 @@ func _build_side(pid: String, at: Vector2) -> Dictionary:
 	UiArt.outlined(title, 30, Game.PLAYER_COLORS[pid], 8)
 	v.add_child(title)
 	var stage := Control.new()
-	stage.custom_minimum_size = Vector2(460, 340)
+	stage.custom_minimum_size = STAGE
 	stage.clip_contents = true
 	v.add_child(stage)
 	var name_label := make_label("")
-	UiArt.outlined(name_label, 46, UiArt.CREAM, 10)
+	UiArt.outlined(name_label, NAME_SIZE, UiArt.CREAM, 10)
 	name_label.add_theme_font_override("font", load("res://assets/fonts/kenney_future.ttf"))
+	name_label.clip_text = true
 	v.add_child(name_label)
 	var kind := make_label("")
 	UiArt.outlined(kind, 24, UiArt.GOLD, 6)
 	v.add_child(kind)
+	# Descrição em parágrafo único com altura fixa de 3 linhas: o resto do
+	# painel não pula quando troca de lutador.
 	var desc := make_label("", "HintLabel")
-	desc.add_theme_font_size_override("font_size", 22)
+	desc.add_theme_font_size_override("font_size", 21)
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.custom_minimum_size = Vector2(460, 64)
+	desc.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	desc.custom_minimum_size = Vector2(460, 96)
 	v.add_child(desc)
 	var bars := VBoxContainer.new()
 	bars.add_theme_constant_override("separation", 4)
+	bars.custom_minimum_size = Vector2(0, 4 * 22 + 3 * 4)
 	v.add_child(bars)
+	var push := Control.new()
+	push.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	push.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(push)
 	var status := make_label("")
 	UiArt.outlined(status, 32, UiArt.GOLD, 8)
 	v.add_child(status)
@@ -215,18 +228,79 @@ func _show_fighter(pid: String) -> void:
 	for c in stage.get_children():
 		c.queue_free()
 	if idx >= 0:
-		var id := String(Game.CHARACTERS[idx].get("id", ""))
-		var f := UiArt.FighterIdle.new().setup("res://assets/characters/%s/pixel/parado.png" % id, 5.6, 6.0)
-		f.flip_h = pid == "p2"   # os dois se olham
-		f.position = Vector2((460 - 64 * 5.6) * 0.5, 340 - 64 * 5.6 + 10)
-		stage.add_child(f)
+		_show_splash(pid, stage, idx)
 	else:
 		var q := make_label("?")
 		UiArt.outlined(q, 220, Color(0.18, 0.12, 0.12), 14)
 		q.set_anchors_preset(Control.PRESET_FULL_RECT)
 		q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		stage.add_child(q)
-	pop(stage, 1.08)
+	pop(stage, 1.04)
+
+
+## Apresentação: a arte pintada do lutador entra deslizando de fora (corte do
+## joelho para cima, apagando embaixo) e o sprite do jogo ginga no canto.
+## Sem arte pintada, só o sprite grande como antes.
+func _show_splash(pid: String, stage: Control, idx: int) -> void:
+	var id := String(Game.CHARACTERS[idx].get("id", ""))
+	var outer := -1.0 if pid == "p1" else 1.0   # lado de fora da tela
+	var group: Dictionary = Roster.GROUPS[(cursor[pid] as Vector2i).y]
+	var glow := Panel.new()
+	var gs := StyleBoxFlat.new()
+	gs.bg_color = Color(group["color"], 0.22)
+	gs.set_corner_radius_all(14)
+	glow.add_theme_stylebox_override("panel", gs)
+	glow.position = Vector2(0, 30)
+	glow.size = Vector2(STAGE.x, STAGE.y - 30)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stage.add_child(glow)
+	var art := UiArt.splash(id)
+	if art == null:
+		var f := UiArt.FighterIdle.new().setup("res://assets/characters/%s/pixel/parado.png" % id, 5.6, 6.0)
+		f.flip_h = pid == "p2"   # os dois se olham
+		f.position = Vector2((STAGE.x - 64 * 5.6) * 0.5, STAGE.y - 64 * 5.6 + 10)
+		stage.add_child(f)
+		return
+	var h := STAGE.y / SPLASH_SHOWN
+	var w := h * art.get_width() / art.get_height()
+	var r := TextureRect.new()
+	r.name = "Apresentacao"
+	r.texture = art
+	r.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	r.stretch_mode = TextureRect.STRETCH_SCALE
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	r.size = Vector2(w, h)
+	# um pouco puxado para o centro da tela, deixando o canto de fora pro sprite
+	var end := Vector2((STAGE.x - w) * 0.5 - outer * 46.0, 4)
+	r.position = end + Vector2(outer * 90.0, 0)
+	r.modulate.a = 0.0
+	stage.add_child(r)
+	var tw := r.create_tween().set_parallel(true).set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tw.tween_property(r, "position", end, 0.22).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(r, "modulate:a", 1.0, 0.14)
+	# corte de baixo esmaecendo na cor do painel
+	var fade := TextureRect.new()
+	var g := Gradient.new()
+	g.set_color(0, Color(UiArt.PANEL_BG, 0.0))
+	g.set_color(1, UiArt.PANEL_BG)
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill_from = Vector2(0.5, 0.0)
+	gt.fill_to = Vector2(0.5, 1.0)
+	fade.texture = gt
+	fade.stretch_mode = TextureRect.STRETCH_SCALE
+	fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fade.position = Vector2(0, STAGE.y - 70)
+	fade.size = Vector2(STAGE.x, 70)
+	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stage.add_child(fade)
+	# o lutador como ele aparece na luta, pequeno no canto de fora
+	var px := 2.6
+	var f := UiArt.FighterIdle.new().setup("res://assets/characters/%s/pixel/parado.png" % id, px, 6.0)
+	f.flip_h = pid == "p2"
+	f.position = Vector2(0.0 if pid == "p1" else STAGE.x - 64 * px, STAGE.y - 64 * px + 6)
+	stage.add_child(f)
 
 
 func _fill_bars(bars: VBoxContainer, stats: Dictionary) -> void:
@@ -237,6 +311,7 @@ func _fill_bars(bars: VBoxContainer, stats: Dictionary) -> void:
 		row.add_theme_constant_override("separation", 10)
 		var l := Label.new()
 		l.text = key
+		row.custom_minimum_size = Vector2(0, 22)
 		l.custom_minimum_size = Vector2(190, 0)
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		UiArt.outlined(l, 20, UiArt.CREAM, 5)
@@ -328,6 +403,7 @@ func _mouse_hover(cell: Vector2i) -> void:
 	_set_cursor(slot, cell)
 	Sfx.play("ui_move")
 	_refresh()
+	pop(tiles[cell]["root"], 1.12)
 
 
 func _mouse_click(cell: Vector2i) -> void:
@@ -362,6 +438,8 @@ func _toggle_lock(slot: String) -> void:
 	_refresh()
 	pop(_panels[slot]["status"], 1.35, 0.25)
 	pop(_panels[slot]["stage"], 1.15, 0.22)
+	_flash(_panels[slot]["stage"])
+	pop(tiles[cursor[slot]]["root"], 1.2, 0.25)
 	if locked["p1"] and locked["p2"]:
 		_start_match()
 
@@ -383,6 +461,12 @@ func _start_match() -> void:
 	for pid in PLAYERS:
 		Game.set_character(pid, choice[pid])
 	_refresh()
+	# faixa "PRONTOS!" estoura no meio antes de ir para a arena
+	var go := UiArt.ribbon("PRONTOS!", 72)
+	go.custom_minimum_size = Vector2(620, 0)
+	go.position = Vector2(960 - 310, 470)
+	_content.add_child(go)
+	pop.call_deferred(go, 1.6, 0.3)
 	await get_tree().create_timer(START_DELAY).timeout
 	Game.go_to(Game.ARENA_SELECT_SCENE)
 
@@ -395,6 +479,12 @@ func _back() -> void:
 
 
 # --- Visual ---
+
+## Clarão rápido (confirmação).
+func _flash(c: CanvasItem) -> void:
+	c.modulate = Color(2.2, 2.2, 2.2)
+	c.create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).tween_property(c, "modulate", Color.WHITE, 0.3)
+
 
 func _refresh() -> void:
 	for cell in tiles:
@@ -429,17 +519,19 @@ func _refresh() -> void:
 		var group: Dictionary = Roster.GROUPS[cell.y]
 		_show_fighter(pid)
 		p["name"].text = slot["name"]
+		UiArt.fit_size(p["name"], NAME_SIZE, STAGE.x - 8)
 		p["kind"].text = "%s  ·  %s" % [group["name"], Roster.TYPES[cell.x]]
 		(p["kind"] as Label).add_theme_color_override("font_color", group["color"])
 		var idx: int = choice[pid]
 		if idx >= 0:
 			var info: Dictionary = Game.CHARACTERS[idx]
-			p["desc"].text = info["desc"]
+			p["desc"].text = UiArt.flat(info["desc"])
 			if p.get("bars_for", -2) != idx:
 				_fill_bars(p["bars"], info.get("stats", {}))
 				p["bars_for"] = idx
 		else:
-			p["desc"].text = "Em breve: %s (%s)." % [slot["name"], slot["animal"]]
+			var animal := String(slot["animal"])
+			p["desc"].text = "%s%s ainda está treinando. Em breve no torneio!" % [animal.left(1).to_upper(), animal.substr(1)]
 			if p.get("bars_for", -2) != -1:
 				_fill_bars(p["bars"], {})
 				p["bars_for"] = -1

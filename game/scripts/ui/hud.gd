@@ -15,6 +15,7 @@ const DAMAGE_STOPS: Array[Array] = [
 ]
 const PUNCH_TIME := 0.22
 const BANNER_TIME := 0.3
+const PORTRAIT := 112.0
 
 ## Círculos de KO de um jogador: cheios os marcados, vazios os que faltam.
 ## Ganhar um KO faz o círculo estourar com um anel; perder um faz ele murchar.
@@ -159,10 +160,17 @@ func _build_panel(pid: String, fighter: Fighter) -> Control:
 	var style := MenuScreen.theme_shared().get_stylebox("panel", "HudPanel").duplicate() as StyleBoxFlat
 	style.border_color = fighter.body_color
 	box.add_theme_stylebox_override("panel", style)
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 14)
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(h)
+	var portrait := _build_portrait(fighter)
+	if portrait != null:
+		h.add_child(portrait)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 0)
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(v)
+	h.add_child(v)
 
 	var name_label := Label.new()
 	name_label.text = "%s · %s" % [Game.player_label(pid), fighter.display_name]
@@ -182,11 +190,47 @@ func _build_panel(pid: String, fighter: Fighter) -> Control:
 	v.add_child(markers)
 
 	panels[pid] = {"name": name_label, "damage": damage, "markers": markers, "fighter": fighter,
-		"shown": 0.0, "tweens": []}
+		"shown": 0.0, "tweens": [], "portrait": portrait}
 	if not fighter.damage_changed.is_connected(_on_damage_changed.bind(pid)):
 		fighter.damage_changed.connect(_on_damage_changed.bind(pid))
 	_show_damage(pid, fighter.damage_percent, false)
 	return box
+
+
+## Retrato em pixel art do lutador, numa moldura com a cor do jogador
+## (null se o lutador não estiver no elenco, ex.: bonecos de teste).
+func _build_portrait(fighter: Fighter) -> Control:
+	var idx := UiArt.char_index_of(fighter)
+	if idx < 0:
+		return null
+	var tex := UiArt.portrait(String(Game.CHARACTERS[idx].get("id", "")))
+	if tex == null:
+		return null
+	var frame := Panel.new()
+	frame.custom_minimum_size = Vector2(PORTRAIT, PORTRAIT)
+	frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	frame.clip_contents = true
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var s := StyleBoxFlat.new()
+	s.bg_color = fighter.body_color.darkened(0.6)
+	s.border_color = fighter.body_color.lightened(0.2)
+	s.set_border_width_all(4)
+	s.set_corner_radius_all(10)
+	frame.add_theme_stylebox_override("panel", s)
+	var pic := TextureRect.new()
+	pic.name = "Retrato"
+	pic.texture = tex
+	pic.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "top"]:
+		pic.set("offset_" + side, 4)
+	for side in ["right", "bottom"]:
+		pic.set("offset_" + side, -4)
+	pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	pic.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(pic)
+	return frame
 
 
 func _on_damage_changed(percent: float, pid: String) -> void:
@@ -223,7 +267,18 @@ func _punch_damage(info: Dictionary, gained: float) -> void:
 	var shake_tween := create_tween()
 	for k in [1.0, -0.8, 0.5, -0.25, 0.0]:
 		shake_tween.tween_property(label, "rotation", shake * k, 0.035)
-	info["tweens"] = [pop_tween, shake_tween]
+	var tweens: Array = [pop_tween, shake_tween]
+	# Retrato: pisca vermelho e dá um tranco junto com o número
+	var portrait: Control = info.get("portrait")
+	if portrait != null:
+		portrait.pivot_offset = portrait.size * 0.5
+		portrait.modulate = Color(1.9, 0.7, 0.7)
+		portrait.scale = Vector2.ONE * (1.08 + 0.08 * power)
+		var pt := create_tween().set_parallel(true)
+		pt.tween_property(portrait, "modulate", Color.WHITE, PUNCH_TIME * 1.4)
+		pt.tween_property(portrait, "scale", Vector2.ONE, PUNCH_TIME).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tweens.append(pt)
+	info["tweens"] = tweens
 
 
 func _clear_punch(info: Dictionary) -> void:
@@ -235,6 +290,10 @@ func _clear_punch(info: Dictionary) -> void:
 	label.scale = Vector2.ONE
 	label.rotation = 0.0
 	label.modulate = Color.WHITE
+	var portrait: Control = info.get("portrait")
+	if portrait != null:
+		portrait.scale = Vector2.ONE
+		portrait.modulate = Color.WHITE
 
 
 ## kos: player_id -> KOs marcados por esse jogador.
