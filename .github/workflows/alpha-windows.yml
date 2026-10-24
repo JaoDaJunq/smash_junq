@@ -2,11 +2,11 @@ name: Alpha Windows
 
 on:
   push:
-    branches: [alpha-windows]
+    branches: [main, alpha-windows]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-windows:
@@ -68,3 +68,11 @@ jobs:
           path: SmashJunq-Alpha-Windows.zip
           retention-days: 30
           if-no-files-found: error
+
+      - name: Publicar ZIP no GitHub Releases
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view alpha-latest >/dev/null 2>&1 || gh release create alpha-latest --title "Smash Junq - Alpha Windows" --notes "Alpha para testes locais no Windows 64 bits. Extraia o ZIP e abra SmashJunq.exe." --latest
+          gh release upload alpha-latest SmashJunq-Alpha-Windows.zip --clobber
