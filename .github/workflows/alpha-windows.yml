@@ -1,0 +1,70 @@
+name: Alpha Windows
+
+on:
+  push:
+    branches: [alpha-windows]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GODOT_VERSION: "4.7.2"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Godot e templates de exportacao
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p godot
+          cd godot
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          editor="Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          templates="Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          curl --fail --location --retry 3 -o "$editor" "$base/$editor"
+          curl --fail --location --retry 3 -o "$templates" "$base/$templates"
+          curl --fail --location --retry 3 -o SHA512-SUMS.txt "$base/SHA512-SUMS.txt"
+          grep -F " $editor" SHA512-SUMS.txt | sha512sum -c -
+          grep -F " $templates" SHA512-SUMS.txt | sha512sum -c -
+          unzip -q "$editor"
+          chmod +x "Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          unzip -q "$templates" -d templates-extracted
+          cp templates-extracted/templates/* "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable/"
+          echo "GODOT_BIN=$PWD/Godot_v${GODOT_VERSION}-stable_linux.x86_64" >> "$GITHUB_ENV"
+
+      - name: Importar projeto
+        run: |
+          "$GODOT_BIN" --headless --editor --path game --import || true
+          "$GODOT_BIN" --headless --editor --path game --import
+
+      - name: Exportar Windows x64
+        run: |
+          mkdir -p builds
+          "$GODOT_BIN" --headless --path game --export-release "Windows Desktop" ../builds/SmashJunq.exe
+          test -s builds/SmashJunq.exe
+          ls -lh builds/
+
+      - name: Preparar pacote Alpha
+        run: |
+          mkdir -p dist/SmashJunq-Alpha-Windows
+          cp builds/SmashJunq.exe dist/SmashJunq-Alpha-Windows/
+          if test -f builds/SmashJunq.pck; then cp builds/SmashJunq.pck dist/SmashJunq-Alpha-Windows/; fi
+          printf '%s\n' 'SMASH JUNQ - ALPHA WINDOWS' '' '1. Extraia o ZIP.' '2. Abra SmashJunq.exe no Windows 64 bits.' '3. Jogue localmente ou contra a CPU.' '' 'Sem multiplayer online nesta Alpha.' 'Envie bugs com personagem, modo, passos e captura de tela.' > dist/SmashJunq-Alpha-Windows/LEIA-ME.txt
+          cd dist
+          zip -qr ../SmashJunq-Alpha-Windows.zip SmashJunq-Alpha-Windows
+          test -s ../SmashJunq-Alpha-Windows.zip
+
+      - name: Disponibilizar ZIP para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmashJunq-Alpha-Windows
+          path: SmashJunq-Alpha-Windows.zip
+          retention-days: 30
+          if-no-files-found: error
