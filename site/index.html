@@ -1,76 +1,350 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101024"><meta name="description" content="Smash Junq: um platform fighter 2D de personagens originais. Baixe a Alpha para Windows.">
-<title>SMASH JUNQ | ALPHA</title>
-<style>
-:root{color-scheme:dark;--ink:#f9f1d8;--muted:#bcb6d5;--pink:#ff537c;--yellow:#ffd36c;--blue:#8c83ff}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#101024;color:var(--ink);overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse at 15% 20%,#7a326a66,transparent 40%),radial-gradient(ellipse at 85% 75%,#42358d77,transparent 48%),linear-gradient(135deg,#101024,#17142c)}
-header{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:24px 24px;gap:12px}
-.brand{font-weight:1000;letter-spacing:.12em;color:var(--yellow);text-shadow:3px 3px #b22d63;font-size:20px}
-.chip{border:1px solid #ffffff40;border-radius:999px;padding:7px 13px;font-size:12px;letter-spacing:.12em}
-main{max-width:1100px;margin:auto;padding:50px 24px 80px}
-.hero{text-align:center;position:relative;padding:40px 0 65px}
-.kicker{color:var(--yellow);font-size:12px;font-weight:900;letter-spacing:.3em}
-h1{font-size:clamp(60px,12vw,150px);line-height:.86;margin:20px 0 30px;letter-spacing:-.08em;font-weight:1000;transform:rotate(-2deg);color:#fff2c7;text-shadow:5px 5px #ee456e,10px 10px #4e2b85,0 16px 30px #0008}
-h1 span{display:block;font-size:.43em;letter-spacing:.16em;color:#ffdc76;text-shadow:3px 3px #a32d69}
-.subtitle{font-size:clamp(16px,2.2vw,22px);color:#e5dff0;max-width:650px;margin:0 auto 30px}
-.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-a.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;min-height:58px;border-radius:13px;padding:15px 25px;font-weight:1000;text-transform:uppercase;letter-spacing:.06em;transition:transform .18s,box-shadow .18s}
-a.btn:hover{transform:translateY(-3px)}
-.primary{background:var(--yellow);color:#1d1830;box-shadow:0 7px 0 #b16a39}
-.secondary{border:2px solid #ffffff65;color:#fff;background:#ffffff12}
-a.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed;pointer-events:none;box-shadow:none}
-.status{font-size:13px;color:var(--muted);margin:20px 0 0;min-height:20px}
-.arena{height:190px;position:relative;margin:40px auto 0;max-width:740px;border-radius:22px;background:linear-gradient(#57488a,#30244f 70%,#1b1736 70%);border:3px solid #ad89b6;box-shadow:0 18px 0 #0b0920,0 25px 45px #0006;overflow:hidden}
-.arena:before{content:"";position:absolute;left:-10%;right:-10%;bottom:34px;height:15px;background:repeating-linear-gradient(90deg,#e58a8a 0 30px,#f5b6a6 30px 60px);border-top:5px solid #ffe0a8}
-.fighter{position:absolute;bottom:50px;font-size:78px;filter:drop-shadow(7px 8px #171129)}.fighter.left{left:18%;transform:rotate(-12deg)}.fighter.right{right:18%;transform:scaleX(-1) rotate(-12deg)}
-.burst{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) rotate(-12deg);font-size:52px;font-weight:1000;color:var(--yellow);text-shadow:4px 4px #f34a78}
-section.info{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:45px}
-.panel{background:#211c3b;border:2px solid #64517d;border-radius:16px;padding:23px;box-shadow:5px 5px #0b0a1a}
-.panel b{display:block;font-size:17px;color:var(--yellow);margin-bottom:10px}.panel p{margin:0;color:#d5cde5;line-height:1.6;font-size:14px}
-footer{padding:35px 24px 50px;text-align:center;color:#a8a0be;font-size:13px}
-footer a{color:#f9d781}
-@media(max-width:650px){header{padding:18px}main{padding-top:10px}.hero{padding-top:25px}.arena{height:155px}.fighter{font-size:62px}.burst{font-size:38px}section.info{grid-template-columns:1fr}h1{text-shadow:3px 3px #ee456e,6px 6px #4e2b85}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151323">
+  <meta name="description" content="Baixe a Alpha do Smash Junq para Windows e entre na arena.">
+  <title>Smash Junq — Alpha para Windows</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #151323;
+      --panel: #211e32;
+      --panel-light: #2b2740;
+      --cream: #fff6db;
+      --muted: #beb8d0;
+      --pink: #ff5478;
+      --gold: #ffd56d;
+      --purple: #8c7bff;
+      --line: #ffffff20;
+      --max: 1160px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      content: "";
+      background:
+        radial-gradient(ellipse at 78% 18%, #6149b844, transparent 31rem),
+        radial-gradient(ellipse at 12% 61%, #d83f6c24, transparent 27rem),
+        linear-gradient(155deg, #171526 0%, #11101b 100%);
+    }
+    a { color: inherit; }
+    .wrap { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 82px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-mark {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      color: #21172a;
+      background: var(--gold);
+      clip-path: polygon(50% 0%, 61% 27%, 89% 11%, 77% 40%, 100% 50%, 76% 61%, 89% 90%, 60% 76%, 50% 100%, 39% 76%, 10% 90%, 24% 61%, 0 50%, 24% 39%, 10% 10%, 39% 25%);
+      font-size: 17px;
+      font-weight: 1000;
+    }
+    .brand-name { font-size: 14px; font-weight: 950; letter-spacing: .13em; line-height: 1.15; }
+    .brand-name small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; letter-spacing: .24em; }
+    .top-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #ffd56d55;
+      border-radius: 999px;
+      padding: 9px 13px;
+      color: var(--gold);
+      background: #ffd56d0b;
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .top-tag::before { width: 7px; height: 7px; border-radius: 50%; background: var(--pink); content: ""; box-shadow: 0 0 12px var(--pink); }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      align-items: center;
+      gap: 44px;
+      min-height: 625px;
+      padding: 60px 0 68px;
+    }
+    .eyebrow { display: flex; align-items: center; gap: 11px; color: var(--gold); font-size: 11px; font-weight: 900; letter-spacing: .23em; text-transform: uppercase; }
+    .eyebrow::before { width: 27px; height: 2px; background: var(--pink); content: ""; }
+    h1 {
+      margin: 20px 0 20px;
+      font-size: clamp(64px, 9vw, 116px);
+      font-weight: 1000;
+      letter-spacing: -.095em;
+      line-height: .78;
+      text-transform: uppercase;
+      transform: rotate(-2deg);
+      text-shadow: 5px 5px 0 #d93d69, 10px 10px 0 #4c3b86;
+    }
+    h1 span { display: block; margin-top: 14px; color: var(--gold); font-size: .48em; letter-spacing: .2em; text-shadow: 3px 3px 0 #a63565; }
+    .lead { max-width: 540px; margin: 30px 0 25px; color: #e4deed; font-size: clamp(17px, 2vw, 20px); line-height: 1.65; }
+    .lead strong { color: var(--cream); }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 13px; align-items: center; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      min-height: 58px;
+      border-radius: 12px;
+      padding: 0 22px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+    }
+    .button:hover { transform: translateY(-3px); filter: brightness(1.06); }
+    .button:focus-visible, a:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+    .button-primary { color: #21172a; background: var(--gold); box-shadow: 0 5px 0 #b87442, 0 13px 26px #0004; }
+    .button-secondary { border: 1px solid #ffffff38; color: var(--cream); background: #ffffff08; }
+    .download-icon { font-size: 18px; line-height: 1; }
+    .download-note { display: flex; align-items: center; gap: 8px; margin: 16px 0 0; color: var(--muted); font-size: 12px; }
+    .download-note::before { color: #8de0ad; content: "●"; font-size: 9px; }
+    .stage {
+      position: relative;
+      min-height: 430px;
+      isolation: isolate;
+      border: 1px solid #ffffff17;
+      border-radius: 28px;
+      background: linear-gradient(145deg, #282440e8, #181625e8 72%);
+      box-shadow: 0 28px 70px #0005, inset 0 1px #ffffff0d;
+      overflow: hidden;
+    }
+    .stage::before {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: radial-gradient(#ffffff16 1px, transparent 1px);
+      background-size: 18px 18px;
+      content: "";
+      opacity: .26;
+      mask-image: linear-gradient(transparent, black 23%, black 75%, transparent);
+    }
+    .stage::after {
+      position: absolute;
+      z-index: -1;
+      right: -40px;
+      bottom: 51px;
+      left: -40px;
+      height: 55px;
+      border-top: 5px solid #ffe4a0;
+      background: repeating-linear-gradient(90deg, #dc8b83 0 39px, #f1b09a 39px 78px);
+      box-shadow: 0 12px 0 #171322, 0 19px 0 #40304d;
+      content: "";
+      transform: perspective(150px) rotateX(8deg);
+    }
+    .stage-label { position: absolute; top: 20px; left: 22px; color: #c6bed8; font-size: 9px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; }
+    .stage-orbit { position: absolute; top: 51%; left: 50%; width: 300px; height: 300px; border: 1px solid #ffffff17; border-radius: 50%; transform: translate(-50%, -50%); }
+    .stage-orbit::before, .stage-orbit::after { position: absolute; inset: 23px; border: 1px dashed #ffffff16; border-radius: 50%; content: ""; }
+    .stage-orbit::after { inset: 52px; border-style: solid; border-color: #8c7bff22; }
+    .versus {
+      position: absolute;
+      z-index: 2;
+      top: 46%;
+      left: 50%;
+      display: grid;
+      width: 68px;
+      height: 68px;
+      place-items: center;
+      border: 3px solid #fff3ce;
+      border-radius: 50%;
+      color: #22182a;
+      background: var(--pink);
+      box-shadow: 0 0 0 8px #ff547822, 0 8px 26px #0007;
+      font-size: 16px;
+      font-weight: 1000;
+      font-style: italic;
+      transform: translate(-50%, -50%) rotate(-10deg);
+    }
+    .fighter {
+      position: absolute;
+      z-index: 1;
+      bottom: 82px;
+      width: 40%;
+      height: 230px;
+      background-repeat: no-repeat;
+      background-size: 800% 100%;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 15px 6px #090811aa);
+      animation: idle .92s steps(8, end) infinite;
+    }
+    .fighter-juba { left: 5%; background-image: url("https://raw.githubusercontent.com/JaoDaJunq/smash_junq/main/game/assets/characters/juba/pixel/parado.png"); }
+    .fighter-capi { right: 5%; background-image: url("https://raw.githubusercontent.com/JaoDaJunq/smash_junq/main/game/assets/characters/seu_capivas/pixel/parado.png"); transform: scaleX(-1); animation-delay: -.46s; }
+    @keyframes idle { from { background-position: 0 0; } to { background-position: 100% 0; } }
+    .stage-caption { position: absolute; right: 20px; bottom: 17px; left: 20px; display: flex; justify-content: space-between; color: #ddd5e8; font-size: 9px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+    .quick-facts { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 18px; background: #ffffff06; }
+    .fact { padding: 19px 22px; }
+    .fact + .fact { border-left: 1px solid var(--line); }
+    .fact b { display: block; margin-bottom: 5px; color: var(--gold); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .fact span { color: var(--muted); font-size: 12px; }
+    .section { padding: 92px 0; }
+    .section-heading { max-width: 670px; margin: 0 auto 36px; text-align: center; }
+    .section-heading .eyebrow { justify-content: center; }
+    h2 { margin: 15px 0 12px; font-size: clamp(30px, 5vw, 46px); font-weight: 950; letter-spacing: -.055em; line-height: 1; }
+    .section-heading p { margin: 0; color: var(--muted); line-height: 1.7; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .card { min-height: 190px; border: 1px solid var(--line); border-radius: 18px; padding: 24px; background: linear-gradient(145deg, #28243b, #1f1c2e); }
+    .card-icon { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid #ffd56d40; border-radius: 11px; color: var(--gold); background: #ffd56d12; font-size: 17px; }
+    .card h3 { margin: 19px 0 8px; font-size: 16px; }
+    .card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .download-panel { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 28px; border: 1px solid #ffd56d39; border-radius: 22px; padding: 32px; background: linear-gradient(112deg, #302541, #211e31 65%); box-shadow: inset 0 1px #ffffff12; }
+    .download-panel h2 { margin: 0 0 9px; font-size: clamp(25px, 4vw, 36px); }
+    .download-panel p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .download-panel .button { white-space: nowrap; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 22px; }
+    .step { display: flex; align-items: flex-start; gap: 12px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .step i { display: grid; flex: 0 0 26px; width: 26px; height: 26px; place-items: center; border-radius: 50%; color: #201827; background: var(--gold); font-size: 11px; font-style: normal; font-weight: 950; }
+    .step b { color: var(--cream); }
+    footer { margin-top: 70px; border-top: 1px solid var(--line); padding: 25px 0 34px; color: #aaa3bb; font-size: 11px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    footer a { color: var(--gold); text-decoration: none; }
+    @media (max-width: 850px) {
+      .hero { grid-template-columns: 1fr; gap: 38px; padding-top: 55px; }
+      .hero-copy { max-width: 680px; }
+      .stage { min-height: 410px; }
+      .fighter { width: 35%; height: 220px; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 32px, var(--max)); }
+      .topbar { min-height: 70px; }
+      .top-tag { padding: 8px 10px; font-size: 8px; }
+      .hero { min-height: auto; gap: 30px; padding: 52px 0 45px; }
+      h1 { font-size: clamp(65px, 18vw, 92px); }
+      .lead { margin-top: 25px; font-size: 16px; }
+      .cta-row { align-items: stretch; }
+      .button { flex: 1 1 100%; }
+      .stage { min-height: 330px; border-radius: 21px; }
+      .stage-orbit { width: 230px; height: 230px; }
+      .fighter { bottom: 76px; width: 43%; height: 180px; }
+      .versus { width: 56px; height: 56px; font-size: 13px; }
+      .quick-facts { grid-template-columns: 1fr; }
+      .fact { padding: 14px 17px; }
+      .fact + .fact { border-top: 1px solid var(--line); border-left: 0; }
+      .section { padding: 68px 0; }
+      .cards, .steps { grid-template-columns: 1fr; }
+      .card { min-height: auto; }
+      .download-panel { grid-template-columns: 1fr; padding: 24px; }
+      .download-panel .button { width: 100%; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
-<header><div class="brand">★ JUNQ GAMES</div><div class="chip">ALPHA • WINDOWS</div></header>
-<main>
-<section class="hero">
-<div class="kicker">ENTRE NA ARENA</div>
-<h1>SMASH<span>JUNQ</span></h1>
-<p class="subtitle">Personagens absurdos. Golpes únicos. Um objetivo: jogar teus amigos pra fora da arena.</p>
-<div class="actions">
-<a id="download" class="btn primary" href="https://github.com/JaoDaJunq/smash_junq/releases" aria-disabled="true">⬇ ALPHA EM PREPARAÇÃO</a>
-<a class="btn secondary" href="https://github.com/JaoDaJunq/smash_junq" target="_blank" rel="noopener noreferrer">VER PROJETO ↗</a>
-</div>
-<p class="status" id="status" role="status">O download será liberado após a primeira versão executável ser publicada.</p>
-<div class="arena" aria-hidden="true"><span class="fighter left">🦁</span><span class="burst">VS!</span><span class="fighter right">🦫</span></div>
-</section>
-<section class="info" aria-label="Sobre o jogo">
-<div class="panel"><b>⚡ CAOS LOCAL</b><p>Jogue contra a CPU ou desafie alguém no mesmo computador. Sem multiplayer online nesta Alpha.</p></div>
-<div class="panel"><b>🥊 VENCE QUEM DERRUBA</b><p>Acumule dano, lance o rival para fora da arena e conquiste 3 nocautes.</p></div>
-<div class="panel"><b>🖥️ BAIXOU, JOGOU</b><p>Windows 64 bits. Extraia o ZIP e execute SmashJunq.exe. Não precisa instalar Godot.</p></div>
-</section>
-</main>
-<footer>Feito com carinho e caos por JUNQ GAMES · <a href="https://github.com/JaoDaJunq/smash_junq/issues">Reportar um bug</a></footer>
-<script>
-(async()=>{
- const button=document.getElementById('download'),status=document.getElementById('status');
- try{
-  const response=await fetch('https://api.github.com/repos/JaoDaJunq/smash_junq/releases/latest',{headers:{Accept:'application/vnd.github+json'}});
-  if(!response.ok)return;
-  const release=await response.json();
-  const asset=(release.assets||[]).find(a=>/^SmashJunq-Alpha-Windows\.zip$/i.test(a.name));
-  if(!asset)return;
-  button.href=asset.browser_download_url;
-  button.removeAttribute('aria-disabled');
-  button.textContent='⬇ BAIXAR ALPHA PARA WINDOWS';
-  status.textContent='Versão '+(release.tag_name||'Alpha')+' • Download ZIP • Windows 64 bits';
- }catch(_){/* O botão fica indisponível até existir um release válido. */}
-})();
-</script>
-</body></html>
+  <header class="topbar wrap">
+    <a class="brand" href="#top" aria-label="Smash Junq, início">
+      <span class="brand-mark" aria-hidden="true">J</span>
+      <span class="brand-name">JUNQ GAMES<small>APRESENTA</small></span>
+    </a>
+    <span class="top-tag">Alpha pública · Windows</span>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero" aria-labelledby="title">
+      <div class="hero-copy">
+        <div class="eyebrow">A arena está aberta</div>
+        <h1 id="title">Smash<span>Junq</span></h1>
+        <p class="lead">Joga junto, acerta o golpe e manda o rival <strong>pra fora da arena</strong>. A primeira Alpha já está pronta pra cair na mão da galera.</p>
+        <div class="cta-row">
+          <a class="button button-primary" href="https://github.com/JaoDaJunq/smash_junq/releases/download/alpha-latest/SmashJunq-Alpha-Windows.zip" download>
+            <span class="download-icon" aria-hidden="true">↓</span> Baixar Alpha grátis
+          </a>
+          <a class="button button-secondary" href="#sobre">Conhecer o jogo <span aria-hidden="true">↘</span></a>
+        </div>
+        <p class="download-note">ZIP para Windows 64 bits · sem instalação</p>
+      </div>
+
+      <div class="stage" aria-label="Juba e Seu Capivas se enfrentam na arena">
+        <span class="stage-label">Desafio local · 1 contra 1</span>
+        <span class="stage-orbit" aria-hidden="true"></span>
+        <span class="fighter fighter-juba" aria-hidden="true"></span>
+        <span class="fighter fighter-capi" aria-hidden="true"></span>
+        <span class="versus" aria-hidden="true">VS</span>
+        <div class="stage-caption"><span>Juba · o ágil</span><span>Seu Capivas · o pesado</span></div>
+      </div>
+    </section>
+
+    <section class="quick-facts" aria-label="Detalhes da Alpha">
+      <div class="fact"><b>Windows 64 bits</b><span>Baixe, extraia e abra o jogo</span></div>
+      <div class="fact"><b>Dois jeitos de jogar</b><span>Contra a CPU ou no mesmo computador</span></div>
+      <div class="fact"><b>Vitória por nocaute</b><span>Faça 3 KOs e leve a partida</span></div>
+    </section>
+
+    <section id="sobre" class="section" aria-labelledby="about-title">
+      <div class="section-heading">
+        <div class="eyebrow">Caos local, diversão direta</div>
+        <h2 id="about-title">Entra na luta.</h2>
+        <p>Acumule dano, use os golpes especiais e volte pra arena. Essa versão é feita pra jogar no PC, sozinho contra a CPU ou com alguém do teu lado.</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <span class="card-icon" aria-hidden="true">✦</span>
+          <h3>Dois lutadores originais</h3>
+          <p>Escolhe o ligeiro Juba ou o tanque Seu Capivas. Cada um tem golpes e ritmo próprios.</p>
+        </article>
+        <article class="card">
+          <span class="card-icon" aria-hidden="true">↗</span>
+          <h3>Um KO muda tudo</h3>
+          <p>Quanto mais dano, mais longe o rival voa. Recupera, volta e tenta virar o placar.</p>
+        </article>
+        <article class="card">
+          <span class="card-icon" aria-hidden="true">⌘</span>
+          <h3>Joga do teu jeito</h3>
+          <p>Teclado ou controle. Treina os golpes, enfrenta a CPU ou chama alguém pra disputa local.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="download" aria-labelledby="download-title">
+      <div class="download-panel">
+        <div>
+          <div class="eyebrow">Tua próxima partida começa aqui</div>
+          <h2 id="download-title">Baixa e bora.</h2>
+          <p>O arquivo vem compactado. Não precisa instalar Godot nem criar conta.</p>
+        </div>
+        <a class="button button-primary" href="https://github.com/JaoDaJunq/smash_junq/releases/download/alpha-latest/SmashJunq-Alpha-Windows.zip" download>
+          <span class="download-icon" aria-hidden="true">↓</span> Baixar o jogo
+        </a>
+      </div>
+      <div class="steps" aria-label="Como iniciar">
+        <div class="step"><i>1</i><span><b>Baixa</b> o ZIP da Alpha.</span></div>
+        <div class="step"><i>2</i><span><b>Extrai</b> a pasta no teu computador.</span></div>
+        <div class="step"><i>3</i><span><b>Abre SmashJunq.exe</b> e chama a disputa.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner wrap">
+      <span>Feito com carinho e caos por JUNQ GAMES.</span>
+      <span>Achou um bug? <a href="https://github.com/JaoDaJunq/smash_junq/issues">Conta pra gente no GitHub ↗</a></span>
+    </div>
+  </footer>
+</body>
+</html>
