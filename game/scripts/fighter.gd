@@ -202,6 +202,7 @@ func _physics_process(delta: float) -> void:
 	if brain != null:
 		controls.begin_frame()
 		brain.think(self, delta)
+	controls.record_frame()   # fila de entrada: anota os toques deste quadro (depois da CPU)
 	invincible_time = maxf(invincible_time - delta, 0.0)
 	sand_time = maxf(sand_time - delta, 0.0)
 	if turn_lock > 0.0:
@@ -212,7 +213,10 @@ func _physics_process(delta: float) -> void:
 	_shield_was_down = shield_down
 	_update_holding()
 	# Guarda o próximo toque da sequência do ataque básico, mesmo durante a pausa de impacto.
-	if state == State.ATTACK and JAB_CHAIN.has(attack_id) and attack_frame >= 1 			and controls.just_pressed("attack") and _stick_direction() == "neutral":
+	# Usa a fila: o toque que encadeia o jab é gasto aqui (um toque = um jab a mais).
+	if state == State.ATTACK and JAB_CHAIN.has(attack_id) and attack_frame >= 1 and not _jab_queued \
+			and controls.buffered("attack") and _stick_direction() == "neutral":
+		controls.consume("attack")
 		_jab_queued = true
 	if _hitstop > 0:
 		_hitstop -= 1
@@ -282,20 +286,25 @@ func _process_ground(dir: float, run_trigger: bool, delta: float) -> void:
 	helpless = false
 	_air_dodge_used = false
 	jumps_left = air_jumps
-	if controls.just_pressed("grab") or (controls.pressed("shield") and controls.just_pressed("attack")):
+	# Fila de entrada: sai o toque guardado mais antigo (empate: ordem da lista).
+	var nxt := controls.oldest(["grab", "attack", "special", "jump"])
+	if nxt == "grab" or (nxt == "attack" and controls.pressed("shield")):
+		controls.consume(nxt)
 		start_grab()
 		return
+	# Defesa (Shift): parado levanta o escudo; andando ou correndo, esquiva
+	# rápida e intocável para o lado do movimento (como no Brawlhalla).
+	if absf(dir) > 0.0 and controls.take("shield"):
+		_start_roll(int(signf(dir)))
+		return
 	if controls.pressed("shield"):
-		# Defesa (Shift): parado levanta o escudo; andando ou correndo, esquiva
-		# rápida e intocável para o lado do movimento (como no Brawlhalla).
-		if _shield_tap and absf(dir) > 0.0:
-			_start_roll(int(signf(dir)))
-		else:
-			_enter_shield()
+		controls.consume("shield")
+		_enter_shield()
 		return
-	if _try_start_action():
+	if (nxt == "attack" or nxt == "special") and _try_start_action():
 		return
-	if controls.just_pressed("jump"):
+	if nxt == "jump":
+		controls.consume("jump")
 		_jump(jump_velocity)
 		return
 	if controls.just_pressed("down") and _on_platform():
@@ -322,12 +331,22 @@ func _process_air(dir: float, delta: float) -> void:
 	state = State.AIR
 	_jump_time += delta
 	if not helpless:
-		if controls.just_pressed("shield") and not _air_dodge_used:
+		# Fila de entrada: esquiva, golpe ou pulo duplo, o que foi apertado antes.
+		var opts: Array[String] = []
+		if not _air_dodge_used:
+			opts.append("shield")
+		opts.append_array(["attack", "special"])
+		if jumps_left > 0:
+			opts.append("jump")
+		var nxt := controls.oldest(opts)
+		if nxt == "shield":
+			controls.consume("shield")
 			_start_air_dodge()
 			return
-		if _try_start_action():
+		if (nxt == "attack" or nxt == "special") and _try_start_action():
 			return
-		if controls.just_pressed("jump") and jumps_left > 0:
+		if nxt == "jump":
+			controls.consume("jump")
 			jumps_left -= 1
 			_jump(double_jump_velocity)
 			if absf(dir) > 0.0:
@@ -364,6 +383,9 @@ func _jump(speed: float) -> void:
 	fast_falling = false
 	velocity.y = -speed
 	_jump_time = 0.0
+	# Pulo que saiu da fila com o botão já solto: pulo curto (como soltar na hora).
+	if not controls.pressed("jump"):
+		velocity.y *= short_hop_factor
 
 
 func _after_move(was_airborne: bool) -> void:
@@ -386,9 +408,12 @@ func _after_move(was_airborne: bool) -> void:
 
 ## Lê Ataque/Especial e a direção e começa o golpe certo. Retorna true se começou.
 func _try_start_action() -> bool:
-	var special := controls.just_pressed("special")
-	if not special and not controls.just_pressed("attack"):
+	# Fila de entrada: o toque guardado mais antigo (empate: especial, como antes).
+	var which := controls.oldest(["special", "attack"])
+	if which == "":
 		return false
+	controls.consume(which)
+	var special := which == "special"
 	var stick := _stick_direction()
 	if special:
 		var kind := "neutral"
@@ -708,6 +733,7 @@ func can_escape() -> bool:
 func _process_hitstun(delta: float) -> void:
 	_hitstun -= delta
 	if _shield_tap and can_escape():
+		controls.consume("shield")   # o toque de Defesa foi usado para escapar
 		_escape_wait = escape_cooldown
 		_hitstun = 0.0
 		_launch = Vector2.ZERO
@@ -775,10 +801,10 @@ func _process_shield(delta: float) -> void:
 	if shield_hp <= 0.0:
 		_break_shield()
 		return
-	if controls.just_pressed("jump"):
+	if controls.take("jump"):
 		_jump(jump_velocity)
 		return
-	if controls.just_pressed("attack") or controls.just_pressed("grab"):
+	if controls.take("attack") or controls.take("grab"):
 		start_grab()
 		return
 	if controls.just_pressed("left"):
@@ -920,7 +946,7 @@ func _process_holding(delta: float) -> void:
 		_grab_escape()
 		return
 	_pummel_cooldown -= 1
-	if controls.just_pressed("attack") and _pummel_cooldown <= 0:
+	if _pummel_cooldown <= 0 and controls.take("attack"):
 		holding.add_damage(pummel_damage)
 		holding._hitstop = 3
 		_pummel_cooldown = 18
@@ -1054,7 +1080,9 @@ func _process_held(_delta: float) -> void:
 	if held_by == null or not is_instance_valid(held_by):
 		release_held()
 		return
-	# Apertar botões ajuda a se soltar mais rápido do agarrão.
+	# Apertar botões ajuda a se soltar mais rápido do agarrão. Esses toques não
+	# ficam na fila (senão viram golpe assim que ele é solto).
+	controls.clear_buffer()
 	for action in ["jump", "attack", "special", "shield", "left", "right", "up", "down"]:
 		if controls.just_pressed(action):
 			held_by.shorten_grab(0.08)
@@ -1144,7 +1172,7 @@ func _process_ledge(dir: float) -> void:
 	if controls.just_pressed("up"):
 		global_position = _ledge.global_position + Vector2(-side * (RADIUS + 24.0), -HEIGHT * 0.5 - 1.0)
 		_release_ledge(State.IDLE)
-	elif controls.just_pressed("jump"):
+	elif controls.take("jump"):
 		_release_ledge(State.AIR)
 		_jump(jump_velocity)
 	elif controls.just_pressed("down") or (absf(dir) > 0.0 and int(signf(dir)) == side):
