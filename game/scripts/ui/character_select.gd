@@ -159,7 +159,7 @@ func _portrait(char_index: int) -> Texture2D:
 		return null
 	var a := AtlasTexture.new()
 	a.atlas = sheet
-	a.region = Rect2(14, 4, 36, 36)
+	a.region = Rect2(14 + (UiArt.frame_width(sheet, "res://assets/characters/%s/pixel/parado.png" % id) - 64.0) * 0.5, 4, 36, 36)
 	return a
 
 
@@ -258,7 +258,7 @@ func _show_splash(pid: String, stage: Control, idx: int) -> void:
 	if art == null:
 		var f := UiArt.FighterIdle.new().setup("res://assets/characters/%s/pixel/parado.png" % id, 5.6, 6.0)
 		f.flip_h = pid == "p2"   # os dois se olham
-		f.position = Vector2((STAGE.x - 64 * 5.6) * 0.5, STAGE.y - 64 * 5.6 + 10)
+		f.position = Vector2((STAGE.x - 64 * 5.6) * 0.5 - f.margin_px, STAGE.y - 64 * 5.6 + 10)
 		stage.add_child(f)
 		return
 	var h := STAGE.y / SPLASH_SHOWN
@@ -299,7 +299,7 @@ func _show_splash(pid: String, stage: Control, idx: int) -> void:
 	var px := 2.6
 	var f := UiArt.FighterIdle.new().setup("res://assets/characters/%s/pixel/parado.png" % id, px, 6.0)
 	f.flip_h = pid == "p2"
-	f.position = Vector2(0.0 if pid == "p1" else STAGE.x - 64 * px, STAGE.y - 64 * px + 6)
+	f.position = Vector2(0.0 if pid == "p1" else STAGE.x - 64 * px, STAGE.y - 64 * px + 6) - Vector2(f.margin_px, 0)
 	stage.add_child(f)
 
 

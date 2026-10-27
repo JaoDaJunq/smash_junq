@@ -36,8 +36,25 @@ static func portrait(char_id: String) -> Texture2D:
 		return null
 	var a := AtlasTexture.new()
 	a.atlas = sheet
-	a.region = Rect2(14, 4, 36, 36)
+	var m := (frame_width(sheet, "res://assets/characters/%s/pixel/parado.png" % char_id) - 64.0) * 0.5
+	a.region = Rect2(14 + m, 4, 36, 36)
 	return a
+
+
+## Largura de UM quadro da folha. Personagens com MARGEM (bico, rabo...) têm
+## quadros mais largos que 64: lê "quadros" do animacoes.json ao lado da folha.
+static func frame_width(sheet: Texture2D, sheet_path: String) -> float:
+	if sheet == null:
+		return 64.0
+	var anim := sheet_path.get_file().get_basename()
+	var jp := sheet_path.get_base_dir().path_join("animacoes.json")
+	if FileAccess.file_exists(jp):
+		var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(jp))
+		if data is Dictionary and (data as Dictionary).has(anim):
+			var n := int(((data as Dictionary)[anim] as Dictionary).get("quadros", 0))
+			if n > 0:
+				return float(sheet.get_width()) / n
+	return 64.0
 
 
 ## Índice em Game.CHARACTERS do lutador (pela cena dele); -1 se não achar.
@@ -185,26 +202,32 @@ static func ribbon(text: String, size := 54, color := RIBBON) -> Control:
 class FighterIdle extends TextureRect:
 	var frames := 1
 	var fps := 6.0
+	var fw := 64.0           # largura de um quadro (64 + 2 x MARGEM do personagem)
+	var margin_px := 0.0     # quanto o quadro sobra de cada lado de 64, já na escala
 	var _t := 0.0
 	var _atlas := AtlasTexture.new()
 
+	## Quem posiciona continua pensando num quadro de 64: some margin_px de x.
 	func setup(sheet_path: String, px: float, speed := 6.0) -> FighterIdle:
 		fps = speed
 		var sheet: Texture2D = UiArt.tex(sheet_path)
 		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		custom_minimum_size = Vector2(64, 64) * px
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if sheet != null:
-			frames = maxi(1, int(sheet.get_width() / 64))
+			fw = UiArt.frame_width(sheet, sheet_path)
+			frames = maxi(1, roundi(sheet.get_width() / fw))
 			_atlas.atlas = sheet
-			_atlas.region = Rect2(0, 0, 64, 64)
+			_atlas.region = Rect2(0, 0, fw, 64)
 			texture = _atlas
+		margin_px = (fw - 64.0) * 0.5 * px
+		custom_minimum_size = Vector2(fw, 64) * px
+		size = custom_minimum_size
 		return self
 
 	func _process(delta: float) -> void:
 		if _atlas.atlas == null:
 			return
 		_t += delta
-		_atlas.region = Rect2((int(_t * fps) % frames) * 64, 0, 64, 64)
+		_atlas.region = Rect2((int(_t * fps) % frames) * fw, 0, fw, 64)
