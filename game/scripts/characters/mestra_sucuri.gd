@@ -267,6 +267,11 @@ func _check_hits() -> void:
 func _on_attack_end(move_id: String) -> void:
 	if move_id == "special_down" and holding != null:
 		throw_held(lasso_throw_data if lasso_throw_data != null else moveset.special_down, facing)
+	elif move_id == "special_side" and holding != null:
+		# Laço interrompido (pousou no meio, levou golpe...): solta o laçado,
+		# senão ele fica seguro (parado e intocável) até o fim da partida.
+		_lasso_t = 0
+		release_hold()
 
 
 ## No laço, o laçado fica onde a cauda está (longe) até ser puxado.

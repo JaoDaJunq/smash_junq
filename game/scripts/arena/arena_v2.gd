@@ -22,6 +22,8 @@ const LAYER_PLATFORM := 2
 ## agarrar ("l", "r"). soft: plataformas finas [centro, y do topo]. moving: finas
 ## que se movem [centro, y do topo, deslocamento, período em s, fase 0..1].
 ## decor: enfeites [x, índice 0..2] em cima do palco principal.
+## ko_zone (opcional): Rect2 da zona de KO desta arena; a partida usa no lugar
+## da padrão (fica como meta "ko_zone" na raiz da cena da arena).
 const LAYOUTS := {
 	"pantanal": {
 		"desc": "Uma ilha de barro no meio da lagoa e duas vitórias-régias que sobem e descem dos lados: boas para voltar, ruins para ficar parado.",
@@ -47,9 +49,15 @@ const LAYOUTS := {
 			{"x": -896.0, "y": 140.0, "w": 2, "h": 2, "ledges": ["l", "r"], "shape": "degraus", "seed": 21},
 			{"x": 640.0, "y": 140.0, "w": 2, "h": 2, "ledges": ["l", "r"], "shape": "torta_e", "seed": 5},
 		],
-		"soft": [[-300.0, -210.0], [300.0, -210.0], [0.0, -410.0]],
+		# Galho do meio a -330 (era -410: alto demais, a CPU ficava presa lá em
+		# cima e a partida não acabava). Dos galhos de baixo sobe com um pulo.
+		"soft": [[-300.0, -210.0], [300.0, -210.0], [0.0, -330.0]],
 		"moving": [],
 		"decor": [[-250.0, 0], [120.0, 2], [-760.0, 1]],
+		# Zona de KO própria (palco compacto): laterais e fundo mais perto que a padrão
+		# (-1400..1400 x -1200..900). Topo em -1350: do galho do meio, pulo +
+		# pulo duplo + especial para cima da Marianinha chega a y = -1258 (cerrado_smoke).
+		"ko_zone": Rect2(-1100, -1350, 2200, 2150),
 	},
 }
 
@@ -79,6 +87,11 @@ func _ready() -> void:
 	_platforms = load(folder.path_join("palco.png"))
 	_add_sky(load(folder.path_join("fundo.png")))
 	var layout: Dictionary = LAYOUTS[arena]
+	if layout.has("ko_zone"):
+		var root := owner if owner != null else get_parent()
+		if root != null:
+			root.set_meta("ko_zone", layout["ko_zone"])
+		set_meta("ko_zone", layout["ko_zone"])
 	for s in layout["solids"]:
 		_build_solid(s)
 	for p in layout["soft"]:

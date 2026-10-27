@@ -10,7 +10,7 @@ on:
 jobs:
   testes:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       GODOT_VERSION: "4.7.2"
       GODOT_BIN: ${{ github.workspace }}/godot/Godot_v4.7.2-stable_linux.x86_64
@@ -34,22 +34,11 @@ jobs:
           "$GODOT_BIN" --headless --path game --import || true
           "$GODOT_BIN" --headless --path game --import
 
-      - name: Testes de fumaça
-        run: |
-          status=0
-          for t in movement_smoke combat_smoke defense_smoke agil_smoke pesado_smoke match_smoke cpu_smoke training_smoke menus_smoke music_smoke sprite_smoke; do
-            echo "::group::$t"
-            out=$("$GODOT_BIN" --headless --path game "res://tests/$t.tscn" 2>&1 || true)
-            echo "$out" | grep -E '^\[(OK|FALHA)\]|RESULTADO|SCRIPT ERROR' || true
-            echo "::endgroup::"
-            if echo "$out" | grep -q 'RESULTADO: OK'; then
-              echo "✔ $t"
-            else
-              echo "::error::$t falhou"
-              status=1
-            fi
-          done
-          exit $status
+      - name: Testes de fumaça (todas as game/tests/*_smoke.tscn)
+        # Reprova a cena se passar de 300 s, tiver SCRIPT ERROR, tiver linha
+        # começando com [FALHA] ou não imprimir "RESULTADO: OK". O laço fica em
+        # game/tools/ci_fumaca.sh para rodar igual na máquina de quem desenvolve.
+        run: GODOT="$GODOT_BIN" bash game/tools/ci_fumaca.sh
 
       - name: Simulação CPU x CPU (4 partidas completas)
         run: |

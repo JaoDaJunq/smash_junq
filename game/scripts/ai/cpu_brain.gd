@@ -27,6 +27,12 @@ var _ledge_wait := 0
 var _seen_foe_attack: AttackData = null
 var _mash_toggle := false
 var _idle := 0
+## Segundos seguidos com o adversário muito acima ou abaixo (plataforma alta).
+var _vert_time := 0.0
+## Diferença de altura que conta como "um em cima do outro" e a paciência (s)
+## antes de quem está em cima descer e quem está embaixo tentar subir.
+const VERT_GAP := 150.0
+const VERT_PATIENCE := 2.0
 
 
 func _init(seed_value := -1) -> void:
@@ -36,12 +42,16 @@ func _init(seed_value := -1) -> void:
 		rng.randomize()
 
 
-func think(me: Fighter, _delta: float) -> void:
+func think(me: Fighter, delta: float) -> void:
 	var c := me.controls as CpuControls
 	if c == null:
 		return
 	_apply_holds(c)
 	var foe := _find_foe(me)
+	if foe != null and absf(foe.global_position.y - me.global_position.y) > VERT_GAP:
+		_vert_time += delta
+	else:
+		_vert_time = 0.0
 
 	match me.state:
 		Fighter.State.HITSTUN, Fighter.State.SHIELD_BREAK, Fighter.State.LAG:
@@ -77,6 +87,15 @@ func think(me: Fighter, _delta: float) -> void:
 
 	if foe == null:
 		return
+	# Ocupada (golpe, agarrão, esquiva): não toma decisão nova. Com a fila de
+	# entrada, um toque dado agora sairia sozinho logo depois (ex.: especial
+	# atrás de especial sem nunca andar). Só segue andando e conta o tempo.
+	if me.state in [Fighter.State.ATTACK, Fighter.State.GRAB, Fighter.State.DODGE]:
+		if _cooldown > 0:
+			_cooldown -= 1
+		if mode == Mode.APPROACH:
+			_walk_toward(me, foe, c)
+		return
 	if _cooldown > 0:
 		_cooldown -= 1
 		if mode == Mode.APPROACH:
@@ -105,6 +124,8 @@ func think(me: Fighter, _delta: float) -> void:
 		return
 
 	mode = Mode.APPROACH
+	if _vert_time > VERT_PATIENCE and _unstack(me, dy):
+		return
 	if absf(dx) > 380.0 and me.is_on_floor() and rng.randf() < zoning_chance:
 		_face(me, dx)
 		_tap("special")
@@ -199,6 +220,29 @@ func _recover(me: Fighter, c: CpuControls) -> void:
 	if me.jumps_left == 0 and (below_stage or (far and me.velocity.y > 150.0)):
 		c.press("up")
 		c.press("special")
+
+
+## Um em cima do outro há mais de VERT_PATIENCE s: quem está em cima desce da
+## plataforma fina (toque para baixo atravessa) e quem está embaixo pula alto e
+## usa o pulo duplo perto do auge. Retorna true se tomou a decisão.
+func _unstack(me: Fighter, dy: float) -> bool:
+	if dy > VERT_GAP:   # adversário embaixo
+		if me.is_on_floor() and me._on_platform():
+			_tap("down", 2)
+			_vert_time = VERT_PATIENCE - 0.5   # se não desceu, tenta de novo logo
+			_cooldown = reaction_frames
+			return true
+		return false
+	if dy < -VERT_GAP:   # adversário em cima
+		if me.is_on_floor():
+			_tap("jump", 12)   # segura: pulo alto
+			_cooldown = 4
+			return true
+		if me.jumps_left > 0 and me.velocity.y > -150.0:
+			_tap("jump", 8)    # pulo duplo perto do auge
+			_cooldown = 4
+			return true
+	return false
 
 
 ## Anda em direção ao adversário. Retorna false se ficou parada.

@@ -243,7 +243,7 @@ func _process_cling(dir: float, delta: float) -> void:
 	state = State.AIR
 	_cling -= delta
 	velocity = Vector2(_cling_side * 40.0, 30.0)   # encostado, escorregando bem devagar
-	if controls.just_pressed("jump"):
+	if controls.take("jump"):
 		_cling = 0.0
 		_cling_cooldown = CLING_COOLDOWN
 		facing = -_cling_side
