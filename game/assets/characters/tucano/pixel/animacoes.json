@@ -84,6 +84,24 @@
     "fator": 1,
     "impacto": 1
   },
+  "fx_bico_entalado": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
+  "fx_grama_peixinho": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
+  "fx_pipoca_estouro": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
   "golpe_baixo": {
     "quadros": 5,
     "fator": 1,

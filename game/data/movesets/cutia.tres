@@ -135,7 +135,7 @@ self_velocity = Vector2(0, 0)
 [sub_resource type="Resource" id="Resource_6x1f0"]
 script = ExtResource("1_24tt8")
 id = "special_up"
-startup = 4
+startup = 3
 active = 10
 recovery = 12
 landing_lag = 16

@@ -24,6 +24,19 @@ const NATIVE := 64
 ## (3 células de 64+2N). No jogo, center_x da cena = 32 + N.
 const MARGEM := {"tucano": 8, "onca": 10, "cutia": 16, "calango": 16}
 var FW := NATIVE  # largura do quadro nativo deste personagem
+var _char_fw := NATIVE  # FW do personagem (FW muda por folha nos efeitos/objetos)
+
+
+## Largura nativa da célula de uma folha 3 colunas x 2 linhas ampliada (1024 de
+## altura = escala 8). 0 se a folha não tem esse formato.
+func _natural_fw(path: String) -> int:
+	var img := Image.load_from_file(path)
+	if img == null or img.get_height() != NATIVE * 2 * 8:
+		return 0
+	var scale := img.get_height() / (NATIVE * 2)
+	if img.get_width() % (3 * scale) != 0:
+		return 0
+	return img.get_width() / (3 * scale)
 const BASELINE := 59
 ## Pedaço solto com até este número de pixels (separado do personagem) é migalha
 ## da célula vizinha ou da redução de escala e é apagado. Objetos de propósito
@@ -44,7 +57,10 @@ const MEIO_REPETIR := {
 ## borda, que o jogo prende pela mão).
 const SEM_ALINHAR := ["pendurado"]
 ## Efeitos (fx_*) e objetos soltos ficam como vieram (centrados), sem alinhar pelos pés.
-const OBJETOS := ["castanha", "pandeiro", "semente", "nota", "laco_cauda", "estandarte", "arco", "cama_elastica"]
+## São lidos na largura de célula DA PRÓPRIA FOLHA (folha 1536 = quadros de 64 mesmo
+## em personagem com MARGEM) e gravados nessa largura ("largura" no animacoes.json).
+const OBJETOS := ["castanha", "pandeiro", "semente", "nota", "laco_cauda", "estandarte", "arco", "cama_elastica",
+	"castanha_enterrada", "rabo", "rabo_solto", "pipoca", "areia", "faixa_interditado"]
 ## Animações em loop (recebem também o intermediário entre o último e o primeiro).
 const LOOPS := ["parado", "andar", "correr", "vitoria", "tonto", "descanso", "pendurado"]
 ## Folhas com mais de uma animação: folha -> {animação: quadros}.
@@ -61,6 +77,7 @@ const IMPACTO := {
 func _initialize() -> void:
 	var who: String = OS.get_cmdline_user_args()[0]
 	FW = NATIVE + 2 * int(MARGEM.get(who, 0))
+	_char_fw = FW
 	var src := ProjectSettings.globalize_path("res://").path_join("../art/pixel").path_join(who)
 	var dst := ProjectSettings.globalize_path("res://assets/characters").path_join(who).path_join("pixel")
 	DirAccess.make_dir_recursive_absolute(dst)
@@ -77,6 +94,10 @@ func _initialize() -> void:
 		var anim := file.get_basename()
 		if not file.ends_with(".png") or anim == "base" or anim.ends_with("_meio"):
 			continue
+		FW = _char_fw
+		var loose := anim in OBJETOS or anim.begins_with("fx_")
+		if loose:
+			FW = _natural_fw(src.path_join(file))
 		var frames := _read(src.path_join(file), SELECAO.get(who, {}).get(anim, []))
 		if anim not in SEM_ALINHAR and anim not in OBJETOS and not anim.begins_with("fx_"):
 			frames = _align(frames)
@@ -131,8 +152,23 @@ func _initialize() -> void:
 	quit()
 
 
-## Quadros nativos de uma folha (sem alinhar).
+## Quadros nativos de uma folha (sem alinhar). Pose numa folha de outra largura
+## (ex.: folha 1536 sem recentrar num personagem com MARGEM) é lida na largura da
+## folha e centralizada no quadro do personagem (antes lia na escala errada).
 func _read(path: String, pick: Array) -> Array[Image]:
+	var natural := _natural_fw(path)
+	if natural != FW and natural > 0:
+		var keep := FW
+		FW = natural
+		var raw := _read(path, pick)
+		FW = keep
+		var padded: Array[Image] = []
+		for f in raw:
+			var out := Image.create(FW, NATIVE, false, Image.FORMAT_RGBA8)
+			out.blit_rect(f, Rect2i(0, 0, natural, NATIVE), Vector2i((FW - natural) / 2, 0))
+			padded.append(out)
+		push_warning("%s: folha com células de %d (personagem usa %d): centralizada" % [path.get_file(), natural, FW])
+		return padded
 	var sheet := Image.load_from_file(path)
 	sheet.convert(Image.FORMAT_RGBA8)
 	var scale := sheet.get_width() / (FW * 3)
@@ -207,6 +243,8 @@ func _save(dst: String, anim: String, frames: Array[Image], factor: int, meta: D
 	var n0 := frames.size() if factor == 1 else (frames.size() + 1) / 2
 	var impact: int = IMPACTO.get(who, {}).get(anim, 1 if n0 <= 3 else (2 if n0 <= 5 else 3))
 	meta[anim] = {"quadros": frames.size(), "fator": factor, "impacto": impact * factor}
+	if FW != _char_fw:
+		meta[anim]["largura"] = FW
 	print("%s: %d quadros%s" % [anim, frames.size(), " (intercalada)" if factor == 2 else ""])
 
 

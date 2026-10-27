@@ -244,10 +244,13 @@ func _start_grab_hold(target: Fighter) -> void:
 
 
 func _hypnotize() -> void:
+	if sand_time > 0.0:
+		sand_time = 0.0   # areia do Calango nos olhos: a hipnose erra
+		return
 	for f in get_tree().get_nodes_in_group("fighters"):
 		var foe := f as Fighter
-		if foe == self or not foe.can_be_hit():
-			continue
+		if foe == self or not foe.can_be_hit() or foe.sand_time > 0.0:
+			continue   # olho fechado de areia não é hipnotizado
 		var d := foe.global_position - global_position
 		if absf(d.x) <= HYPNO_RANGE and absf(d.y) < 90.0 and signf(d.x) == float(facing):
 			foe.hypnotize(HYPNO_TIME)

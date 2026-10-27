@@ -42,7 +42,14 @@
   "castanha": {
     "quadros": 2,
     "fator": 1,
-    "impacto": 1
+    "impacto": 1,
+    "largura": 80
+  },
+  "castanha_enterrada": {
+    "quadros": 2,
+    "fator": 1,
+    "impacto": 1,
+    "largura": 64
   },
   "correr": {
     "quadros": 6,
@@ -88,6 +95,18 @@
     "quadros": 3,
     "fator": 1,
     "impacto": 1
+  },
+  "fx_cova": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
+  "fx_estouro_castanha": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
   },
   "golpe_baixo": {
     "quadros": 5,

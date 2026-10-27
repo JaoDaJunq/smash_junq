@@ -38,10 +38,18 @@ func _ready() -> void:
 			"marianinha": await _marianinha()
 			"sucuri": await _sucuri()
 			"tatu_peba": await _peba()
-			"tucano": await _tucao()
-			"onca": await _onca()
-			"cutia": await _cutia()
-			"calango": await _calango()
+			"tucano":
+				await _tucao()
+				await _tucao_r12()
+			"onca":
+				await _onca()
+				await _onca_r12()
+			"cutia":
+				await _cutia()
+				await _cutia_r12()
+			"calango":
+				await _calango()
+				await _calango_r12()
 		_match.queue_free()
 		await _frames(5)
 	print("\n".join(results))
@@ -341,12 +349,12 @@ func _onca() -> void:
 	await _frames(40)
 	_check("Onça: voz de prisão bate mais forte e zera a ficha", foe.damage_percent > normal * 1.3 and o.ficha_de(foe) == 0,
 		"%.1f x %.1f, ficha %d" % [foe.damage_percent, normal, o.ficha_de(foe)])
-	# Rugido empurra para trás
+	# "Parado aí!" (antigo rugido) empurra para trás — agora empurra pouco (ROAR_PUSH 420)
 	await _face_off(150.0)
 	var x0 := foe.global_position.x
 	me.start_special("neutral")
 	await _frames(40)
-	_check("Onça: rugido empurra", foe.global_position.x > x0 + 60.0, "%.0f px" % (foe.global_position.x - x0))
+	_check("Onça: rugido empurra", foe.global_position.x > x0 + 15.0, "%.0f px" % (foe.global_position.x - x0))
 	o.set_ficha(foe, 0)
 
 
@@ -395,16 +403,20 @@ func _calango() -> void:
 	await _frames(30)
 	_check("Calango: rabo solto segura o lançamento", not c.tail_ready and absf(me.global_position.x + 200.0) < 200.0,
 		"rabo=%s x=%.0f" % [c.tail_ready, me.global_position.x])
-	# Tomar sol: fica mais rápido
+	# Tomar sol: fica mais rápido (segurando o botão junta os 3 níveis)
 	await _face_off(400.0)
 	var base: float = c._base_speeds.y
+	Input.action_press("p1_special")
 	me.start_special("down")
-	await _frames(40)
+	await _frames(70)
+	Input.action_release("p1_special")
+	await _frames(10)
 	_check("Calango: sol acelera", c.has_sun() and me.run_speed > base * 1.2, "%.0f -> %.0f" % [base, me.run_speed])
 
 
 func _face_off(gap := 70.0) -> void:
-	for n in get_tree().get_nodes_in_group("camas_elasticas") + get_tree().get_nodes_in_group("estandartes"):
+	for n in get_tree().get_nodes_in_group("camas_elasticas") + get_tree().get_nodes_in_group("estandartes") \
+			+ get_tree().get_nodes_in_group("faixas") + get_tree().get_nodes_in_group("iscas"):
 		n.queue_free()
 	await _place(me, Vector2(-200, -60), 1)
 	await _place(foe, Vector2(-200 + gap, -60), -1)
@@ -427,6 +439,9 @@ func _place(f: Fighter, pos: Vector2, face := 1) -> void:
 	f.facing = face
 	f.visible = true
 	f.slip_time = 0.0
+	f.turn_lock = 0.0
+	f.sand_time = 0.0
+	f.invincible_time = 0.0
 	await _frames(2)
 
 
@@ -439,3 +454,406 @@ func _check(name: String, ok: bool, detail: String) -> void:
 	results.append(("[OK] " if ok else "[FALHA] ") + name + " — " + detail)
 	if not ok:
 		failures += 1
+
+
+# --- Rodada 12: mecânicas novas dos 4 (design/revisao/novos_personagens.md) ---
+
+func _tucao_r12() -> void:
+	var t := me as Tucao
+	_check("Tucão: 2 pulos no ar (ave)", t.air_jumps == 2, str(t.air_jumps))
+	_check("Tucão: bicada final do jab (jab3) é blindada", "jab3" in Tucao.BICO and not "jab_c" in Tucao.BICO and not "special_up" in Tucao.BICO, str(Tucao.BICO))
+	# Blindagem tem limite: golpe de 20% atravessa
+	await _face_off(300.0)
+	me.start_attack("ftilt")
+	await _frames(2)
+	var big := AttackData.new()
+	big.damage = 20.0
+	big.angle = 45.0
+	big.base_knockback = 300.0
+	big.knockback_growth = 3.0
+	me.receive_hit(foe, big, -1)
+	_check("Tucão: blindagem para em 12% (smash de 20% derruba)", me.state == Fighter.State.HITSTUN, Fighter.State.keys()[me.state])
+	# Blindagem aguentou: estalo visível (evento armor)
+	await _face_off(300.0)
+	me.start_attack("ftilt")
+	await _frames(2)
+	var small := AttackData.new()
+	small.damage = 3.0
+	small.base_knockback = 100.0
+	me.receive_hit(foe, small, -1)
+	await _frames(1)
+	_check("Tucão: blindagem mostra o estalo", _fx_count("tranco") + _fx_count("fx_trave_tranco") > 0 and me.attack_id == "ftilt", me.attack_id)
+	# Pipoca em arco que acerta e estoura
+	await _face_off(260.0)
+	me.start_special("neutral")
+	await _frames(14)
+	var arc := false
+	for p in _projectiles(me):
+		arc = arc or (p.gravity > 0.0 and p.bounces == 1)
+	var hit := false
+	var pop := false
+	for i in 60:
+		await get_tree().physics_frame
+		hit = hit or foe.damage_percent > 0.0
+		pop = pop or _fx_count("fx_pipoca_estouro") > 0
+	_check("Tucão: pipocas em arco (gravidade + 1 quique)", arc, "")
+	_check("Tucão: pipoca acerta e estoura (gancho de projétil)", hit and pop, "dano %.1f, estouro %s" % [foe.damage_percent, pop])
+	# Gol de peixinho: parede alta à frente = trave (para e fica tonto)
+	await _face_off(600.0)
+	foe.global_position = Vector2(3000, -3000)
+	var wall := _wall(Vector2(me.global_position.x + 170.0, -300.0))
+	await _frames(2)
+	var n0 := t.trave_count
+	me.start_special("side")
+	await _frames(40)
+	_check("Tucão: peixinho bate na trave (parede) e fica tonto", t.trave_count == n0 + 1, "traves %d, %s" % [t.trave_count - n0, Fighter.State.keys()[me.state]])
+	wall.queue_free()
+	await _frames(2)
+	# Faixa "Interditado" também é trave
+	await _face_off(600.0)
+	var fx := FaixaInterditada.plant(foe, me.global_position + Vector2(220.0, Fighter.HEIGHT * 0.5))
+	foe.global_position = Vector2(3000, -3000)
+	await _frames(2)
+	n0 = t.trave_count
+	me.start_special("side")
+	await _frames(40)
+	_check("Tucão: faixa da Onça conta como trave", fx != null and t.trave_count == n0 + 1, "traves %d" % (t.trave_count - n0))
+	# Peixinho no ar vai reto (não cai)
+	await _place(me, Vector2(-200, -400), 1)
+	foe.global_position = Vector2(3000, -3000)
+	me.start_special("side")
+	await _frames(12)
+	var y1 := me.global_position.y
+	await _frames(8)
+	_check("Tucão: peixinho no ar vai reto", absf(me.global_position.y - y1) < 6.0, "%.0f px" % (me.global_position.y - y1))
+	await _frames(40)
+	# Cabeceio rebate projétil para a frente
+	await _face_off(600.0)
+	foe.global_position = Vector2(3000, -3000)
+	var shot := AttackData.new()
+	shot.damage = 4.0
+	shot.hitbox_radius = 10.0
+	var p := Projectile.spawn(load("res://scenes/combat/projectile.tscn"), foe, shot, me.global_position + Vector2(90, -110), Vector2(-260, 0), 2.0)
+	me.start_special("up")
+	var headed := false
+	for i in 30:
+		await get_tree().physics_frame
+		if is_instance_valid(p) and p.owner_fighter == me and p.velocity.x > 0.0:
+			headed = true
+			break
+	_check("Tucão: cabeceio rebate o projétil (vira dele, 1.5x)", headed and p.data.damage > 5.0, "")
+	if is_instance_valid(p):
+		p.queue_free()
+	await _frames(60)
+	# Pilão no chão: 4 pipocas sobem; errou = bico entala (castigo)
+	await _face_off(500.0)
+	foe.global_position = Vector2(3000, -3000)
+	me.start_special("down")
+	var a: AttackData = me.attack
+	var normal_len := a.startup + a.active + a.recovery
+	var up := 0
+	var len := 0
+	for i in 140:
+		await get_tree().physics_frame
+		if me.attack_id == "special_down":
+			len += 1
+		for q in _projectiles(me):
+			if q.velocity.y < -300.0:
+				up = maxi(up, _projectiles(me).size())
+	_check("Tucão: pilão no chão solta 4 pipocas", up == 4, str(up))
+	_check("Tucão: bico entala quando erra (+%d quadros)" % Tucao.STUCK_EXTRA, len >= normal_len + Tucao.STUCK_EXTRA - 2, "%d x %d" % [len, normal_len])
+
+
+func _onca_r12() -> void:
+	var o := me as DonaOnca
+	_check("Onça: patadas do jab são jab2/jab3 (sem nair)", "jab2" in DonaOnca.PATADAS and "jab3" in DonaOnca.PATADAS and not "nair" in DonaOnca.PATADAS and not "jab_b" in DonaOnca.PATADAS, "")
+	# Prisão só turbina contra quem tem a ficha cheia
+	await _face_off()
+	o.set_ficha(foe, 0)
+	me.start_attack("ftilt")
+	var plain := o._attack_for(foe)
+	_check("Onça: sem ficha cheia o golpe é normal (prisão não vaza)", plain == me.attack, "")
+	me._end_attack()
+	# Ficha zera no KO do alvo
+	o.set_ficha(foe, 2)
+	foe.start_respawn_hold(1.0)
+	await _frames(3)
+	_check("Onça: ficha zera quando o alvo leva KO", o.ficha_de(foe) == 0, str(o.ficha_de(foe)))
+	# "Parado aí!": vira o alvo de costas, trava a virada e apaga projétil
+	await _face_off(150.0)
+	o._roar_cd = 0.0
+	var shot := AttackData.new()
+	shot.damage = 3.0
+	shot.hitbox_radius = 10.0
+	var p := Projectile.spawn(load("res://scenes/combat/projectile.tscn"), foe, shot, me.global_position + Vector2(230, -20), Vector2(-120, 0), 3.0)
+	var x0 := foe.global_position.x
+	me.start_special("neutral")
+	await _frames(16)
+	_check("Onça: Parado aí! vira o adversário de costas (trava a virada)", foe.facing == me.facing and foe.turn_lock > 0.0, "facing %d lock %.2f" % [foe.facing, foe.turn_lock])
+	_check("Onça: Parado aí! apaga projétil no cone", not is_instance_valid(p) or p.is_queued_for_deletion(), "")
+	await _frames(30)
+	_check("Onça: Parado aí! empurra um pouco e não machuca", foe.global_position.x > x0 + 15.0 and foe.damage_percent == 0.0,
+		"%.0f px, %.1f%%" % [foe.global_position.x - x0, foe.damage_percent])
+	_check("Onça: Parado aí! tem recarga", o._roar_cd > 0.0, "%.2f" % o._roar_cd)
+	# Abordagem: de costas = x1.3 e +2 fichas
+	await _face_off(140.0)
+	o.set_ficha(foe, 0)
+	me.start_special("side")
+	await _frames(45)
+	var front := foe.damage_percent
+	var f_front := o.ficha_de(foe)
+	await _face_off(140.0)
+	o.set_ficha(foe, 0)
+	foe.lock_facing(1, 2.0)   # de costas para ela
+	me.start_special("side")
+	await _frames(45)
+	_check("Onça: abordagem por trás bate x1.3 e dá +2 fichas", foe.damage_percent > front * 1.2 and o.ficha_de(foe) == 2 and f_front == 1,
+		"%.1f x %.1f, fichas %d/%d" % [foe.damage_percent, front, o.ficha_de(foe), f_front])
+	foe.turn_lock = 0.0
+	o.set_ficha(foe, 0)
+	# Bote: salto diagonal para a frente
+	await _face_off(500.0)
+	var bx := me.global_position.x
+	me.start_special("up")
+	await _frames(14)
+	_check("Onça: bote vai na diagonal para a frente", me.global_position.x > bx + 60.0 and me.velocity.y < 0.0, "%.0f px" % (me.global_position.x - bx))
+	await _frames(80)
+	# Interditado: barreira que não se atravessa andando, segura projétil, rasga com 2 golpes
+	await _face_off(500.0)
+	me.start_special("down")
+	await _frames(30)
+	var faixas := get_tree().get_nodes_in_group("faixas")
+	_check("Onça: Interditado finca a faixa", faixas.size() == 1, str(faixas.size()))
+	if faixas.size() == 1:
+		var fx := faixas[0] as FaixaInterditada
+		await _place(foe, Vector2(fx.global_position.x + 160.0, -60), -1)
+		await _frames(20)
+		for i in 40:
+			foe.global_position.x -= 8.0
+			await get_tree().physics_frame
+		await _frames(2)
+		var limit := fx.global_position.x + FaixaInterditada.WIDTH * 0.5 + Fighter.RADIUS - 4.0
+		_check("Onça: adversário não atravessa a faixa andando", foe.global_position.x >= limit, "%.0f >= %.0f" % [foe.global_position.x, limit])
+		var p2 := Projectile.spawn(load("res://scenes/combat/projectile.tscn"), foe, shot, fx.global_position + Vector2(140, -30), Vector2(-500, 0), 2.0)
+		await _frames(30)
+		_check("Onça: faixa segura projétil", not is_instance_valid(p2) and me.damage_percent == 0.0, "%.1f%%" % me.damage_percent)
+		for i in 2:
+			await _place(foe, Vector2(fx.global_position.x + 120.0, -60), -1)
+			await _frames(15)
+			foe.start_attack("ftilt")
+			await _frames(30)
+		await _frames(30)
+		_check("Onça: 2 golpes rasgam a faixa", get_tree().get_nodes_in_group("faixas").is_empty(), str(get_tree().get_nodes_in_group("faixas").size()))
+
+
+func _cutia_r12() -> void:
+	var c := me as CutiaLigeira
+	for n in get_tree().get_nodes_in_group("castanhas_enterradas"):
+		n.queue_free()
+	# Saquinho que erra planta castanha
+	await _face_off(260.0)
+	await _place(me, Vector2(-520, -60), 1)   # do outro lado: o saquinho para no palco
+	foe.global_position = Vector2(3000, -3000)
+	await _frames(15)
+	me.start_special("neutral")
+	await _frames(120)
+	var n := get_tree().get_nodes_in_group("castanhas_enterradas").size()
+	_check("Cutia: saquinho que erra rasga e planta castanha", n == 1, str(n))
+	for k in get_tree().get_nodes_in_group("castanhas_enterradas"):
+		k.queue_free()
+	# Distância mínima entre castanhas
+	await _face_off(400.0)
+	var feet := me.global_position + Vector2(100, Fighter.HEIGHT * 0.5)
+	var first := CastanhaEnterrada.bury(me, CastanhaEnterrada.free_spot(me, feet), c._trap_data())
+	var spot := CastanhaEnterrada.free_spot(me, feet)
+	_check("Cutia: castanhas ficam a 90 px uma da outra", spot != Vector2.INF and absf(spot.x - first.global_position.x) >= CastanhaEnterrada.MIN_GAP - 1.0, str(spot))
+	first.queue_free()
+	await _frames(2)
+	# Carrinhada colhedora: recolhe as castanhas do caminho e despeja em leque
+	await _face_off(600.0)
+	foe.global_position = Vector2(3000, -3000)
+	feet = me.global_position + Vector2(0, Fighter.HEIGHT * 0.5)
+	for dx in [90.0, 190.0]:
+		CastanhaEnterrada.bury(me, CastanhaEnterrada.free_spot(me, feet + Vector2(dx, 0)), c._trap_data())
+	await _frames(2)
+	var got0 := c.collected_total
+	me.start_special("side")
+	var shots := 0
+	for i in 50:
+		await get_tree().physics_frame
+		shots = maxi(shots, _projectiles(me).size())
+	_check("Cutia: carrinhada recolhe as castanhas do caminho", c.collected_total - got0 == 2 and get_tree().get_nodes_in_group("castanhas_enterradas").is_empty(),
+		"recolheu %d" % (c.collected_total - got0))
+	_check("Cutia: carrinho despeja as castanhas em leque", shots == 2, "%d projéteis" % shots)
+	# Para na beirada
+	var edge := _edge_x()
+	await _place(me, Vector2(edge - 160.0, -60), 1)
+	await _frames(20)
+	me.start_special("side")
+	await _frames(45)
+	_check("Cutia: carrinho para na beirada", me.is_on_floor() and me.global_position.x < edge + 10.0, "x %.0f borda %.0f" % [me.global_position.x, edge])
+	# Pulo de susto: intocável no começo e derruba castanha para baixo
+	await _face_off(500.0)
+	foe.global_position = Vector2(3000, -3000)
+	me.start_special("up")
+	await _frames(4)
+	var ghost := not me.can_be_hit()
+	var down := false
+	for q in _projectiles(me):
+		down = down or q.velocity.y > 300.0
+	await _frames(6)
+	_check("Cutia: pulo de susto é intocável no começo", ghost and me.can_be_hit(), "")
+	_check("Cutia: pulo de susto derruba castanha para baixo", down, "")
+	await _frames(80)
+	for k in get_tree().get_nodes_in_group("castanhas_enterradas"):
+		k.queue_free()
+
+
+func _calango_r12() -> void:
+	var c := me as Calango
+	# Areia só como projétil: 1 acerto, 1%, e cega
+	await _face_off(80.0)
+	me.start_special("neutral")
+	await _frames(30)
+	_check("Calango: areia acerta 1 vez só (projétil) e cega", is_equal_approx(foe.damage_percent, 1.0) and foe.sand_time > 0.0,
+		"%.1f%%, areia %.1f s" % [foe.damage_percent, foe.sand_time])
+	_check("Calango: areia nos olhos mostra o efeito", _fx_count("areia_olho") + _fx_count("fx_areia_olho") > 0, "")
+	# Corrida acelera enquanto segura
+	await _face_off(600.0)
+	foe.global_position = Vector2(3000, -3000)
+	Input.action_press("p1_special")
+	me.start_special("side")
+	var vmax := 0.0
+	var v_early := 0.0
+	for i in 45:
+		await get_tree().physics_frame
+		if i == 8:
+			v_early = absf(me.velocity.x)
+		vmax = maxf(vmax, absf(me.velocity.x))
+	Input.action_release("p1_special")
+	_check("Calango: corrida acelera enquanto segura", vmax > 1100.0 and v_early < vmax - 200.0, "%.0f -> %.0f" % [v_early, vmax])
+	await _frames(40)
+	# Sobe parede alta correndo (1 vez por pulo)
+	await _face_off(600.0)
+	foe.global_position = Vector2(3000, -3000)
+	var wall := _wall(Vector2(me.global_position.x + 200.0, -300.0))
+	await _frames(2)
+	var y0 := me.global_position.y
+	var w0 := c.wall_runs
+	me.start_special("side")
+	var top := y0
+	for i in 40:
+		await get_tree().physics_frame
+		top = minf(top, me.global_position.y)
+	_check("Calango: sobe a parede correndo", c.wall_runs == w0 + 1 and top < y0 - 100.0, "subiu %.0f px" % (y0 - top))
+	wall.queue_free()
+	await _frames(60)
+	# Sol em 3 níveis (segurando) e só um toque = nível 1
+	await _face_off(400.0)
+	var base: float = c._base_speeds.y
+	Input.action_press("p1_special")
+	me.start_special("down")
+	var sol := 0
+	for i in 75:
+		await get_tree().physics_frame
+		sol = maxi(sol, _fx_count("fx_sol"))
+	Input.action_release("p1_special")
+	await _frames(20)
+	_check("Calango: sol segurando chega ao nível 3 (+30%)", c.sun_level == 3 and me.run_speed > base * 1.25, "nível %d, %.0f -> %.0f" % [c.sun_level, base, me.run_speed])
+	_check("Calango: sol mostra o efeito (fx_sol)", sol > 0, str(sol))
+	c._set_sun(0)
+	await _face_off(400.0)
+	me.start_special("down")
+	await _frames(30)
+	_check("Calango: um toque no sol = nível 1", c.sun_level == 1, str(c.sun_level))
+	c._set_sun(0)
+	await _face_off(400.0)
+	Input.action_press("p1_special")
+	me.start_special("down")
+	await _frames(25)
+	var tap := AttackData.new()
+	tap.damage = 2.0
+	tap.base_knockback = 80.0
+	me.receive_hit(foe, tap, -1)
+	Input.action_release("p1_special")
+	await _frames(60)
+	_check("Calango: levar golpe deitado perde o sol", c.sun_level == 0, str(c.sun_level))
+	# Rabo solto: encerra o golpe, sem_rabo, 1 vez por vida, isca
+	await _face_off(300.0)
+	c.tail_ready = true
+	me.damage_percent = 150.0
+	me.start_attack("ftilt")
+	await _frames(2)
+	var big := AttackData.new()
+	big.damage = 14.0
+	big.angle = 40.0
+	big.base_knockback = 400.0
+	big.knockback_growth = 8.0
+	me.receive_hit(foe, big, -1)
+	_check("Calango: rabo solto encerra o golpe que ele fazia", me.attack == null and not c.tail_ready, me.attack_id)
+	await _frames(40)
+	var o: Array = c.anim_override()
+	_check("Calango: sem rabo usa a folha sem_rabo", not o.is_empty() and o[0] == "sem_rabo", str(o))
+	var iscas := get_tree().get_nodes_in_group("iscas")
+	_check("Calango: rabo no chão é isca", iscas.size() == 1, str(iscas.size()))
+	if iscas.size() == 1:
+		var r := iscas[0] as Node2D
+		await _place(me, r.global_position + Vector2(-260, -80), 1)
+		await _place(foe, r.global_position + Vector2(70, -60), -1)
+		await _frames(15)
+		me.damage_percent = 0.0
+		foe.start_attack("dtilt")
+		await _frames(30)
+		_check("Calango: golpe que acerta a isca é gasto nela", get_tree().get_nodes_in_group("iscas").is_empty() and me.damage_percent == 0.0, "")
+	await _face_off()
+	me.damage_percent = 150.0
+	me.receive_hit(foe, big, -1)
+	_check("Calango: rabo solta só 1 vez por vida", me.state == Fighter.State.HITSTUN, Fighter.State.keys()[me.state])
+	me.respawn()
+	_check("Calango: rabo volta no KO (respawn)", c.tail_ready, "")
+	await _frames(30)
+
+
+## Parede de teste alta (como no maracaja_smoke), centro em `at`.
+func _wall(at: Vector2) -> StaticBody2D:
+	var wall := StaticBody2D.new()
+	wall.collision_layer = 1
+	var ws := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(60, 600)
+	ws.shape = rect
+	wall.add_child(ws)
+	_match.add_child(wall)
+	wall.global_position = at
+	return wall
+
+
+## Beirada direita do palco principal (onde o chão de palco acaba).
+func _edge_x() -> float:
+	var space := me.get_world_2d().direct_space_state
+	var x := me.global_position.x
+	while x < 3000.0:
+		var q := PhysicsRayQueryParameters2D.create(Vector2(x, -200), Vector2(x, 300), Fighter.LAYER_STAGE)
+		if space.intersect_ray(q).is_empty():
+			return x - 10.0
+		x += 10.0
+	return x
+
+
+func _projectiles(owner_f: Fighter) -> Array:
+	var out := []
+	for p in get_tree().get_nodes_in_group("projectiles"):
+		if p.owner_fighter == owner_f and not p.is_queued_for_deletion():
+			out.append(p)
+	return out
+
+
+## Efeitos vivos (PixelFx pela folha, CodeFx pelo tipo) cujo nome contém `what`.
+func _fx_count(what: String) -> int:
+	var n := 0
+	for node in get_tree().get_nodes_in_group("match_cleanup"):
+		if node is PixelFx and node.texture != null and node.texture.resource_path.contains(what):
+			n += 1
+		elif node is CodeFx and node.kind.contains(what):
+			n += 1
+	return n

@@ -100,6 +100,10 @@ func _build_fighters() -> void:
 	for pid in IDS:
 		(fighters[pid] as Fighter).hit_taken.connect(_on_fighter_hit.bind(pid))
 	ko_scored.connect(func(scorer: String, _victim: String) -> void: _set_mood(scorer, "vitoria", 2.4))
+	ko_scored.connect(func(scorer: String, _victim: String) -> void:
+		var f := fighters.get(scorer) as Fighter
+		if f != null and is_instance_valid(f):
+			f.on_ko_scored())
 
 
 ## Zera o placar e os lutadores e começa a contagem. Usado na entrada e na revanche.

@@ -81,6 +81,13 @@ func _burrow_move() -> void:
 			break
 		best = probe.x
 		x += step
+	# Cutia: castanha enterrada no caminho da toca estoura sem dano ("cavou e achou").
+	var lo := minf(global_position.x, best) - RADIUS
+	var hi := maxf(global_position.x, best) + RADIUS
+	for c in get_tree().get_nodes_in_group("castanhas_enterradas"):
+		if c.has_method("defuse") and c.global_position.x >= lo and c.global_position.x <= hi \
+				and absf(c.global_position.y - (global_position.y + HEIGHT * 0.5)) < 40.0:
+			c.defuse()
 	global_position.x = best
 
 

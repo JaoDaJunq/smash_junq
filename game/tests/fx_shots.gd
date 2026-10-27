@@ -30,6 +30,24 @@ const SCENES := [
 	["peba_montinho", 6, "fx_montinho"],
 	["peba_lufada", 6, "fx_lufada"],
 	["peba_casco", 6, "fx_faisca"],
+	# rodada 12: os 4 novos ("code:" = desenho por código enquanto a folha não chega)
+	["tucao_pipoca", 7, "fx_pipoca_estouro"],
+	["tucao_peixinho", 7, "fx_grama_peixinho"],
+	["tucao_entalado", 7, "fx_bico_entalado"],
+	["tucao_trave", 7, "code:estrelas"],
+	["tucao_tranco", 7, "code:tranco"],
+	["onca_parado", 8, "code:parado_ai"],
+	["onca_carimbo", 8, "code:carimbo"],
+	["onca_algema", 8, "fx_algema"],
+	["onca_faixa", 8, "faixa_interditada"],
+	["cutia_cova", 9, "fx_cova"],
+	["cutia_estouro", 9, "fx_estouro_castanha"],
+	["cutia_carrinho", 9, "code:poeira"],
+	["cutia_saquinho", 9, "code:rasgo"],
+	["calango_areia", 10, "code:areia_olho"],
+	["calango_sol", 10, "fx_sol"],
+	["calango_corrida", 10, "code:poeira"],
+	["calango_rabo", 10, "rabo_solto"],
 ]
 
 var me: Fighter
@@ -97,6 +115,11 @@ func _watch(shots: Array[Image], n: int) -> void:
 		await get_tree().physics_frame
 		for node in get_tree().get_nodes_in_group("match_cleanup"):
 			var tex: Texture2D = null
+			if node is CodeFx:
+				var ck := "code:" + String(node.kind)
+				if not seen.has(ck):
+					seen[ck] = [i, ((node as Node2D).global_position - (me.global_position + Vector2(0, Fighter.HEIGHT * 0.5))).round()]
+				continue
 			if node is PixelFx:
 				tex = node.texture
 			elif node is Projectile:
@@ -109,7 +132,7 @@ func _watch(shots: Array[Image], n: int) -> void:
 				seen[key] = [i, rel.round()]
 		for node in m.find_children("*", "", true, false):
 			var nm := String(node.get_script().resource_path.get_file()) if node.get_script() != null else ""
-			for want in ["estandarte", "cama_elastica"]:
+			for want in ["estandarte", "cama_elastica", "faixa_interditada", "castanha_enterrada", "rabo_solto"]:
 				if nm.begins_with(want) and not seen.has(want):
 					seen[want] = [i, ((node as Node2D).global_position - (me.global_position + Vector2(0, Fighter.HEIGHT * 0.5))).round()]
 		if i % 3 == 0:
@@ -283,3 +306,123 @@ func _peba_casco(s: Array[Image]) -> void:
 	me.facing = -1   # de costas para o adversário
 	foe.start_attack("ftilt")
 	await _watch(s, 40)
+
+
+# --- Rodada 12: os 4 novos (Tucão 7, Onça 8, Cutia 9, Calango 10) ---
+
+func _big_hit() -> AttackData:
+	var big := AttackData.new()
+	big.damage = 14.0
+	big.angle = 40.0
+	big.base_knockback = 400.0
+	big.knockback_growth = 8.0
+	return big
+
+func _test_wall(at: Vector2) -> StaticBody2D:
+	var wall := StaticBody2D.new()
+	wall.collision_layer = 1
+	var ws := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(60, 600)
+	ws.shape = rect
+	wall.add_child(ws)
+	m.add_child(wall)
+	wall.global_position = at
+	return wall
+
+func _tucao_pipoca(s: Array[Image]) -> void:
+	await _near(240)
+	me.start_special("neutral")
+	await _watch(s, 50)
+
+func _tucao_peixinho(s: Array[Image]) -> void:
+	me.start_special("side")
+	await _watch(s, 36)
+
+func _tucao_entalado(s: Array[Image]) -> void:
+	me.start_special("down")
+	await _watch(s, 70)
+
+func _tucao_trave(s: Array[Image]) -> void:
+	_test_wall(me.global_position + Vector2(180, -240))
+	await _frames(2)
+	me.start_special("side")
+	await _watch(s, 45)
+
+func _tucao_tranco(s: Array[Image]) -> void:
+	await _near(80)
+	me.start_attack("ftilt")
+	await _frames(1)
+	foe.start_attack("jab")
+	await _watch(s, 30)
+
+func _onca_parado(s: Array[Image]) -> void:
+	await _near(150)
+	me.start_special("neutral")
+	await _watch(s, 40)
+
+func _onca_carimbo(s: Array[Image]) -> void:
+	await _near(80)
+	me.start_attack("ftilt")
+	await _watch(s, 36)
+
+func _onca_algema(s: Array[Image]) -> void:
+	await _near(80)
+	(me as DonaOnca).set_ficha(foe, 3)
+	me.start_attack("ftilt")
+	await _watch(s, 40)
+
+func _onca_faixa(s: Array[Image]) -> void:
+	me.start_special("down")
+	await _watch(s, 30)
+	await _place(foe, me.global_position + Vector2(260, 0), -1)
+	await _watch(s, 30)
+
+func _cutia_cova(s: Array[Image]) -> void:
+	me.start_special("down")
+	await _watch(s, 45)
+
+func _cutia_estouro(s: Array[Image]) -> void:
+	me.start_special("down")
+	await _frames(60)
+	var c := get_tree().get_nodes_in_group("castanhas_enterradas")
+	if not c.is_empty():
+		await _place(foe, Vector2((c[0] as Node2D).global_position.x, me.global_position.y), -1)
+	await _watch(s, 40)
+
+func _cutia_carrinho(s: Array[Image]) -> void:
+	var feet := me.global_position + Vector2(0, Fighter.HEIGHT * 0.5)
+	for dx in [100.0, 200.0]:
+		CastanhaEnterrada.bury(me, CastanhaEnterrada.free_spot(me, feet + Vector2(dx, 0)), (me as CutiaLigeira)._trap_data())
+	await _frames(2)
+	me.start_special("side")
+	await _watch(s, 45)
+
+func _cutia_saquinho(s: Array[Image]) -> void:
+	await _near(250)
+	me.start_special("neutral")
+	await _watch(s, 50)
+
+func _calango_areia(s: Array[Image]) -> void:
+	await _near(110)
+	me.start_special("neutral")
+	await _watch(s, 45)
+
+func _calango_sol(s: Array[Image]) -> void:
+	Input.action_press("p1_special")
+	me.start_special("down")
+	await _watch(s, 75)
+	Input.action_release("p1_special")
+	await _watch(s, 10)
+
+func _calango_corrida(s: Array[Image]) -> void:
+	Input.action_press("p1_special")
+	me.start_special("side")
+	await _watch(s, 40)
+	Input.action_release("p1_special")
+
+func _calango_rabo(s: Array[Image]) -> void:
+	await _near(80)
+	me.damage_percent = 150.0
+	me.receive_hit(foe, _big_hit(), -1)
+	await _watch(s, 45)

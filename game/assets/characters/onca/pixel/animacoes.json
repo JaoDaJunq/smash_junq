@@ -84,6 +84,12 @@
     "fator": 1,
     "impacto": 1
   },
+  "fx_algema": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
   "golpe_baixo": {
     "quadros": 5,
     "fator": 1,

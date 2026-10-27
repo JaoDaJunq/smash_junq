@@ -111,11 +111,11 @@ active = 3
 recovery = 14
 landing_lag = 8
 hitbox_offset = Vector2(60, -10)
-hitbox_radius = 34.0
-damage = 3.0
+hitbox_radius = 18.0
+damage = 1.0
 angle = 30.0
-base_knockback = 120.0
-knockback_growth = 1.0
+base_knockback = 60.0
+knockback_growth = 0.5
 
 [sub_resource type="Resource" id="Resource_qm6ai"]
 script = ExtResource("1_24tt8")

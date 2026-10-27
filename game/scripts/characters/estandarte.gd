@@ -105,6 +105,8 @@ func _physics_process(delta: float) -> void:
 			if foe == owner_fighter or foe.attack == null or not foe.attack.is_active(foe.attack_frame):
 				continue
 			if Combat.circle_hits_rect(foe.hitbox_center(foe.attack), foe.attack.hitbox_radius, box):
+				if foe is Tucao and foe.attack_id == "special_down":
+					_hp -= 1   # bicada pilão do Tucão conta como 2 golpes
 				if _take_hit():
 					return
 				break

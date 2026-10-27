@@ -3,10 +3,16 @@ extends Node
 ## Efeitos de suporte dos golpes (design/efeitos-especiais.md, rodada 8).
 ## Fica como filho do lutador e observa: golpe começando (quadro de impacto),
 ## acerto, estados (descanso, cochilo), mudanças de posição. Cada personagem tem
-## uma tabela em RULES; o efeito só aparece se a folha fx_<nome>.png existir.
-##   regra: {"on": "impact"|"active"|"hit"|"rest"|"move_start", "move": id,
-##           "fx": nome, "at": "feet"|"front"|"target"|"head"|"center"|"behind",
-##           "every": quadros (só "active"), "time": s, "char": pasta}
+## uma tabela em RULES; o efeito só aparece se a folha fx_<nome>.png existir
+## (ou, com a chave "draw", um desenho por código no lugar da folha que falta).
+##   regra: {"on": "impact"|"active"|"hit"|"rest"|"frame"|"during"|"proj_hit"|<evento>,
+##           "move": id, "fx": nome, "at": posição (ver _pos), "every": quadros,
+##           "time": s, "px": escala, "char": pasta, "ground": só no chão,
+##           "follow": segue o alvo, "rot": graus, "draw": desenho reserva (CodeFx),
+##           "base": linha do chão na folha (posições *feet*)}
+## Eventos chamados pelos personagens com event(nome, alvo): "armor", "trave",
+## "ficha", "prisao", "trap", "tail", "ko"...
+## play(fx, at, alvo, px, follow, time, draw) toca qualquer efeito na hora.
 
 const RULES := {
 	"juba": [
@@ -34,11 +40,34 @@ const RULES := {
 		{"on": "hypno", "fx": "fx_hipnose", "at": "target_head", "time": 0.7},
 		{"on": "hold_tick", "move": "special_down", "fx": "fx_aperto", "at": "front", "every": 10, "time": 0.35},
 	],
+	# --- Rodada 10/12: os 4 novos (design/revisao/novos_personagens.md) ---
+	"tucano": [
+		{"on": "active", "move": "special_side", "fx": "fx_grama_peixinho", "at": "feet_behind", "base": 52, "every": 4, "time": 0.4, "ground": true},
+		{"on": "impact", "move": "special_down", "fx": "fx_bico_entalado", "at": "front_feet", "base": 46, "time": 0.45, "ground": true},
+		{"on": "proj_hit", "fx": "fx_pipoca_estouro", "at": "target", "time": 0.3, "px": 1.5},
+		{"on": "armor", "fx": "fx_trave_tranco", "at": "center", "time": 0.25, "px": 1.5, "draw": "tranco"},
+		{"on": "trave", "fx": "fx_trave_tranco", "at": "head", "time": 0.45, "draw": "estrelas", "follow": true},
+	],
+	"onca": [
+		{"on": "impact", "move": "special_neutral", "fx": "fx_rugido", "at": "front", "time": 0.4, "draw": "parado_ai"},
+		{"on": "ficha", "fx": "fx_carimbo", "at": "target_head", "time": 0.35, "follow": true, "draw": "carimbo"},
+		{"on": "prisao", "fx": "fx_algema", "at": "target", "time": 0.5},
+	],
+	"cutia": [
+		{"on": "frame", "move": "special_down", "frame": 6, "fx": "fx_cova", "at": "feet_front", "base": 53, "time": 0.45, "ground": true},
+		{"on": "active", "move": "special_side", "fx": "fx_poeira_carrinho", "at": "feet_behind", "every": 4, "time": 0.35, "ground": true, "draw": "poeira"},
+		{"on": "proj_hit", "fx": "fx_saquinho_rasga", "at": "target", "time": 0.4, "px": 3.0, "draw": "rasgo"},
+	],
+	"calango":[
+		# poeira da corrida sai do calango.gd (a corrida segura o quadro ativo enquanto acelera)
+		{"on": "tail", "fx": "fx_rabo_poof", "at": "behind", "time": 0.4, "draw": "poof"},
+	],
 }
 
 var fighter: Fighter
 var who := ""
 var _tex := {}
+var _missing := {}
 var _last_attack := ""
 var _resting_fx: Node2D
 var _was_cling := false
@@ -63,14 +92,35 @@ func _ready() -> void:
 		fighter.hit_taken.connect(_on_hit_taken)
 
 
+## Folha fx_<nome> deste personagem (carrega na primeira vez); null se não existe.
+func tex(fx_name: String, char_id := "") -> Texture2D:
+	if _tex.has(fx_name):
+		return _tex[fx_name]
+	if _missing.has(fx_name):
+		return null
+	var path := "res://assets/characters/%s/pixel/%s.png" % [char_id if char_id != "" else who, fx_name]
+	if ResourceLoader.exists(path):
+		_tex[fx_name] = load(path)
+		return _tex[fx_name]
+	_missing[fx_name] = true
+	return null
+
+
+func _usable(r: Dictionary) -> bool:
+	return _tex.has(r["fx"]) or r.has("draw")
+
+
 func _physics_process(_delta: float) -> void:
-	if fighter == null or not fighter.has_art or _tex.is_empty():
+	var rules: Array = RULES.get(who, [])
+	if fighter == null or not fighter.has_art or rules.is_empty():
 		return
 	var a := fighter.attack
 	var id := fighter.attack_id if a != null else ""
 	var f := fighter.attack_frame
-	for r in RULES[who]:
-		if not _tex.has(r["fx"]):
+	for r in rules:
+		if not _usable(r):
+			continue
+		if r.get("ground", false) and not fighter.is_on_floor():
 			continue
 		match r["on"]:
 			"impact":
@@ -110,8 +160,26 @@ func _physics_process(_delta: float) -> void:
 ## Acertos (gancho chamado pelo Fighter) e golpes que outros sofrem.
 func on_hit_landed(target: Fighter, move_id: String) -> void:
 	for r in RULES.get(who, []):
-		if r["on"] == "hit" and r["move"] == move_id and _tex.has(r["fx"]):
+		if r["on"] == "hit" and r["move"] == move_id and _usable(r):
 			_spawn(r, target)
+
+
+## Acerto de projétil deste lutador (gancho do Projectile).
+func on_proj_hit(target: Fighter, _p: Node2D) -> void:
+	event("proj_hit", target)
+
+
+## Evento com nome (ver cabeçalho): toca as regras {"on": nome}.
+func event(name: String, target: Fighter = null) -> Array:
+	var out := []
+	if fighter == null or not fighter.has_art:
+		return out
+	for r in RULES.get(who, []):
+		if r["on"] == name and _usable(r):
+			var fx := _spawn(r, target)
+			if fx != null:
+				out.append(fx)
+	return out
 
 
 func on_hypnotized(target: Fighter) -> void:
@@ -126,6 +194,29 @@ func on_shell_block() -> void:
 	for r in RULES.get(who, []):
 		if r["on"] == "shell" and _tex.has(r["fx"]):
 			_spawn(r)
+
+
+## Toca um efeito agora. at: nome de posição (ver _pos); target: alvo das posições
+## target*/seguir; draw: desenho reserva (CodeFx) se a folha não existir.
+## Retorna o nó do efeito (PixelFx ou CodeFx) ou null.
+func play(fx_name: String, at := "center", target: Node2D = null, px := 2.0, follow := false, time := 0.4, draw := "") -> Node2D:
+	if fighter == null or not fighter.has_art:
+		return null
+	var r := {"fx": fx_name, "at": at, "px": px, "time": time, "follow": follow}
+	if draw != "":
+		r["draw"] = draw
+	tex(fx_name)
+	if not _usable(r):
+		return null
+	return _spawn(r, target)
+
+
+## Toca um efeito num ponto do mundo (ex.: castanha estourando).
+func play_at(fx_name: String, where: Vector2, px := 2.0, time := 0.4, draw := "") -> Node2D:
+	var fx := play(fx_name, "center", null, px, false, time, draw)
+	if fx != null:
+		fx.global_position = where
+	return fx
 
 
 func _on_hit_taken(_a: Node2D, _d: AttackData, _l: Vector2) -> void:
@@ -145,42 +236,71 @@ func _update_rest(r: Dictionary) -> void:
 		(_resting_fx as PixelFx).duration = 999.0
 
 
-func _pos(at: String, target: Fighter) -> Vector2:
+## Deslocamento de cada posição em relação ao lutador (ou ao alvo, nas target*).
+func _offset(at: String) -> Vector2:
 	var f := fighter
 	var half := Fighter.HEIGHT * 0.5
 	match at:
 		# folhas de chão têm a base na linha ~58 do quadro de 64 (2x): centro 56 px acima dos pés
-		"feet": return f.global_position + Vector2(0, half - 56)
-		"front": return f.global_position + Vector2(f.facing * 50.0, -30)
-		"nose": return f.global_position + Vector2(f.facing * 56.0, -half + 14)
-		"behind": return f.global_position + Vector2(-f.facing * 30.0, -20)
-		"head": return f.global_position + Vector2(f.facing * 20.0, -half - 10)
-		"below": return f.global_position + Vector2(0, half - 10)
-		"wall": return f.global_position + Vector2(f.facing * Fighter.RADIUS, -10)
-		"target":
-			if target != null:
-				return target.global_position + Vector2(0, -20)
-		"target_head":
-			if target != null:
-				return target.global_position + Vector2(0, -half - 24)
-	return f.global_position
+		"feet": return Vector2(0, half - 56)
+		"feet_front": return Vector2(f.facing * 36.0, half - 56)
+		"feet_behind": return Vector2(-f.facing * 34.0, half - 56)
+		"front_feet": return Vector2(f.facing * 56.0, half - 56)
+		"front": return Vector2(f.facing * 50.0, -30)
+		"nose": return Vector2(f.facing * 56.0, -half + 14)
+		"behind": return Vector2(-f.facing * 30.0, -20)
+		"head": return Vector2(f.facing * 20.0, -half - 10)
+		"above": return Vector2(0, -half - 30)
+		"below": return Vector2(0, half - 10)
+		"wall": return Vector2(f.facing * Fighter.RADIUS, -10)
+		"target": return Vector2(0, -20)
+		"target_head": return Vector2(0, -half - 24)
+		"target_eyes": return Vector2(0, -half + 24)
+		"target_feet": return Vector2(0, half - 56)
+	return Vector2.ZERO
 
 
-func _spawn(r: Dictionary, target: Fighter = null) -> PixelFx:
-	var fx := PixelFx.spawn(fighter.get_parent(), _tex[r["fx"]], _pos(r["at"], target), maxf(float(r.get("time", 0.4)), 0.05), float(r.get("px", 2.0)))
-	if r["at"] in ["below", "behind"] or r["fx"] == "fx_boia":
+func _pos(at: String, target: Node2D) -> Vector2:
+	if at.begins_with("target"):
+		if target != null and is_instance_valid(target):
+			return target.global_position + _offset(at)
+		return fighter.global_position
+	return fighter.global_position + _offset(at)
+
+
+func _spawn(r: Dictionary, target: Node2D = null) -> Node2D:
+	var time := maxf(float(r.get("time", 0.4)), 0.05)
+	var where := _pos(r["at"], target)
+	if r.has("base") and String(r["at"]).contains("feet"):
+		# "base": linha do chão desenhada na folha (0..63): ela cai em cima dos pés
+		where.y += 56.0 - (float(r["base"]) - 32.0) * float(r.get("px", 2.0))
+	var fx: Node2D
+	if _tex.has(r["fx"]):
+		fx = PixelFx.spawn(fighter.get_parent(), _tex[r["fx"]], where, time, float(r.get("px", 2.0)))
+	elif r.has("draw"):
+		fx = CodeFx.spawn(fighter.get_parent(), String(r["draw"]), where, time, float(r.get("px", 2.0)) / 2.0)
+	else:
+		return null
+	if r["at"] in ["below", "behind", "feet_behind"] or r["fx"] == "fx_boia":
 		fx.z_index = -1   # atrás do lutador
 	else:
 		fx.z_index = 5
 	if fighter.facing < 0:
 		fx.scale.x = -1.0
+	if r.has("rot"):
+		fx.rotation_degrees = float(r["rot"]) * (1.0 if fighter.facing > 0 else -1.0)
+	if r.get("follow", false):
+		var t: Node2D = target if target != null else fighter
+		fx.set_meta("follow", t)
+		fx.set_meta("follow_off", _offset(r["at"]) if target != null else (where - fighter.global_position))
 	return fx
 
 
 func _process(_delta: float) -> void:
-	# Efeitos que seguem o alvo (espiral da hipnose em cima da cabeça).
+	# Efeitos que seguem o alvo (espiral da hipnose em cima da cabeça, carimbo).
 	for n in fighter.get_parent().get_children():
-		if n is PixelFx and n.has_meta("follow"):
+		if (n is PixelFx or n is CodeFx) and n.has_meta("follow"):
 			var t = n.get_meta("follow")
 			if is_instance_valid(t):
-				n.global_position = (t as Fighter).global_position + Vector2(0, -Fighter.HEIGHT * 0.5 - 24)
+				var off: Vector2 = n.get_meta("follow_off") if n.has_meta("follow_off") else Vector2(0, -Fighter.HEIGHT * 0.5 - 24)
+				n.global_position = (t as Node2D).global_position + off

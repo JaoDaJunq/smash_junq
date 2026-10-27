@@ -108,6 +108,10 @@ var _jab_cache := {}
 var attack_frame := 0
 var _attack_in_air := false
 var _hit_targets: Array[Fighter] = []
+var _attack_spent := false   # o golpe atual já foi gasto numa isca
+## Virada travada (s) e para que lado (ver lock_facing).
+var turn_lock := 0.0
+var _locked_facing := 1
 var _lag_frames := 0
 
 var _hitstun := 0.0
@@ -200,6 +204,8 @@ func _physics_process(delta: float) -> void:
 		brain.think(self, delta)
 	invincible_time = maxf(invincible_time - delta, 0.0)
 	sand_time = maxf(sand_time - delta, 0.0)
+	if turn_lock > 0.0:
+		turn_lock = maxf(turn_lock - delta, 0.0)
 	_escape_wait = maxf(_escape_wait - delta, 0.0)
 	var shield_down := controls.pressed("shield")
 	_shield_tap = shield_down and not _shield_was_down
@@ -254,6 +260,8 @@ func _physics_process(delta: float) -> void:
 				_process_ground(dir, run_trigger, delta)
 			else:
 				_process_air(dir, delta)
+	if turn_lock > 0.0:
+		facing = _locked_facing   # virado à força: não deixa virar de volta
 
 	if state != State.LEDGE and state != State.HELD and state != State.RESPAWN:
 		var was_airborne := not is_on_floor()
@@ -474,6 +482,7 @@ func start_attack(move_id: String) -> bool:
 	attack_frame = 0
 	_attack_in_air = not is_on_floor()
 	_hit_targets.clear()
+	_attack_spent = false
 	fast_falling = false
 	state = State.ATTACK
 	return true
@@ -575,7 +584,17 @@ func hurtbox() -> Rect2:
 
 
 func _check_hits() -> void:
+	if _attack_spent:
+		return   # golpe já gasto (ex.: acertou o rabo-isca do Calango)
 	var center := hitbox_center(attack)
+	# Iscas (rabo solto do Calango): o golpe que encosta nelas é gasto ali.
+	for n in get_tree().get_nodes_in_group("iscas"):
+		if not is_instance_valid(n) or n.get("owner_fighter") == self or not n.has_method("hurt_rect"):
+			continue
+		if Combat.circle_hits_rect(center, attack.hitbox_radius, n.hurt_rect()):
+			_attack_spent = true
+			n.pop(self)
+			return
 	for f in get_tree().get_nodes_in_group("fighters"):
 		var target := f as Fighter
 		if target == self or target in _hit_targets or not target.can_be_hit():
@@ -586,12 +605,44 @@ func _check_hits() -> void:
 				sand_time = 0.0   # areia nos olhos: este golpe erra
 				continue
 			var move_id := attack_id
-			if target.receive_hit(self, attack, facing):
+			if target.receive_hit(self, _attack_for(target), facing):
 				_on_hit_landed(target, move_id)
 				if move_fx != null:
 					move_fx.on_hit_landed(target, move_id)
 			if state != State.ATTACK:
 				return  # o gancho pode ter encerrado o golpe
+
+
+## Gancho para personagens: dados do golpe atual contra ESTE alvo (ex.: voz de
+## prisão da Dona Onça só turbina contra quem está com a ficha cheia).
+func _attack_for(_target: Fighter) -> AttackData:
+	return attack
+
+
+## Trava a direção para onde o lutador olha por um tempo (ex.: "Parado aí!" da
+## Dona Onça vira o adversário de costas).
+func lock_facing(dir: int, seconds: float) -> void:
+	facing = dir
+	_locked_facing = dir
+	turn_lock = maxf(turn_lock, seconds)
+
+
+## Gancho chamado pela partida quando ESTE lutador marca um KO (ex.: Gol do Tucão).
+func on_ko_scored() -> void:
+	pass
+
+
+## Parede de palco ALTA logo à frente (2 raios na altura do peito e da cabeça).
+## Usada pela trave do Tucão e pela corrida na parede do Calango.
+func tall_wall_ahead(dist := 16.0) -> bool:
+	var space := get_world_2d().direct_space_state
+	for dy in [-10.0, -50.0]:
+		var from := global_position + Vector2(0, dy)
+		var q := PhysicsRayQueryParameters2D.create(from, from + Vector2(facing * (RADIUS + dist), 0), LAYER_STAGE)
+		q.exclude = [get_rid()]
+		if space.intersect_ray(q).is_empty():
+			return false
+	return true
 
 
 ## Gancho para personagens: o golpe atual acertou alguém (ex.: golpe que agarra).
@@ -1160,6 +1211,8 @@ func respawn() -> void:
 	_air_dodge_used = false
 	shield_hp = shield_max
 	damage_percent = 0.0
+	sand_time = 0.0
+	turn_lock = 0.0
 	damage_changed.emit(damage_percent)
 
 
