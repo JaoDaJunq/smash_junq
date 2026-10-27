@@ -270,6 +270,33 @@ func _sucuri() -> void:
 			await _frames(18)
 		_check("Sucuri: apertos tiram dano", foe.damage_percent >= d0 + 5.0, "%.1f -> %.1f" % [d0, foe.damage_percent])
 	await _frames(240)
+	# Laço interrompido pelo pouso: a Sucuri laça no ar, pousa no meio do puxão
+	# e o laçado tem de ficar livre (antes ficava seguro até o fim da partida).
+	await _face_off(170.0)
+	s.global_position.y -= 70.0
+	s.state = Fighter.State.AIR
+	await _frames(1)
+	s.start_special("side")
+	var caught := false
+	var landed_mid := false
+	for i in 60:
+		await get_tree().physics_frame
+		if s.holding == foe and s.attack_id == "special_side":
+			caught = true
+		if caught and s.attack_id != "special_side" and s.state != Fighter.State.HOLDING:
+			landed_mid = true
+			break
+		if s.state == Fighter.State.HOLDING:
+			break   # o puxão terminou antes do pouso
+	print("Sucuri laço: pouso natural no meio do laço = %s" % landed_mid)
+	if caught and not landed_mid and s.attack_id == "special_side" and s.holding == foe:
+		s._land_during_attack()   # garante o caminho do pouso no meio do laço
+		landed_mid = true
+	await _frames(30)
+	_check("Sucuri: pouso no meio do laço solta o laçado", caught and landed_mid and foe.held_by == null \
+		and foe.state != Fighter.State.HELD and s.holding == null and foe.can_be_hit(),
+		"pegou=%s pousou=%s estado=%s" % [caught, landed_mid, Fighter.State.keys()[foe.state]])
+	await _frames(60)
 	# Abraço: quem encosta fica preso e é apertado
 	await _face_off(50.0)
 	s.start_special("down")
