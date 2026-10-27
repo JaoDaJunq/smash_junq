@@ -77,6 +77,15 @@ func think(me: Fighter, _delta: float) -> void:
 
 	if foe == null:
 		return
+	# Ocupada (golpe, agarrão, esquiva): não toma decisão nova. Com a fila de
+	# entrada, um toque dado agora sairia sozinho logo depois (ex.: especial
+	# atrás de especial sem nunca andar). Só segue andando e conta o tempo.
+	if me.state in [Fighter.State.ATTACK, Fighter.State.GRAB, Fighter.State.DODGE]:
+		if _cooldown > 0:
+			_cooldown -= 1
+		if mode == Mode.APPROACH:
+			_walk_toward(me, foe, c)
+		return
 	if _cooldown > 0:
 		_cooldown -= 1
 		if mode == Mode.APPROACH:

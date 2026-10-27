@@ -65,15 +65,23 @@ const BUFFERED_ACTIONS: Array[String] = ["attack", "special", "jump", "grab", "s
 
 var _frame := 0
 var _taps: Dictionary = {}   # ação -> quadro do toque ainda não usado
+var _prev_down: Dictionary = {}   # ação -> estava apertada no quadro anterior
 
 
 ## Anota os toques deste quadro. Chamar 1x por quadro de física, DEPOIS de a CPU
 ## escolher os botões (para a CPU, just_pressed só vale depois de think()).
+## Toque = botão desceu neste quadro (pressed agora e não no quadro anterior) ou
+## just_pressed (toque rapidíssimo, apertou e soltou entre dois quadros). O
+## just_pressed de um botão que já estava descido no quadro anterior é ignorado
+## (Input.action_press de script só acusa just_pressed um quadro depois).
 func record_frame() -> void:
 	_frame += 1
 	for action in BUFFERED_ACTIONS:
-		if just_pressed(action):
+		var down := pressed(action)
+		var was_down: bool = _prev_down.get(action, false)
+		if not was_down and (down or just_pressed(action)):
 			_taps[action] = _frame
+		_prev_down[action] = down
 
 
 ## O botão foi tocado há no máximo BUFFER_FRAMES quadros e o toque não foi usado?
