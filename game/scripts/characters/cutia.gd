@@ -158,8 +158,8 @@ func _collect() -> void:
 
 ## Despeja o que o carrinho recolheu: 1 castanha (4%) por unidade, em leque.
 func _dump() -> void:
-	if _cart_dumped or _cart_load <= 0:
-		return
+	if _cart_dumped or _cart_load <= 0 or attack == null:
+		return   # (attack nulo: golpe interrompido por uma troca no mesmo quadro)
 	_cart_dumped = true
 	var d := attack.duplicate() as AttackData
 	d.damage = 4.0

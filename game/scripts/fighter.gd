@@ -629,13 +629,9 @@ func _check_hits() -> void:
 			if sand_time > 0.0:
 				sand_time = 0.0   # areia nos olhos: este golpe erra
 				continue
-			var move_id := attack_id
-			if target.receive_hit(self, _attack_for(target), facing):
-				_on_hit_landed(target, move_id)
-				if move_fx != null:
-					move_fx.on_hit_landed(target, move_id)
-			if state != State.ATTACK:
-				return  # o gancho pode ter encerrado o golpe
+			# Troca justa: o acerto é aplicado no fim do quadro (autoload Hits),
+			# depois de todos andarem; se os dois acertam juntos, os dois tomam.
+			Hits.queue(self, target, _attack_for(target), facing, attack_id)
 
 
 ## Gancho para personagens: dados do golpe atual contra ESTE alvo (ex.: voz de
