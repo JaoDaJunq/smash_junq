@@ -620,3 +620,12 @@ bugio_descanso,animacao,bugio_descanso,OpenAI ImageGen com referencias aprovadas
 bugio_vitoria,animacao,bugio_vitoria,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/vitoria.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
 bugio_retrato,interface,retrato_bugio,OpenAI ImageGen com referencias aprovadas,art/ui/retrato_bugio.png,1254x1254,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
 bugio_apresentacao,interface,apresentacao_bugio,OpenAI ImageGen com referencias aprovadas,art/ui/apresentacao_bugio.png,1024x1536,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+preguica_especial_neutro,animacao,preguica_especial_neutro,OpenAI ImageGen com referencias aprovadas,art/pixel/preguica/especial_neutro.png,2016x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato_escala_pendente
+preguica_especial_lado,animacao,preguica_especial_lado,OpenAI ImageGen com referencias aprovadas,art/pixel/preguica/especial_lado.png,2016x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato_escala_pendente
+preguica_especial_cima,animacao,preguica_especial_cima,OpenAI ImageGen com referencias aprovadas,art/pixel/preguica/especial_cima.png,2016x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato_escala_pendente
+preguica_especial_baixo,animacao,preguica_especial_baixo,OpenAI ImageGen com referencias aprovadas,art/pixel/preguica/especial_baixo.png,2016x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato_escala_pendente
+preguica_pendurado,animacao,preguica_pendurado,OpenAI ImageGen com referencias aprovadas,art/pixel/preguica/pendurado.png,2016x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato_escala_pendente
+preguica_descanso,animacao,preguica_descanso,OpenAI ImageGen com referencias aprovadas,art/pixel/preguica/descanso.png,2016x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato_escala_pendente
+preguica_vitoria,animacao,preguica_vitoria,OpenAI ImageGen com referencias aprovadas,art/pixel/preguica/vitoria.png,2016x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato_escala_pendente
+preguica_retrato,interface,retrato_preguica,OpenAI ImageGen com referencias aprovadas,art/ui/retrato_preguica.png,1024x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+preguica_apresentacao,interface,apresentacao_preguica,OpenAI ImageGen com referencias aprovadas,art/ui/apresentacao_preguica.png,1024x1536,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato

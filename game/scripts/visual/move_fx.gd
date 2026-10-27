@@ -53,6 +53,13 @@ const RULES := {
 		{"on": "impact", "move": "special_up", "fx": "fx_berro", "at": "below", "time": 0.4, "rot": 90, "draw": "berro"},
 		{"on": "impact", "move": "special_down", "fx": "fx_berro", "at": "center", "time": 0.35, "px": 1.5, "draw": "berro"},
 	],
+	"preguica": [
+		# a bolha de moleza é um nó próprio (bolha_moleza.gd), desenhado por código
+		{"on": "galho", "fx": "fx_galho", "at": "hang_top", "time": 0.75, "draw": "galho"},
+		{"on": "cafe", "fx": "fx_cafe", "at": "mouth", "time": 0.5, "draw": "cafe"},
+		{"on": "cochilo", "fx": "fx_bolha_nariz", "at": "mouth", "time": 1.0, "follow": true, "draw": "bolha_nariz"},
+		{"on": "carona", "fx": "fx_moleza", "at": "target_head", "time": 0.45, "follow": true, "draw": "zzz"},
+	],
 	"onca": [
 		{"on": "impact", "move": "special_neutral", "fx": "fx_rugido", "at": "front", "time": 0.4, "draw": "parado_ai"},
 		{"on": "ficha", "fx": "fx_carimbo", "at": "target_head", "time": 0.35, "follow": true, "draw": "carimbo"},
@@ -253,6 +260,8 @@ func _offset(at: String) -> Vector2:
 		"front_feet": return Vector2(f.facing * 56.0, half - 56)
 		"front": return Vector2(f.facing * 50.0, -30)
 		"nose": return Vector2(f.facing * 56.0, -half + 14)
+		"hang_top": return Vector2(0, -half - 6)   # galho onde o pendurado segura (Seu Preguiçoso)
+		"mouth": return Vector2(f.facing * 20.0, -half + 22)   # focinho curto (Seu Preguiçoso)
 		"behind": return Vector2(-f.facing * 30.0, -20)
 		"head": return Vector2(f.facing * 20.0, -half - 10)
 		"above": return Vector2(0, -half - 30)

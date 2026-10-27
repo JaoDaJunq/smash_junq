@@ -18,7 +18,7 @@ func _ready() -> void:
 	Game.mode = "training"
 	Game.arena_index = 0
 	var only := OS.get_cmdline_user_args()
-	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba", "tucano", "onca", "cutia", "calango", "bugio"]:
+	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba", "tucano", "onca", "cutia", "calango", "bugio", "preguica"]:
 		if not only.is_empty() and id not in only:
 			continue
 		var idx := -1
@@ -39,6 +39,7 @@ func _ready() -> void:
 			"sucuri": await _sucuri()
 			"tatu_peba": await _peba()
 			"bugio": await _berrante()
+			"preguica": await _preguica()
 			"tucano":
 				await _tucao()
 				await _tucao_r12()
@@ -451,6 +452,119 @@ func _berrante() -> void:
 	await _frames(20)
 	_check("Berrante: berro foguete sobe", me.global_position.y < y0 - 100.0, "%.0f px" % (y0 - me.global_position.y))
 	b.set_volume(0)
+
+
+func _preguica() -> void:
+	var p := me as SeuPreguicoso
+	for b in get_tree().get_nodes_in_group("bolhas_moleza"):
+		b.queue_free()
+	p._bubble_cd = 0.0
+	# Lentidão: golpe do adversário fora da bolha (quadros até acabar)
+	await _face_off(400.0)
+	foe.facing = 1
+	var fast := await _attack_len(foe, "ftilt")
+	# Bolha de moleza: aparece e deixa quem está dentro a 50%
+	await _face_off(90.0)
+	me.start_special("neutral")
+	await _frames(20)
+	var bolhas := get_tree().get_nodes_in_group("bolhas_moleza")
+	_check("Preguiçoso: bolha aparece", bolhas.size() == 1, str(bolhas.size()))
+	foe.facing = 1   # golpe para longe dele (sem pausa de impacto)
+	var slow := await _attack_len(foe, "ftilt")
+	_check("Preguiçoso: dentro da bolha o golpe dos outros dura o dobro", slow >= fast * 2 - 2 and slow <= fast * 2 + 2,
+		"fora %d quadros, dentro %d" % [fast, slow])
+	# ele mesmo não fica lento dentro da bolha
+	me.facing = -1   # para longe do adversário
+	var mine := await _attack_len(me, "jab")
+	var jab := me.moveset.jab
+	_check("Preguiçoso: ele não fica lento na própria bolha", mine <= jab.total_frames() + 1, "%d quadros" % mine)
+	# projétil dentro da bolha anda a 50%
+	var atk := AttackData.new()
+	atk.hitbox_radius = 6.0
+	var pr := Projectile.spawn(preload("res://scenes/combat/projectile.tscn"), foe, atk, bolhas[0].global_position + Vector2(-60, -120), Vector2(300, 0), 2.0)
+	var x0 := pr.global_position.x
+	await _frames(30)
+	var moved := pr.global_position.x - x0 if is_instance_valid(pr) else -1.0
+	if is_instance_valid(pr):
+		pr.queue_free()
+	_check("Preguiçoso: projétil lento dentro da bolha", moved > 60.0 and moved < 100.0, "%.0f px em 30 quadros (normal 150)" % moved)
+	# recarga: segunda bolha não sai logo depois
+	await _face_off(400.0)
+	me.start_special("neutral")
+	await _frames(30)
+	_check("Preguiçoso: 1 bolha por vez (recarga)", get_tree().get_nodes_in_group("bolhas_moleza").size() == 1,
+		str(get_tree().get_nodes_in_group("bolhas_moleza").size()))
+	for b in get_tree().get_nodes_in_group("bolhas_moleza"):
+		b.queue_free()
+	await _frames(2)
+	# Carona: pega, monta nas costas, deixa lento e tira 1% a cada 20 quadros
+	await _face_off(90.0)
+	me.start_special("side")
+	var rode := false
+	for i in 40:
+		await _frames(1)
+		if p.is_riding():
+			rode = true
+			break
+	_check("Preguiçoso: carona gruda nas costas", rode, Fighter.State.keys()[foe.state])
+	var d0 := foe.damage_percent
+	await _frames(60)
+	_check("Preguiçoso: carona tira 1% a cada 20 quadros", p.is_riding() and foe.damage_percent >= d0 + 2.9 and foe.damage_percent <= d0 + 3.1,
+		"%.1f -> %.1f" % [d0, foe.damage_percent])
+	_check("Preguiçoso: quem leva carona fica a 60%", is_equal_approx(foe.slow_now, SeuPreguicoso.RIDE_SLOW), str(foe.slow_now))
+	_check("Preguiçoso: montado em cima das costas", absf(me.global_position.y - (foe.global_position.y - 34.0)) < 2.0,
+		"dy %.0f" % (me.global_position.y - foe.global_position.y))
+	await _frames(150)
+	_check("Preguiçoso: carona acaba em 3 s", not p.is_riding(), str(p.is_riding()))
+	await _frames(40)
+	# Galho: sobe e fica pendurado parado
+	await _face_off(400.0)
+	var y0 := me.global_position.y
+	me.start_special("up")
+	var hung := false
+	var hy := 0.0
+	for i in 60:
+		await _frames(1)
+		if p.is_hanging():
+			hung = true
+			hy = me.global_position.y
+			break
+	_check("Preguiçoso: galho sobe e pendura", hung and hy < y0 - 120.0, "subiu %.0f px" % (y0 - hy))
+	await _frames(20)
+	_check("Preguiçoso: parado no galho", p.is_hanging() and absf(me.global_position.y - hy) < 1.0,
+		"pendurado=%s dy=%.1f" % [p.is_hanging(), me.global_position.y - hy])
+	_check("Preguiçoso: galho tem efeito", _fx_count("galho") >= 1, str(_fx_count("galho")))
+	await _frames(40)
+	_check("Preguiçoso: solta do galho sozinho (0.6 s)", not p.is_hanging(), str(p.is_hanging()))
+	await _frames(60)
+	# Cafezinho: segurando, cura 1% a cada 18 quadros
+	await _face_off(400.0)
+	me.damage_percent = 20.0
+	Input.action_press("p1_special")
+	me.start_special("down")
+	await _frames(14 + 18 * 5 + 2)
+	Input.action_release("p1_special")
+	_check("Preguiçoso: cafezinho cura segurando", me.damage_percent <= 15.0 and me.damage_percent >= 14.0, "20 -> %.1f" % me.damage_percent)
+	await _frames(60)
+	_check("Preguiçoso: levanta ao soltar o botão", me.state != Fighter.State.ATTACK, Fighter.State.keys()[me.state])
+	# Cochilo: parado 4 s cura 1%/s
+	await _face_off(400.0)
+	me.damage_percent = 20.0
+	await _frames(60 * 4 + 30)
+	_check("Preguiçoso: cochila parado", p.is_napping(), str(p._calm))
+	await _frames(60 * 3 + 5)
+	_check("Preguiçoso: cochilo cura devagar", me.damage_percent <= 18.0 and me.damage_percent >= 16.0, "20 -> %.1f" % me.damage_percent)
+	_check("Preguiçoso: bolha no nariz", _fx_count("bolha_nariz") >= 1, str(_fx_count("bolha_nariz")))
+
+
+## Quadros de física até `f` terminar o golpe `mv` (começa na hora).
+func _attack_len(f: Fighter, mv: String) -> int:
+	f.start_attack(mv)
+	var n := 0
+	while f.state == Fighter.State.ATTACK and n < 400:
+		await _frames(1)
+		n += 1
+	return n
 
 
 func _face_off(gap := 70.0) -> void:

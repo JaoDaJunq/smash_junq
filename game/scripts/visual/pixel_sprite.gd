@@ -139,7 +139,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_clock += delta
-	_anim_time += delta
+	_anim_time += delta * (fighter.slow_now if fighter != null else 1.0)   # lento: loops também
 	_since_jump += delta
 	_hit_time += delta
 	_turn += delta

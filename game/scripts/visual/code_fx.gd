@@ -11,6 +11,10 @@ extends Node2D
 ##   rasgo      saquinho rasgando: fiapos de juta e castanhas (Cutia)
 ##   poof       fumacinha branca em nuvem (rabo do Calango soltando)
 ##   areia_olho grãos de areia rodando na frente dos olhos (cegado)
+##   galho      galho com folhas que brota, balança e solta folhas (Seu Preguiçoso)
+##   cafe       fios de vapor e coraçõezinhos subindo (cafezinho que cura)
+##   bolha_nariz bolha de quem cochila, crescendo e murchando no nariz
+##   zzz        "z" lavanda subindo da cabeça de quem está lento (carona)
 
 const INK := Color("2a0f12")
 
@@ -149,6 +153,50 @@ func _draw() -> void:
 				var r := (8.0 + 6.0 * k) * m * (1.0 - 0.5 * k)
 				draw_circle(p, r + 2.0, Color(INK, 1.0 - k))
 				draw_circle(p, r, Color(0.96, 0.96, 0.92, 1.0 - k * 0.8))
+		"galho":
+			# galho marrom horizontal: brota (k<0.15), balança, solta folhas no fim
+			var grow := minf(1.0, k / 0.15)
+			var sway := sin(_t * 9.0) * 3.0 * m
+			var half_w := 30.0 * m * grow
+			var fade := clampf((1.0 - k) / 0.2, 0.0, 1.0)
+			draw_line(Vector2(-half_w, sway), Vector2(half_w, -sway * 0.5), Color(INK, fade), 12.0 * m)
+			draw_line(Vector2(-half_w, sway), Vector2(half_w, -sway * 0.5), Color(Color("8a6a3a"), fade), 7.0 * m)
+			draw_line(Vector2(-half_w, sway + 2.0 * m), Vector2(half_w, -sway * 0.5 + 2.0 * m), Color(Color("6a4a2a"), fade), 3.0 * m)
+			for i in 4:
+				var lx := (-22.0 + i * 15.0) * m * grow
+				var drop := maxf(0.0, k - 0.8) * 5.0
+				var lp := Vector2(lx + drop * 10.0 * m * (i % 2 * 2 - 1), (-7.0 if i % 2 == 0 else 7.0) * m + drop * 60.0 * m)
+				_px(lp, 7.0 * m * grow, Color("4a8a3a") if i % 2 else Color("6aaa4a"))
+		"cafe":
+			# 3 fios de vapor creme subindo em S + 1 coraçãozinho laranja
+			for i in 3:
+				for j in 4:
+					var y := -(6.0 + j * 7.0 + 22.0 * k) * m
+					var x := (-8.0 + i * 8.0 + sin(j * 1.3 + _t * 8.0 + i) * 3.0) * m
+					var a := (1.0 - k) * (1.0 - j * 0.18)
+					draw_rect(Rect2(Vector2(x, y) - Vector2(2, 2) * m, Vector2(4, 4) * m), Color(Color("f5f0e6"), a))
+			if k > 0.3:
+				var hp := Vector2(10.0, -30.0 - 20.0 * k) * m
+				var hc := Color(Color("e8822a"), 1.0 - k)
+				draw_circle(hp + Vector2(-2.5, 0) * m, 3.0 * m, hc)
+				draw_circle(hp + Vector2(2.5, 0) * m, 3.0 * m, hc)
+				draw_colored_polygon(PackedVector2Array([hp + Vector2(-5.5, 1) * m, hp + Vector2(5.5, 1) * m, hp + Vector2(0, 7) * m]), hc)
+		"bolha_nariz":
+			# bolha azul-clarinha que cresce e murcha, presa no nariz
+			var br := (3.0 + 5.0 * sin(k * PI)) * m
+			var bc := Vector2(br, 0)
+			draw_circle(bc, br + 2.0, INK)
+			draw_circle(bc, br, Color("d8ecf8"))
+			draw_circle(bc + Vector2(-br * 0.35, -br * 0.35), maxf(1.5, br * 0.25), Color.WHITE)
+		"zzz":
+			# 2 "z" lavanda subindo devagar (lento)
+			for i in 2:
+				var s := (6.0 + 3.0 * i) * m
+				var p := Vector2((26.0 + i * 12.0) * m, (14.0 - i * 12.0 - 18.0 * k) * m)   # ao lado da marca "CPU"
+				var zc := Color(Color("bfd8f0"), 1.0 - k * 0.7)
+				var z := PackedVector2Array([p, p + Vector2(s, 0), p + Vector2(0, s), p + Vector2(s, s)])
+				draw_polyline(z, Color(INK, 1.0 - k * 0.7), 5.0 * m)
+				draw_polyline(z, zc, 2.5 * m)
 		"areia_olho":
 			for i in 8:
 				var ang := _t * 9.0 + i * TAU / 8.0

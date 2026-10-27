@@ -170,6 +170,15 @@ var brain: CpuBrain = null
 
 var move_fx: MoveFx
 
+## Lentidão (bolha de moleza / carona do Seu Preguiçoso). Quem quer deixar este
+## lutador lento faz slow_factor = minf(slow_factor, x) a cada quadro; vale no quadro
+## de física seguinte e volta sozinho a 1.0. Tempo, gravidade e movimento andam a
+## slow_factor; os quadros de golpe/lag avançam por acumulador (determinístico).
+## slow_now = fator usado no último quadro (o visual lê para as animações em loop).
+var slow_factor := 1.0
+var slow_now := 1.0
+var _slow_acc := 0.0
+
 
 func _ready() -> void:
 	add_to_group("fighters")
@@ -197,6 +206,10 @@ func set_cpu(new_brain: CpuBrain) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	slow_now = clampf(slow_factor, 0.05, 1.0)
+	slow_factor = 1.0
+	var raw_delta := delta
+	delta *= slow_now
 	slip_time = maxf(slip_time - delta, 0.0)
 	_clock += delta
 	if brain != null:
@@ -240,9 +253,11 @@ func _physics_process(delta: float) -> void:
 		State.HITSTUN:
 			_process_hitstun(delta)
 		State.ATTACK:
-			_process_attack(dir, delta)
+			if _slow_step():
+				_process_attack(dir, raw_delta)
 		State.LAG:
-			_process_lag(delta)
+			if _slow_step():
+				_process_lag(raw_delta)
 		State.SHIELD:
 			_process_shield(delta)
 		State.SHIELD_BREAK:
@@ -268,11 +283,27 @@ func _physics_process(delta: float) -> void:
 		_fall_speed_before_move = velocity.y
 		if state == State.ATTACK and is_on_floor() and attack_id.begins_with("jab"):
 			_stop_at_edge(delta)
+		if slow_now < 1.0:
+			velocity *= slow_now
 		move_and_slide()
+		if slow_now < 1.0:
+			velocity /= slow_now
 		_after_move(was_airborne)
 		_update_holding()  # quem está seguro acompanha a posição já atualizada
 	_check_out_of_bounds()
 	queue_redraw()
+
+
+## Lento: este quadro conta para golpe/lag? (acumula slow_now até dar 1 quadro)
+func _slow_step() -> bool:
+	if slow_now >= 1.0:
+		_slow_acc = 0.0
+		return true
+	_slow_acc += slow_now
+	if _slow_acc >= 1.0:
+		_slow_acc -= 1.0
+		return true
+	return false
 
 
 # --- Chão e ar ---

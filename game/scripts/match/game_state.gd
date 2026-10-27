@@ -112,6 +112,14 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "bugio",
 		"stats": {"Velocidade": 3, "Força": 5, "Peso": 4, "Volta ao palco": 4},
 	},
+	{
+		"name": "Seu Preguiçoso",
+		"scene": "res://scenes/characters/seu_preguicoso.tscn",
+		"desc": "Bicho-preguiça fiscal da prefeitura. Lento e pesado: solta uma bolha de câmera lenta, pega carona nas costas dos outros e cura tomando cafezinho.",
+		"weight": "Pesado",
+		"id": "preguica",
+		"stats": {"Velocidade": 1, "Força": 4, "Peso": 5, "Volta ao palco": 2},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

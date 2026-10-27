@@ -50,7 +50,7 @@ func _ready() -> void:
 
 func _shoot(mv: String) -> void:
 	await _reset()
-	var air := mv in ["nair", "fair", "bair", "uair", "dair", "pulo"] or mv == "special_up"
+	var air := mv in ["nair", "fair", "bair", "uair", "dair", "pulo"] or (mv == "special_up" and not me is SeuPreguicoso)
 	if air:
 		me.global_position = Vector2(-200, -330)
 		me.state = Fighter.State.AIR
@@ -85,6 +85,14 @@ func _shoot(mv: String) -> void:
 				foe.global_position = me.global_position + Vector2(55, 0)
 			if mv == "special_side" or (mv == "special_neutral" and me.display_name == "Marianinha"):
 				foe.global_position = me.global_position + Vector2(260, 0)
+			if me is SeuPreguicoso:
+				if mv == "special_side":
+					foe.global_position = me.global_position + Vector2(90, 0)   # carona: perto para grudar
+				if mv == "special_down":
+					Input.action_press("p1_special")   # cafezinho: segura para beber
+					n = 90
+				if mv == "special_side":
+					n = 90
 			if mv in ["special_down", "special_side"]:
 				await _frames(3)
 			if mv == "special_neutral":

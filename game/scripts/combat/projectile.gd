@@ -36,6 +36,9 @@ var hit_fx_px := 2.0
 var on_hit := Callable()
 ## Desenho por código quando não há sprite: "" (círculo), "pipoca", "areia".
 var look := ""
+## Lentidão (bolha de moleza): quem quer deixar o projétil lento faz
+## slow_factor = minf(slow_factor, x) a cada quadro; volta sozinho a 1.0.
+var slow_factor := 1.0
 
 
 ## Cria o projétil como filho do pai do dono e o posiciona. Retorna o projétil.
@@ -96,6 +99,8 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	delta *= clampf(slow_factor, 0.05, 1.0)   # tempo, gravidade e voo andam juntos
+	slow_factor = 1.0
 	_flight += delta
 	if return_after >= 0.0 and _flight >= return_after and owner_fighter != null and is_instance_valid(owner_fighter):
 		var to_owner := owner_fighter.global_position + Vector2(0, -20) - global_position

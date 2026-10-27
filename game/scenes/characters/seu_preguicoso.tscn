@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/seu_preguicoso.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/seu_preguicoso.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/visual/pixel_sprite.gd" id="9_visual"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 30.0
+height = 116.0
+
+[node name="SeuPreguicoso" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Seu Preguiçoso"
+moveset = ExtResource("2_moves")
+weight = 122.0
+walk_speed = 240.0
+run_speed = 440.0
+air_speed = 340.0
+gravity = 2700.0
+jump_velocity = 960.0
+double_jump_velocity = 860.0
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("9_visual")
+folder = "res://assets/characters/preguica/pixel"
+center_x = 42.0
+walk_fps = 5.0
+run_fps = 7.0
