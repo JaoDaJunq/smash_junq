@@ -35,6 +35,8 @@ var sudden_death := false
 var fighters := {}
 var kos := {"p1": 0, "p2": 0}
 var ko_target := 3
+## Semente da CPU do P2 no modo CPU (-1 = aleatória). Simulações usam para repetir partidas.
+var cpu_seed := -1
 
 var _arena: Node2D
 var _start_positions := {}
@@ -94,7 +96,7 @@ func _build_fighters() -> void:
 		fighters[pid] = f
 	# T20: a CPU assume o P2 neste modo (o teclado/gamepad do jogador 2 deixa de valer).
 	if Game.mode == "cpu":
-		fighters["p2"].set_cpu(CpuBrain.new())
+		fighters["p2"].set_cpu(CpuBrain.new(cpu_seed))
 	elif Game.mode == "training":
 		# Treino: P2 vira boneco, a pausa abre o painel de treino
 		training = TrainingMode.new()
