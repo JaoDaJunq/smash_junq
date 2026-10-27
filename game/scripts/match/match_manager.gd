@@ -72,6 +72,11 @@ func _build_fighters() -> void:
 	var arena_scene := ARENA if use_default_arena else load(Game.arena_scene()) as PackedScene
 	_arena = arena_scene.instantiate()
 	add_child(_arena)
+	# Zona de KO própria da arena (meta "ko_zone" na raiz ou num filho, posto
+	# pelo arena_v2 a partir do formato), senão fica a padrão.
+	var zone: Variant = arena_ko_zone(_arena)
+	if zone != null:
+		ko_zone = zone
 	for pid in IDS:
 		var marker := _arena.get_node_or_null("Spawn" + pid.capitalize()) as Node2D
 		var start: Vector2 = marker.global_position if marker else Vector2(-300 if pid == "p1" else 300, -400)
@@ -217,6 +222,18 @@ func resolve_kos(victims: Array[String]) -> void:
 		# Empatados na meta: o próximo KO decide (regra provisória do GDD)
 		hud.show_banner("MORTE SÚBITA", 2.0, Color(0.95, 0.2, 0.15))
 		sudden_death_started.emit()
+
+
+## Zona de KO definida pela arena (Rect2) ou null se ela não definir.
+static func arena_ko_zone(arena: Node) -> Variant:
+	if arena == null:
+		return null
+	if arena.has_meta("ko_zone"):
+		return arena.get_meta("ko_zone")
+	for child in arena.get_children():
+		if child.has_meta("ko_zone"):
+			return child.get_meta("ko_zone")
+	return null
 
 
 func other(pid: String) -> String:
