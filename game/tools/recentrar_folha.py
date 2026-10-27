@@ -93,6 +93,12 @@ def main():
         x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
         fw, fh = x1 - x0 + 1, y1 - y0 + 1
         cx0, cy0 = k[0] * N - m, k[1] * N
+        if N < fh <= N + 3:  # até 3 linhas a mais: corta o topo (ponta de orelha/pelo)
+            pts = [p for p in pts if p[1] > y1 - N]
+            ys = [p[1] for p in pts]
+            y0 = min(ys)
+            fh = y1 - y0 + 1
+            print(f"  quadro {k}: {fh + 0} de altura depois de cortar o topo")
         if fw > CW - 2 or fh > N:
             print(f"  quadro {k}: {fw}x{fh} nativos, NÃO cabe em 64")
             if not so_medir:

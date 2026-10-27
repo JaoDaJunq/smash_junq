@@ -102,6 +102,15 @@ func _draw() -> void:
 			if pop >= 1.0:
 				draw_rect(Rect2(b + Vector2(-3, -9) * m, Vector2(6, 12) * m), Color.WHITE)
 				draw_rect(Rect2(b + Vector2(-3, 5) * m, Vector2(6, 5) * m), Color.WHITE)
+		"berro":
+			# ondas de som grossas e laranja (berro do Berrante)
+			var g2 := 0.5 + 0.9 * k
+			for i in 4:
+				var rr := (20.0 + i * 20.0) * g2 * m
+				var col := Color("ffb040") if i % 2 == 0 else Color("fff0c0")
+				col.a = 1.0 - k
+				draw_arc(Vector2(-14, 0) * m, rr, -0.85, 0.85, 12, INK, 8.0 * m)
+				draw_arc(Vector2(-14, 0) * m, rr, -0.85, 0.85, 12, col, 4.0 * m)
 		"carimbo":
 			# carimbo: cai de cima e bate (k < 0.35), depois a marca pisca
 			var drop := maxf(0.0, 1.0 - k / 0.35)

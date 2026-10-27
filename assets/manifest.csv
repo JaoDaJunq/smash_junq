@@ -609,3 +609,14 @@ cutia_castanha_enterrada,efeito,armadilha_castanha_armada,art/prompts/pedidos/ro
 cutia_fx_estouro_castanha,efeito,armadilha_castanha_explodindo,art/prompts/pedidos/rodada11/10_cutia_fx_estouro_castanha.md,art/pixel/cutia/fx_estouro_castanha.png,1536x1024,OpenAI Terms,Codex ImageGen com referências de estilo e escala,2026-10-22,rascunho_aguardando_aprovacao
 cutia_fx_cova,efeito,cavando_cutia,art/prompts/pedidos/rodada11/11_cutia_fx_cova.md,art/pixel/cutia/fx_cova.png,1536x1024,OpenAI Terms,Codex ImageGen com referências de estilo e escala,2026-10-22,rascunho_aguardando_aprovacao
 calango_fx_sol,efeito,sol_esquentando,art/prompts/pedidos/rodada11/14_calango_fx_sol.md,art/pixel/calango/fx_sol.png,1536x1024,OpenAI Terms,Codex ImageGen com referências de estilo e escala,2026-10-22,rascunho_aguardando_aprovacao
+bugio_aereo_baixo,animacao,bugio_aereo_baixo,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/aereo_baixo.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_especial_neutro,animacao,bugio_especial_neutro,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/especial_neutro.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_especial_lado,animacao,bugio_especial_lado,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/especial_lado.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_especial_cima,animacao,bugio_especial_cima,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/especial_cima.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_especial_baixo,animacao,bugio_especial_baixo,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/especial_baixo.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_rouco,animacao,bugio_rouco,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/rouco.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_pendurado,animacao,bugio_pendurado,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/pendurado.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_descanso,animacao,bugio_descanso,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/descanso.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_vitoria,animacao,bugio_vitoria,OpenAI ImageGen com referencias aprovadas,art/pixel/bugio/vitoria.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_retrato,interface,retrato_bugio,OpenAI ImageGen com referencias aprovadas,art/ui/retrato_bugio.png,1254x1254,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato
+bugio_apresentacao,interface,apresentacao_bugio,OpenAI ImageGen com referencias aprovadas,art/ui/apresentacao_bugio.png,1024x1536,proprio,gerado por OpenAI ImageGen,2026-10-27,candidato

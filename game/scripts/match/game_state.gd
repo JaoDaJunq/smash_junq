@@ -104,6 +104,14 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "calango",
 		"stats": {"Velocidade": 5, "Força": 2, "Peso": 2, "Volta ao palco": 4},
 	},
+	{
+		"name": "Berrante",
+		"scene": "res://scenes/characters/berrante.tscn",
+		"desc": "Bugio radialista de rádio AM. Forte e escandaloso: cada berro aumenta o volume, mas no máximo ele fica rouco.",
+		"weight": "Pesado",
+		"id": "bugio",
+		"stats": {"Velocidade": 3, "Força": 5, "Peso": 4, "Volta ao palco": 4},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

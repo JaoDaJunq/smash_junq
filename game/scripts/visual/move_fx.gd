@@ -48,6 +48,11 @@ const RULES := {
 		{"on": "armor", "fx": "fx_trave_tranco", "at": "center", "time": 0.25, "px": 1.5, "draw": "tranco"},
 		{"on": "trave", "fx": "fx_trave_tranco", "at": "head", "time": 0.45, "draw": "estrelas", "follow": true},
 	],
+	"bugio": [
+		{"on": "impact", "move": "special_neutral", "fx": "fx_berro", "at": "front", "time": 0.45, "draw": "berro"},
+		{"on": "impact", "move": "special_up", "fx": "fx_berro", "at": "below", "time": 0.4, "rot": 90, "draw": "berro"},
+		{"on": "impact", "move": "special_down", "fx": "fx_berro", "at": "center", "time": 0.35, "px": 1.5, "draw": "berro"},
+	],
 	"onca": [
 		{"on": "impact", "move": "special_neutral", "fx": "fx_rugido", "at": "front", "time": 0.4, "draw": "parado_ai"},
 		{"on": "ficha", "fx": "fx_carimbo", "at": "target_head", "time": 0.35, "follow": true, "draw": "carimbo"},

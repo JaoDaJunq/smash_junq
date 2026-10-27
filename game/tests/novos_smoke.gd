@@ -18,7 +18,7 @@ func _ready() -> void:
 	Game.mode = "training"
 	Game.arena_index = 0
 	var only := OS.get_cmdline_user_args()
-	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba", "tucano", "onca", "cutia", "calango"]:
+	for id in ["arara_canga", "marianinha", "sucuri", "tatu_peba", "tucano", "onca", "cutia", "calango", "bugio"]:
 		if not only.is_empty() and id not in only:
 			continue
 		var idx := -1
@@ -38,6 +38,7 @@ func _ready() -> void:
 			"marianinha": await _marianinha()
 			"sucuri": await _sucuri()
 			"tatu_peba": await _peba()
+			"bugio": await _berrante()
 			"tucano":
 				await _tucao()
 				await _tucao_r12()
@@ -412,6 +413,44 @@ func _calango() -> void:
 	Input.action_release("p1_special")
 	await _frames(10)
 	_check("Calango: sol acelera", c.has_sun() and me.run_speed > base * 1.2, "%.0f -> %.0f" % [base, me.run_speed])
+
+
+func _berrante() -> void:
+	var b := me as Berrante
+	b.set_volume(0)
+	b.rouco_time = 0.0
+	# Berro empurra e sobe o volume
+	await _face_off(150.0)
+	var x0 := foe.global_position.x
+	me.start_special("neutral")
+	await _frames(40)
+	_check("Berrante: berro empurra", foe.global_position.x > x0 + 50.0, "%.0f px" % (foe.global_position.x - x0))
+	_check("Berrante: berro sobe o volume", b.volume == 1, str(b.volume))
+	# Volume no máximo: próximo berro deixa rouco
+	await _face_off(400.0)
+	b.set_volume(4)
+	me.start_special("down")
+	await _frames(40)
+	_check("Berrante: no máximo fica rouco", b.is_rouco() and b.volume == 0, "rouco=%s vol=%d" % [b.is_rouco(), b.volume])
+	b.rouco_time = 0.0
+	# Teste do som: susto faz pular, sem dano
+	await _face_off(120.0)
+	var fy := foe.global_position.y
+	me.start_special("down")
+	var top := fy
+	for i in 30:
+		await _frames(1)
+		top = minf(top, foe.global_position.y)
+	_check("Berrante: teste do som faz pular sem dano", foe.damage_percent == 0.0 and top < fy - 15.0,
+		"dano %.1f subiu %.0f px" % [foe.damage_percent, fy - top])
+	# Berro foguete sobe
+	await _face_off(400.0)
+	b.set_volume(0)
+	var y0 := me.global_position.y
+	me.start_special("up")
+	await _frames(20)
+	_check("Berrante: berro foguete sobe", me.global_position.y < y0 - 100.0, "%.0f px" % (y0 - me.global_position.y))
+	b.set_volume(0)
 
 
 func _face_off(gap := 70.0) -> void:

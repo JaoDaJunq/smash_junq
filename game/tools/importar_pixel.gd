@@ -22,7 +22,7 @@ const NATIVE := 64
 ## Personagens com quadros mais largos que 64 (bico/cauda que passa da célula):
 ## margem extra de cada lado. As folhas dele vêm de tools/recentrar_folha.py --margem N
 ## (3 células de 64+2N). No jogo, center_x da cena = 32 + N.
-const MARGEM := {"tucano": 8, "onca": 10, "cutia": 16, "calango": 16}
+const MARGEM := {"tucano": 8, "onca": 10, "cutia": 16, "calango": 16, "bugio": 12, "preguica": 10}
 var FW := NATIVE  # largura do quadro nativo deste personagem
 var _char_fw := NATIVE  # FW do personagem (FW muda por folha nos efeitos/objetos)
 
@@ -44,7 +44,8 @@ const BASELINE := 59
 const MIGALHA := 4
 ## personagem -> animação -> índices dos quadros aproveitáveis (na ordem da grade)
 const SELECAO := {
-	"tatu_peba": {"vitoria": [0, 1, 2], "pendurado": [0, 1]},  # restos de pixel na 2ª linha
+	"tatu_peba": {"vitoria": [0, 1, 2], "pendurado": [0, 1]},
+	"bugio": {"vitoria": [0, 1, 2]},  # restos de pixel na 2ª linha
 	"sucuri": {"jab": [0, 1, 2]},
 	"arara_canga": {"jab": [0, 1, 2], "pendurado": [0, 1]},
 }
