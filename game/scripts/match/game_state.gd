@@ -120,6 +120,14 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "preguica",
 		"stats": {"Velocidade": 1, "Força": 4, "Peso": 5, "Volta ao palco": 2},
 	},
+	{
+		"name": "Beija",
+		"scene": "res://scenes/characters/beija.tscn",
+		"desc": "Beija-flor skatista. Rápido e minúsculo: paira no ar, difícil de acertar.",
+		"weight": "Muito leve",
+		"id": "beija_flor",
+		"stats": {"Velocidade": 5, "Força": 1, "Peso": 1, "Volta ao palco": 5},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam
