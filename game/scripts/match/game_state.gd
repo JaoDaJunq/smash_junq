@@ -120,6 +120,14 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "preguica",
 		"stats": {"Velocidade": 1, "Força": 4, "Peso": 5, "Volta ao palco": 2},
 	},
+	{
+		"name": "Mourisco",
+		"scene": "res://scenes/characters/mourisco.tscn",
+		"desc": "Gato do vôlei de praia. Saca, corta e rebate a bola e projétil.",
+		"weight": "Médio",
+		"id": "mourisco",
+		"stats": {"Velocidade": 3, "Força": 3, "Peso": 3, "Volta ao palco": 4},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

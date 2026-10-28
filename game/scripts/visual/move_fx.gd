@@ -60,6 +60,9 @@ const RULES := {
 		{"on": "cochilo", "fx": "fx_bolha_nariz", "at": "mouth", "time": 1.0, "follow": true, "draw": "bolha_nariz"},
 		{"on": "carona", "fx": "fx_moleza", "at": "target_head", "time": 0.45, "follow": true, "draw": "zzz"},
 	],
+	"mourisco": [
+		{"on": "active", "move": "special_down", "fx": "fx_areia_mergulho", "at": "feet", "every": 4, "time": 0.35, "ground": true},
+	],
 	"onca": [
 		{"on": "impact", "move": "special_neutral", "fx": "fx_rugido", "at": "front", "time": 0.4, "draw": "parado_ai"},
 		{"on": "ficha", "fx": "fx_carimbo", "at": "target_head", "time": 0.35, "follow": true, "draw": "carimbo"},
