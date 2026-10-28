@@ -171,7 +171,7 @@ func _process(delta: float) -> void:
 		_last_facing = fighter.facing
 		if fighter.state in [S.IDLE, S.WALK, S.RUN]:
 			_turn = 0.0
-	var pick := _pick()
+	var pick := _variant(_pick())
 	_show(pick[0], pick[1])
 	_update_squash(delta)
 	scale = Vector2(pixel_scale * fighter.facing * (1.0 + _squash), pixel_scale * (1.0 - _squash))
@@ -299,6 +299,23 @@ func _cycle(a: String, fps: float, frames: PackedInt32Array) -> Array:
 func _once(a: String, elapsed: float, time: float) -> Array:
 	var n := int(_counts.get(a, 1))
 	return [a, mini(n - 1, int(elapsed / time * n))]
+
+
+## Folha alternativa do mesmo momento (ex.: Preguinho com chave/furadeira:
+## "parado" -> "parado_chave"). O personagem devolve o sufixo em anim_suffix();
+## o quadro é convertido na proporção do número de quadros da outra folha.
+func _variant(pick: Array) -> Array:
+	if not fighter.has_method("anim_suffix"):
+		return pick
+	var suf: String = fighter.anim_suffix()
+	if suf == "":
+		return pick
+	var alt: String = str(pick[0]) + suf
+	if not has_anim(alt):
+		return pick
+	var n0 := maxi(1, int(_counts.get(pick[0], 1)))
+	var n1 := maxi(1, int(_counts[alt]))
+	return [alt, mini(n1 - 1, int(pick[1]) * n1 / n0)]
 
 
 # --- Escolha da animação ---

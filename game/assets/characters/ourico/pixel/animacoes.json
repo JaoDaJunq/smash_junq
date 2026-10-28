@@ -96,7 +96,25 @@
     "impacto": 2,
     "largura": 64
   },
+  "fx_espinhos_arrepiados": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
+  "fx_microfonia": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
   "fx_power_chord": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2,
+    "largura": 64
+  },
+  "fx_stage_dive": {
     "quadros": 4,
     "fator": 1,
     "impacto": 2,

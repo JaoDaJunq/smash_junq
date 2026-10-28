@@ -41,8 +41,8 @@ func _ready() -> void:
 	_spine_data.base_knockback = 190.0
 	_spine_data.knockback_growth = 3.0
 	_ring = SpikeRing.new()
-	_ring.z_index = -1
 	add_child(_ring)
+	move_child(_ring, 0)   # desenha antes do sprite (atrás dele), mas na frente do cenário
 
 
 func _physics_process(delta: float) -> void:
@@ -135,24 +135,28 @@ func respawn() -> void:
 	_restore_speed()
 
 
-## Anel de espinhos que aparece em volta dele enquanto arrepiado.
+## Anel de espinhos em volta dele enquanto arrepiado: folha fx_espinhos_arrepiados
+## (1º quadro = espinhos saindo, depois loop nos quadros 2-4), centrada no corpo.
 class SpikeRing:
 	extends Node2D
 
+	const SHEET := "res://assets/characters/ourico/pixel/fx_espinhos_arrepiados.png"
+	var _tex: Texture2D
+	var _n := 4
+
+	func _ready() -> void:
+		if ResourceLoader.exists(SHEET):
+			_tex = load(SHEET)
+			_n = Projectile.strip_frames(_tex)
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
 	func _draw() -> void:
 		var e := get_parent() as Espeto
-		if e == null or not e.is_spiky():
+		if e == null or not e.is_spiky() or _tex == null:
 			return
 		var t := e._spiky
-		var fade := clampf(t / 0.3, 0.0, 1.0)
-		var n := 18
-		for i in n:
-			var a := i * TAU / n + 0.2
-			var d := Vector2(cos(a), sin(a))
-			var base := Vector2(d.x * 30.0, d.y * 40.0 - 6.0)
-			var tip := Vector2(d.x * 50.0, d.y * 60.0 - 6.0)
-			var side := Vector2(-d.y, d.x) * 6.0
-			var tri := PackedVector2Array([base + side, tip, base - side])
-			draw_colored_polygon(tri, Color(0.165, 0.059, 0.071, fade))
-			var inner := PackedVector2Array([base + side * 0.55, base.lerp(tip, 0.82), base - side * 0.55])
-			draw_colored_polygon(inner, Color(0.96, 0.82, 0.3, fade))
+		var w := float(_tex.get_width()) / float(_n)
+		var h := float(_tex.get_height())
+		var i := 0 if t < 0.12 else 1 + int(t * 10.0) % maxi(1, _n - 1)
+		var size := Vector2(w, h) * 3.0   # o anel da folha é menor que o corpo: ampliado para os espinhos saírem em volta
+		draw_texture_rect_region(_tex, Rect2(Vector2(-size.x * 0.5, -size.y * 0.5 - 6.0), size), Rect2(i * w, 0, w, h))

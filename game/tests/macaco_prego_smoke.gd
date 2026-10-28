@@ -126,6 +126,20 @@ func _ferramentas() -> void:
 			"%d acertos" % _hits.size())
 	# o ícone mostra a ferramenta
 	_check("Ícone das ferramentas carregado", p._icons != null, "")
+	# a ferramenta aparece NA MÃO: a folha mostrada muda com ela (parado e forte)
+	var vis := me.get_node_or_null("Visual") as PixelSprite
+	var shown := {}
+	for t in 3:
+		p.tool = t
+		await _face_off(400.0)
+		await _frames(6)
+		var idle := vis.anim
+		me.start_attack("ftilt")
+		await _frames(8)
+		shown[t] = [idle, vis.anim]
+		await _frames(50)
+	_check("Na mão: parado muda com a ferramenta", shown[0][0] == "parado" and shown[1][0] == "parado_chave" and shown[2][0] == "parado_furadeira", str(shown))
+	_check("Na mão: forte muda com a ferramenta", shown[0][1] == "golpe_frente" and shown[1][1] == "golpe_frente_chave" and shown[2][1] == "golpe_frente_furadeira", str(shown))
 	p.tool = Preguinho.MARTELO
 
 

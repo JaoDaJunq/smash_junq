@@ -127,9 +127,9 @@
     "impacto": 2
   },
   "parado": {
-    "quadros": 4,
+    "quadros": 6,
     "fator": 1,
-    "impacto": 2
+    "impacto": 3
   },
   "pendurado": {
     "quadros": 2,

@@ -34,6 +34,16 @@
     "fator": 1,
     "impacto": 3
   },
+  "andar_chave": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "andar_furadeira": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
   "arrancar": {
     "quadros": 3,
     "fator": 1,
@@ -107,12 +117,42 @@
     "fator": 1,
     "impacto": 2
   },
+  "golpe_baixo_chave": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "golpe_baixo_furadeira": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
   "golpe_cima": {
     "quadros": 5,
     "fator": 1,
     "impacto": 2
   },
+  "golpe_cima_chave": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "golpe_cima_furadeira": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
   "golpe_frente": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "golpe_frente_chave": {
+    "quadros": 5,
+    "fator": 1,
+    "impacto": 2
+  },
+  "golpe_frente_furadeira": {
     "quadros": 5,
     "fator": 1,
     "impacto": 2
@@ -133,6 +173,16 @@
     "impacto": 2
   },
   "parado": {
+    "quadros": 4,
+    "fator": 1,
+    "impacto": 2
+  },
+  "parado_chave": {
+    "quadros": 6,
+    "fator": 1,
+    "impacto": 3
+  },
+  "parado_furadeira": {
     "quadros": 4,
     "fator": 1,
     "impacto": 2

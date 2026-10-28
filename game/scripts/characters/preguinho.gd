@@ -46,6 +46,14 @@ func tool_name() -> String:
 	return TOOL_NAMES[tool]
 
 
+## Folhas com a ferramenta da vez na mão (parado_chave, golpe_frente_furadeira...).
+func anim_suffix() -> String:
+	match tool:
+		1: return "_chave"
+		2: return "_furadeira"
+	return ""
+
+
 # --- Golpes fortes mudam com a ferramenta ---
 
 func start_attack(move_id: String) -> bool:
