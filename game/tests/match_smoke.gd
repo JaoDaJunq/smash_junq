@@ -109,9 +109,9 @@ func _test_menus() -> void:
 	sel._refresh()
 	await _tap("p1_attack")
 	_check("\"?\" não confirma", not sel.locked["p1"], str(sel.locked))
-	sel._set_cursor("p1", Vector2i(2, 0))
+	sel._set_cursor("p1", Vector2i(2, 1))
 	await _tap("p1_down")
-	_check("p1_down pula o \"?\" de baixo e chega no Seu Capivas (coluna mais perto)", sel.choice["p1"] == 1 and sel.cursor["p1"] == Vector2i(1, 1), str(sel.cursor))
+	_check("p1_down pula o \"?\" de baixo (Suçuarana) e chega na Dona Onça (coluna mais perto, empate vai para a esquerda)", sel.choice["p1"] == 8 and sel.cursor["p1"] == Vector2i(1, 2), str(sel.cursor))
 	var empty_hits := 0
 	var probe := Vector2i.ZERO
 	for i in 40:
@@ -129,7 +129,7 @@ func _test_menus() -> void:
 	_check("P2 confirma com pulo", sel.locked["p2"], str(sel.locked))
 	await _wait(sel.START_DELAY + 0.3)
 	_check("Os dois prontos vão para a escolha de arena", Game.requested_scene == Game.ARENA_SELECT_SCENE, Game.requested_scene)
-	_check("Escolhas ficam no Game", Game.character_scene("p1").ends_with("pesado.tscn") and Game.character_scene("p2").ends_with("agil.tscn"), str(Game.characters))
+	_check("Escolhas ficam no Game", Game.character_scene("p1").ends_with("dona_onca.tscn") and Game.character_scene("p2").ends_with("agil.tscn"), str(Game.characters))
 	sel.queue_free()
 	Game.set_character("p1", 0)
 	Game.set_character("p2", 1)

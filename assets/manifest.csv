@@ -747,3 +747,37 @@ fx_tamandua_nuvem_veneno,efeito,fx_nuvem_veneno,art/prompts/pedidos/tamandua/tod
 fx_tamandua_jato,efeito,fx_jato,art/prompts/pedidos/tamandua/todos.md (fx_jato),art/pixel/tamandua/fx_jato.png,1536x1024,OpenAI Terms,ChatGPT ImageGen com conceito/base/parado aprovados,2026-10-28,candidato_aguarda_aprovacao
 ui_tamandua_retrato,interface,retrato_selecao,art/prompts/pedidos/tamandua/todos.md (retrato_tamandua),art/ui/retrato_tamandua.png,1254x1254,OpenAI Terms,ChatGPT ImageGen com conceito/base/parado aprovados,2026-10-28,candidato_aguarda_aprovacao
 ui_tamandua_apresentacao,interface,apresentacao_personagem,art/prompts/pedidos/tamandua/todos.md (apresentacao_tamandua),art/ui/apresentacao_tamandua.png,1024x1536,OpenAI Terms,ChatGPT ImageGen com conceito/base/parado aprovados,2026-10-28,candidato_aguarda_aprovacao
+ourico_aereo_baixo,animacao,ourico_aereo_baixo,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/aereo_baixo.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_aereo_cima,animacao,ourico_aereo_cima,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/aereo_cima.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_aereo_frente,animacao,ourico_aereo_frente,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/aereo_frente.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_aereo_neutro,animacao,ourico_aereo_neutro,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/aereo_neutro.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_aereo_tras,animacao,ourico_aereo_tras,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/aereo_tras.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_agarrar,animacao,ourico_agarrar,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/agarrar.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_andar,animacao,ourico_andar,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/andar.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_base,sprite_base,ourico_base,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/base.png,1024x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_correr,animacao,ourico_correr,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/correr.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_defesa_esquiva,animacao,ourico_defesa_esquiva,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/defesa_esquiva.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_descanso,animacao,ourico_descanso,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/descanso.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_dor,animacao,ourico_dor,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/dor.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_especial_baixo,animacao,ourico_especial_baixo,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/especial_baixo.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_especial_cima,animacao,ourico_especial_cima,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/especial_cima.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_especial_lado,animacao,ourico_especial_lado,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/especial_lado.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_especial_neutro,animacao,ourico_especial_neutro,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/especial_neutro.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_espinho,projetil,ourico_espinho,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/espinho.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_fx_arrepio,efeito,ourico_fx_arrepio,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/fx_arrepio.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_fx_power_chord,efeito,ourico_fx_power_chord,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/fx_power_chord.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_golpe_baixo,animacao,ourico_golpe_baixo,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/golpe_baixo.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_golpe_cima,animacao,ourico_golpe_cima,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/golpe_cima.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_golpe_frente,animacao,ourico_golpe_frente,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/golpe_frente.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_jab,animacao,ourico_jab,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/jab.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_jab_b,animacao,ourico_jab_b,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/jab_b.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_jab_c,animacao,ourico_jab_c,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/jab_c.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_parado,animacao,ourico_parado,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/parado.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_pendurado,animacao,ourico_pendurado,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/pendurado.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_pulo,animacao,ourico_pulo,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/pulo.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_tonto,animacao,ourico_tonto,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/tonto.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_transicoes_a,animacao,ourico_transicoes_a,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/transicoes_a.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_transicoes_b,animacao,ourico_transicoes_b,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/transicoes_b.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_vitoria,animacao,ourico_vitoria,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/vitoria.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_retrato,interface,retrato_ourico,OpenAI ImageGen com referencias aprovadas,art/ui/retrato_ourico.png,1024x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ourico_apresentacao,interface,apresentacao_ourico,OpenAI ImageGen com referencias aprovadas,art/ui/apresentacao_ourico.png,1024x1536,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
