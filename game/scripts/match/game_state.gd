@@ -120,6 +120,22 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "preguica",
 		"stats": {"Velocidade": 1, "Força": 4, "Peso": 5, "Volta ao palco": 2},
 	},
+	{
+		"name": "Papo-Amarelo",
+		"scene": "res://scenes/characters/papo_amarelo.tscn",
+		"desc": "Jacaré pescador, o mais pesado. Anzol que prende na borda e fisga de longe.",
+		"weight": "Pesado",
+		"id": "jacare",
+		"stats": {"Velocidade": 1, "Força": 5, "Peso": 5, "Volta ao palco": 3},
+	},
+	{
+		"name": "Espeto",
+		"scene": "res://scenes/characters/espeto.tscn",
+		"desc": "Ouriço roqueiro de garagem. Forte: eriça os espinhos e devolve dano.",
+		"weight": "Médio",
+		"id": "ourico",
+		"stats": {"Velocidade": 3, "Força": 4, "Peso": 3, "Volta ao palco": 3},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam
