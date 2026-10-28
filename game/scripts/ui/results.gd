@@ -237,6 +237,11 @@ func show_result(result: Dictionary) -> void:
 	var labels: Dictionary = result["labels"]
 	kos_label.text = "%s  %d   x   %d  %s" % [labels["p1"], kos["p1"], kos["p2"], labels["p2"]]
 	var stats: Dictionary = result.get("stats", {})
+	# Luta-espelho: o P2 aparece com a paleta trocada (retrato e, se venceu, a arte)
+	var mirror := Espelho.is_mirror(_char_index(result, "p1"), _char_index(result, "p2"))
+	Espelho.set_on(_faces["p2"], mirror)
+	Espelho.set_on(_faces["p1"], false)
+	Espelho.set_on(_art, mirror and winner == "p2")
 	for pid in PLAYERS:
 		var i := _char_index(result, pid)
 		var pic: TextureRect = _faces[pid]

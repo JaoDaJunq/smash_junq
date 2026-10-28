@@ -103,6 +103,8 @@ class Lives extends Control:
 var panels := {}
 var banner: Label
 var ko_target := 3
+## P1 e P2 com o mesmo lutador (P2 de paleta trocada).
+var mirror := false
 var _banner_id := 0
 var _banner_tween: Tween
 
@@ -125,6 +127,12 @@ func _ready() -> void:
 ## Monta os painéis. fighters: player_id -> Fighter.
 func setup(fighters: Dictionary, target: int) -> void:
 	ko_target = target
+	# Luta-espelho: P2 com o mesmo lutador do P1 ganha a paleta trocada (sprite,
+	# retrato e vidas), para os dois não se confundirem.
+	mirror = fighters.has("p1") and fighters.has("p2") \
+		and Espelho.is_mirror(UiArt.char_index_of(fighters["p1"]), UiArt.char_index_of(fighters["p2"]))
+	if mirror and not Espelho.is_applied(fighters["p2"]):
+		Espelho.apply_fighter(fighters["p2"])
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -221,6 +229,10 @@ func _build_panel(pid: String, fighter: Fighter) -> Control:
 	var head: Texture2D = UiArt.portrait(String(Game.CHARACTERS[idx].get("id", ""))) if idx >= 0 else null
 	lives.configure(ko_target, fighter.body_color.lightened(0.15), head)
 	v.add_child(lives)
+	if mirror and pid == "p2":
+		Espelho.set_on(lives, true)
+		if portrait != null:
+			Espelho.set_on(portrait.get_node("Retrato") as CanvasItem, true)
 
 	panels[pid] = {"name": name_label, "tag": tag, "damage": damage, "lives": lives, "fighter": fighter,
 		"shown": 0.0, "tweens": [], "portrait": portrait, "box": box}

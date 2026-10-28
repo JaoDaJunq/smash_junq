@@ -28,6 +28,8 @@ func _ready() -> void:
 		await _hud()
 	if _want("resultado"):
 		await _results()
+	if _want("espelho"):
+		await _mirror()
 	if _want("outras"):
 		await _screen("como_jogar", "res://scenes/ui/how_to_play.tscn")
 		var h: Node = (load("res://scenes/ui/how_to_play.tscn") as PackedScene).instantiate()
@@ -208,6 +210,48 @@ func _results() -> void:
 		await _shot("resultado_%s_vence_%s" % [pr[2], Game.CHARACTERS[pr[0] if pr[2] == "p1" else pr[1]]["id"]])
 		m.queue_free()
 		await _frames(5)
+
+
+## Luta-espelho (Juba, Capivas, Onça): os dois lado a lado no chão, print
+## inteiro e um recorte em volta deles; e a seleção com os dois no Juba.
+func _mirror() -> void:
+	for idx in [0, 1, 8]:
+		if not Game.character_ready(idx):
+			continue
+		var m := await _new_match(idx, idx)
+		var a: Fighter = m.fighters["p1"]
+		var b: Fighter = m.fighters["p2"]
+		a.global_position = Vector2(-110, -60)
+		b.global_position = Vector2(110, -60)
+		a.facing = 1
+		b.facing = -1
+		await _frames(60)
+		var key := "espelho_%s" % Game.CHARACTERS[idx]["id"]
+		await _shot(key)
+		var xf := get_viewport().get_canvas_transform()
+		var mid := xf * ((a.global_position + b.global_position) * 0.5)
+		var img := get_viewport().get_texture().get_image()
+		var r := Rect2i(Vector2i(mid) - Vector2i(320, 260), Vector2i(640, 360)).intersection(Rect2i(Vector2i.ZERO, img.get_size()))
+		img.get_region(r).save_png(out.path_join(key + "_recorte.png"))
+		m.queue_free()
+		await _frames(5)
+	var mr := await _new_match(8, 8)
+	mr.kos = {"p1": 1, "p2": 3}
+	mr.end_match("p2")
+	await get_tree().create_timer(1.2).timeout
+	await _shot("espelho_resultado_onca")
+	mr.queue_free()
+	await _frames(5)
+	var s: Node = (load("res://scenes/ui/character_select.tscn") as PackedScene).instantiate()
+	add_child(s)
+	await _frames(10)
+	s._set_cursor("p1", Roster.cell_of(0))
+	s._set_cursor("p2", Roster.cell_of(0))
+	s._refresh()
+	await _frames(30)
+	await _shot("espelho_selecao_juba")
+	s.queue_free()
+	await _frames(3)
 
 
 func _shot(key: String) -> void:

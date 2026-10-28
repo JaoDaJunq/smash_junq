@@ -38,6 +38,7 @@ func _run() -> void:
 	await _test_simultaneous_and_sudden_death()
 	await _test_rematch_and_pause()
 	await _test_cpu_mode()
+	await _test_mirror()
 
 
 # --- Partida ---
@@ -377,6 +378,28 @@ func _test_rematch_and_pause() -> void:
 	get_tree().paused = false
 	m.pause_menu.visible = false
 	await _frames(2)
+
+
+## Espelho: mesmo lutador dos dois lados -> P2 com a paleta trocada (só ele).
+func _test_mirror() -> void:
+	var old_mode := Game.mode
+	Game.mode = "versus"
+	Game.set_character("p1", 0)
+	Game.set_character("p2", 1)
+	await _new_match()
+	_check("Espelho: lutadores diferentes não trocam paleta", not Espelho.is_applied(p2) and not m.hud.mirror, "")
+	for idx in [0, 1, 8]:
+		Game.set_character("p1", idx)
+		Game.set_character("p2", idx)
+		await _new_match()
+		var s1 := p1.get_node_or_null("Visual/Quadro") as CanvasItem
+		var s2 := p2.get_node_or_null("Visual/Quadro") as CanvasItem
+		var ok2 := s2 != null and s2.material is ShaderMaterial and (s2.material as ShaderMaterial).shader == Espelho.SHADER
+		var ok1 := s1 != null and s1.material is ShaderMaterial and (s1.material as ShaderMaterial).shader != Espelho.SHADER
+		_check("Espelho %s: P2 com paleta trocada, P1 normal" % Game.CHARACTERS[idx]["name"], ok1 and ok2 and m.hud.mirror, "%s %s" % [s1, s2])
+	Game.set_character("p1", 0)
+	Game.set_character("p2", 1)
+	Game.mode = old_mode
 
 
 func _test_cpu_mode() -> void:

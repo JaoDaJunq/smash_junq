@@ -276,6 +276,7 @@ func _show_splash(pid: String, stage: Control, idx: int) -> void:
 	var w := h * art.get_width() / art.get_height()
 	var r := TextureRect.new()
 	r.name = "Apresentacao"
+	r.set_meta("arte_lutador", true)   # o nome pode ganhar sufixo enquanto o antigo sai
 	r.texture = art
 	r.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -603,3 +604,13 @@ func _refresh() -> void:
 			border = GOOD
 		(p["root"] as PanelContainer).add_theme_stylebox_override("panel", UiArt.panel(border, 5 if active or locked[pid] else 3))
 		(p["stage"] as Control).modulate = Color.WHITE if active or locked[pid] else Color(1, 1, 1, 0.4)
+	_apply_mirror()
+
+
+## Os dois no mesmo lutador: o painel do P2 mostra a paleta trocada (a mesma
+## que ele terá na luta).
+func _apply_mirror() -> void:
+	var on := Espelho.is_mirror(choice["p1"], choice["p2"])
+	for c in (_panels["p2"]["stage"] as Control).get_children():
+		if c is UiArt.FighterIdle or c.has_meta("arte_lutador"):
+			Espelho.set_on(c as CanvasItem, on)
