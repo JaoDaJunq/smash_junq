@@ -27,6 +27,11 @@ extends Resource
 ## Depois deste golpe no ar, o lutador não pode pular nem atacar até pousar (recuperação).
 @export var helpless_after := false
 
+@export_group("Som")
+## Som de assinatura do personagem (nome de evento do Sfx, ex. "assinatura_berimbau")
+## tocado 4 dB abaixo do golpe quando este golpe é forte ou especial. Vazio = nenhum.
+@export var signature_layer := ""
+
 
 func total_frames() -> int:
 	return startup + active + recovery
