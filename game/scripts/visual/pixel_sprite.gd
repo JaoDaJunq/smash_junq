@@ -311,7 +311,8 @@ func _pick() -> Array:
 		if not o.is_empty() and has_anim(o[0]):
 			if o.size() > 2 and o[2]:   # [animação, quadro, true] = quadro fixo
 				return [o[0], mini(int(o[1]), int(_counts[o[0]]) - 1)]
-			return _loop(o[0], o[1])
+			var only: Array = o[3] if o.size() > 3 else []   # [animação, fps, false, quadros do loop]
+			return _loop(o[0], o[1], only)
 	var grounded := fighter.state in [S.IDLE, S.WALK, S.RUN]
 	if grounded and _turn < TURN_TIME and has_anim("virar"):
 		return _once("virar", _turn, TURN_TIME)

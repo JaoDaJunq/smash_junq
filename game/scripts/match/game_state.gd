@@ -136,6 +136,22 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "ourico",
 		"stats": {"Velocidade": 3, "Força": 4, "Peso": 3, "Volta ao palco": 3},
 	},
+	{
+		"name": "Beija",
+		"scene": "res://scenes/characters/beija.tscn",
+		"desc": "Beija-flor skatista. Rápido e minúsculo: paira no ar, difícil de acertar.",
+		"weight": "Muito leve",
+		"id": "beija_flor",
+		"stats": {"Velocidade": 5, "Força": 1, "Peso": 1, "Volta ao palco": 5},
+	},
+	{
+		"name": "Preguinho",
+		"scene": "res://scenes/characters/preguinho.tscn",
+		"desc": "Macaco-prego faz-tudo. Versátil: troca de ferramenta, coco, escada e prego.",
+		"weight": "Médio",
+		"id": "macaco_prego",
+		"stats": {"Velocidade": 3, "Força": 3, "Peso": 3, "Volta ao palco": 3},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

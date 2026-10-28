@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/beija.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/beija.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/visual/pixel_sprite.gd" id="9_visual"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 24.0
+height = 110.0
+
+[node name="Beija" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Beija"
+moveset = ExtResource("2_moves")
+weight = 62.0
+walk_speed = 380.0
+run_speed = 700.0
+air_speed = 480.0
+gravity = 2500.0
+max_fall_speed = 1000.0
+jump_velocity = 960.0
+double_jump_velocity = 900.0
+air_jumps = 2
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("9_visual")
+folder = "res://assets/characters/beija_flor/pixel"
+center_x = 40.0

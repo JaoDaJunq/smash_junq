@@ -103,7 +103,9 @@ func _test_menus() -> void:
 	_check("p1_right pula o \"?\" e chega no Berrante", sel.choice["p1"] == 11 and sel.cursor["p1"] == Vector2i(2, 0), str(sel.cursor))
 	await _tap("p1_left")
 	await _tap("p1_left")
-	_check("p1_left dá a volta pulando os \"?\" (Berrante -> Juba -> Berrante)", sel.choice["p1"] == 11, str(sel.cursor))
+	_check("p1_left dá a volta pulando os \"?\" (Berrante -> Juba -> Preguinho)", sel.choice["p1"] == 14, str(sel.cursor))
+	await _tap("p1_left")
+	_check("p1_left do Preguinho volta ao Berrante", sel.choice["p1"] == 11, str(sel.cursor))
 	# \"?\" à força (mouse/teste): não confirma
 	sel._set_cursor("p1", Vector2i(1, 0))
 	sel._refresh()

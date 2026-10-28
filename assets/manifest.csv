@@ -781,3 +781,7 @@ ourico_transicoes_b,animacao,ourico_transicoes_b,OpenAI ImageGen com referencias
 ourico_vitoria,animacao,ourico_vitoria,OpenAI ImageGen com referencias aprovadas,art/pixel/ourico/vitoria.png,1920x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
 ourico_retrato,interface,retrato_ourico,OpenAI ImageGen com referencias aprovadas,art/ui/retrato_ourico.png,1024x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
 ourico_apresentacao,interface,apresentacao_ourico,OpenAI ImageGen com referencias aprovadas,art/ui/apresentacao_ourico.png,1024x1536,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
+ui_beija_flor_retrato,interface,retrato_personagem,art/ui/retrato_beija_flor.png,game/assets/characters/beija_flor/retrato_pixel.png,1024x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato_aguarda_aprovacao
+ui_beija_flor_apresentacao,interface,apresentacao_personagem,art/ui/apresentacao_beija_flor.png,game/assets/ui/apresentacao_beija_flor.png,1024x1536,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato_aguarda_aprovacao
+ui_macaco_prego_retrato,interface,retrato_personagem,art/ui/retrato_macaco_prego.png,game/assets/characters/macaco_prego/retrato_pixel.png,1024x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato_aguarda_aprovacao
+ui_macaco_prego_apresentacao,interface,apresentacao_personagem,art/ui/apresentacao_macaco_prego.png,game/assets/ui/apresentacao_macaco_prego.png,1024x1536,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato_aguarda_aprovacao
