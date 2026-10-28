@@ -150,6 +150,29 @@ func _hud() -> void:
 		await _shot("hud_%s_x_%s" % [Game.CHARACTERS[a]["id"], Game.CHARACTERS[b]["id"]])
 		m.queue_free()
 		await _frames(5)
+	# Estrelas da ficha da Dona Onça x setinha P1/CPU em cima do alvo (não podem
+	# se cobrir): Onça P1 contra CPU com 2 fichas; depois CPU-Onça marca o P1 com 3.
+	var onca := -1
+	for i in Game.CHARACTERS.size():
+		if Game.CHARACTERS[i]["id"] == "onca":
+			onca = i
+	if onca >= 0 and Game.character_ready(onca):
+		Game.mode = "cpu"
+		for side in ["p1", "p2"]:
+			var m := await _new_match(onca if side == "p1" else 0, 0 if side == "p1" else onca)
+			var dona: Node = m.fighters[side]
+			var alvo: Fighter = m.fighters["p2" if side == "p1" else "p1"]
+			await _frames(50)
+			m.fighters["p2"].set_physics_process(false)
+			m.fighters["p1"].set_physics_process(false)
+			dona.set_ficha(alvo, 2 if side == "p1" else 3)
+			m.kos = {"p1": 0, "p2": 1}
+			m.hud.set_kos(m.kos)
+			await _frames(30)
+			await _shot("hud_ficha_onca_%s" % side)
+			m.queue_free()
+			await _frames(5)
+		Game.mode = "versus"
 
 
 func _results() -> void:

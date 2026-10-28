@@ -46,7 +46,7 @@ func _marca(f: Fighter) -> FichaMarca:
 	if m == null:
 		m = FichaMarca.new()
 		m.name = "FichaMarca"
-		m.position = Vector2(0, -HEIGHT * 0.5 - 40)
+		m.position = Vector2(0, -HEIGHT * 0.5 - 68)  # acima da setinha P1/P2/CPU (que vai até -HEIGHT/2 - 48)
 		f.add_child(m)
 	return m
 

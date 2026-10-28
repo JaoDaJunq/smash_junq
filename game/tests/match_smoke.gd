@@ -70,8 +70,9 @@ func _damage_text(pid: String) -> String:
 	return (m.hud.panels[pid]["damage"] as Label).text
 
 
-func _hud_kos(pid: String) -> int:
-	return (m.hud.panels[pid]["markers"] as Hud.KoMarkers).count
+## Vidas acesas no HUD (cada KO do adversário apaga uma).
+func _hud_lives(pid: String) -> int:
+	return m.hud.lives_of(pid)
 
 
 # --- Testes ---
@@ -189,7 +190,7 @@ func _test_countdown_and_ko() -> void:
 			fell = true
 			break
 	_check("KO ao cair pela zona (natural): P1 marca", fell and m.kos["p2"] == 0, str(m.kos))
-	_check("KO: HUD mostra 1 KO para P1", _hud_kos("p1") == 1 and _hud_kos("p2") == 0, "%d/%d" % [_hud_kos("p1"), _hud_kos("p2")])
+	_check("KO: HUD apaga 1 vida do P2 (KO do P1)", _hud_lives("p2") == m.ko_target - 1 and _hud_lives("p1") == m.ko_target, "%d/%d" % [_hud_lives("p1"), _hud_lives("p2")])
 	_check("Retorno: P2 reaparece no alto", p2.global_position.y < -380 and p2.global_position.y > -470 and absf(p2.global_position.x - 300.0) < 5.0, str(p2.global_position))
 	_check("Retorno: invencível por ~2 s", p2.invincible_time > 1.9, "%.2f" % p2.invincible_time)
 	_check("Retorno: dano zerado e HUD em 0%", p2.damage_percent == 0.0 and _damage_text("p2") == "0%", _damage_text("p2"))
@@ -241,7 +242,7 @@ func _test_normal_win_and_results() -> void:
 		await _frames(3)
 	_check("3 KOs encerram a partida", m.phase == MatchManager.Phase.ENDED and ended == ["p1"], str(ended))
 	_check("Fim: lutadores param", not p1.is_physics_processing(), "")
-	_check("Fim: HUD com 3 KOs do P1", _hud_kos("p1") == 3 and _hud_kos("p2") == 0, "")
+	_check("Fim: HUD com P2 sem vidas e P1 com todas", _hud_lives("p2") == 0 and _hud_lives("p1") == m.ko_target, "%d/%d" % [_hud_lives("p1"), _hud_lives("p2")])
 	await _wait(m.results_delay + 0.3)
 	_check("Resultado aparece", m.results.visible, "")
 	_check("Resultado: vencedor", m.results.title_label.text == "Jogador 1 venceu!", m.results.title_label.text)
@@ -308,7 +309,7 @@ func _test_rematch_and_pause() -> void:
 	_check("Botão Menu volta ao menu", Game.requested_scene == Game.MENU_SCENE, Game.requested_scene)
 	m.results.buttons[0].pressed.emit()
 	await _frames(3)
-	_check("Revanche: placar 0 x 0", m.kos["p1"] == 0 and m.kos["p2"] == 0 and _hud_kos("p1") == 0 and _hud_kos("p2") == 0, str(m.kos))
+	_check("Revanche: placar 0 x 0", m.kos["p1"] == 0 and m.kos["p2"] == 0 and _hud_lives("p1") == m.ko_target and _hud_lives("p2") == m.ko_target, str(m.kos))
 	_check("Revanche: resultado some e contagem recomeça", not m.results.visible and m.phase == MatchManager.Phase.COUNTDOWN, "")
 	_check("Revanche: mesmos personagens e dano zerado", p1.display_name == "Juba" and p2.display_name == "Seu Capivas" and p2.damage_percent == 0.0 and _damage_text("p2") == "0%", "")
 	_check("Revanche: lutadores nas posições iniciais", p1.global_position.distance_to(Vector2(-300, -400)) < 5.0 and p2.global_position.distance_to(Vector2(300, -400)) < 5.0, str(p2.global_position))
@@ -355,7 +356,12 @@ func _test_cpu_mode() -> void:
 	Game.mode = "cpu"
 	await _new_match()
 	_check("Modo CPU: P2 controlado pela CPU", p2.brain != null and p1.brain == null, "")
-	_check("Modo CPU: HUD chama o P2 de CPU", (m.hud.panels["p2"]["name"] as Label).text.begins_with("CPU"), (m.hud.panels["p2"]["name"] as Label).text)
+	var selo := (m.hud.panels["p2"]["tag"] as Control).get_node("Texto") as Label
+	_check("Modo CPU: selo do HUD chama o P2 de CPU", selo.text == "CPU", selo.text)
+	var cor_selo := ((m.hud.panels["p2"]["tag"] as Panel).get_theme_stylebox("panel") as StyleBoxFlat).bg_color
+	_check("Modo CPU: selo na cor do jogador 2", cor_selo.is_equal_approx(Game.PLAYER_COLORS["p2"]), str(cor_selo))
+	var box := m.hud.panels["p1"]["box"] as Control
+	_check("HUD: painel compacto (<= 400x145 em 1080p)", box.size.x <= 400.0 and box.size.y <= 145.0, str(box.size))
 	# Escolha de personagem no modo CPU: P1 escolhe os dois
 	var sel := CHAR_SELECT.instantiate()
 	add_child(sel)
