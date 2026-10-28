@@ -40,3 +40,10 @@ Codex em tarefa de código: pode editar e rodar testes no worktree que recebeu, 
 ## Trabalho em paralelo
 
 Subagentes trabalham em worktrees separados (`git worktree add`), cada um com a lista de arquivos que pode mexer combinada antes; o Hermes junta, roda a bateria de novo e só então sobe para main.
+
+## Lições da rodada 11 (28/10)
+- **Arte nunca por código.** Objeto, projétil, efeito ou ferramenta que aparece na tela tem folha própria pedida ao Codex ANTES de programar. Agente de código que não achar a folha PARA e pede, não desenha com `draw_rect`/`draw_circle` (só vale para barrinha de interface e depuração).
+- **Mecânica que muda o visual precisa de arte para cada estado** (ex.: ferramenta do Preguinho: folhas com martelo, chave e furadeira). Teste verde não prova que a mudança aparece na tela.
+- **Objeto desenhado no sprite tem de ter tamanho fixo em todas as folhas** (ex.: skate do Beija) e não pode duplicar com o objeto do palco (ex.: bola do Mourisco só nos especiais).
+- **Efeito proporcional:** nenhum efeito maior que o próprio lutador sem motivo; conferir no print in-game antes de entregar.
+- **Portão de prints + revisor separado vale também para personagem novo**, antes de mostrar ao João, mesmo com a bateria em 0.
