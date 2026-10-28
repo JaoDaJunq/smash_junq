@@ -10,7 +10,7 @@ const GROUPS: Array[Dictionary] = [
 		{"name": "Juba", "animal": "mico-leão-dourado", "char": 0},
 		{"name": "Mestre Muriqui", "animal": "muriqui", "char": -1},
 		{"name": "Berrante", "animal": "bugio", "char": 11},
-		{"name": "Preguinho", "animal": "macaco-prego", "char": -1},
+		{"name": "Preguinho", "animal": "macaco-prego", "char": 14},
 	]},
 	{"name": "Roedores", "color": Color("c98a5a"), "slots": [
 		{"name": "Cutia Ligeira", "animal": "cutia", "char": 9},
