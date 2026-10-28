@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/papo_amarelo.gd" id="1_script"]
+[ext_resource type="Resource" path="res://data/movesets/papo_amarelo.tres" id="2_moves"]
+[ext_resource type="Script" path="res://scripts/visual/pixel_sprite.gd" id="9_visual"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 30.0
+height = 116.0
+
+[node name="PapoAmarelo" type="CharacterBody2D"]
+script = ExtResource("1_script")
+display_name = "Papo-Amarelo"
+moveset = ExtResource("2_moves")
+weight = 130.0
+walk_speed = 275.0
+run_speed = 490.0
+air_speed = 340.0
+gravity = 2800.0
+jump_velocity = 980.0
+double_jump_velocity = 880.0
+
+[node name="Body" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("9_visual")
+folder = "res://assets/characters/jacare/pixel"
+center_x = 44.0
+walk_fps = 5.0
+run_fps = 7.0

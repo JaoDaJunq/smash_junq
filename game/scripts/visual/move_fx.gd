@@ -74,6 +74,11 @@ const RULES := {
 		# poeira da corrida sai do calango.gd (a corrida segura o quadro ativo enquanto acelera)
 		{"on": "tail", "fx": "fx_rabo_poof", "at": "behind", "time": 0.4, "draw": "poof"},
 	],
+	"jacare": [
+		# o anzol e a rede são nós próprios (anzol_pesca.gd, rede_pesca.gd)
+		{"on": "splash", "fx": "fx_splash_rio", "at": "front_feet", "base": 58, "time": 0.4, "ground": true},
+		{"on": "dente", "fx": "fx_dente", "at": "target_head", "time": 0.9, "follow": true, "draw": "estrelas"},
+	],
 }
 
 var fighter: Fighter

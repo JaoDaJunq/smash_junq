@@ -32,7 +32,7 @@ const GROUPS: Array[Dictionary] = [
 	]},
 	{"name": "Répteis", "color": Color("6fbf4a"), "slots": [
 		{"name": "Calango", "animal": "calango", "char": 10},
-		{"name": "Papo-Amarelo", "animal": "jacaré-de-papo-amarelo", "char": -1},
+		{"name": "Papo-Amarelo", "animal": "jacaré-de-papo-amarelo", "char": 13},
 		{"name": "Mestra Sucuri", "animal": "sucuri", "char": 5},
 		{"name": "Seu Jabuti", "animal": "jabuti", "char": -1},
 	]},

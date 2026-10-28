@@ -1,0 +1,203 @@
+[gd_resource type="Resource" script_class="Moveset" format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/attack_data.gd" id="1_attack"]
+[ext_resource type="Script" path="res://scripts/combat/moveset.gd" id="2_moveset"]
+
+[sub_resource type="Resource" id="Resource_jab"]
+script = ExtResource("1_attack")
+id = "jab"
+startup = 3
+active = 3
+recovery = 11
+landing_lag = 0
+hitbox_offset = Vector2(52, -10)
+hitbox_radius = 27.0
+damage = 5.0
+angle = 35.0
+base_knockback = 200.0
+knockback_growth = 1.8
+
+[sub_resource type="Resource" id="Resource_ftilt"]
+script = ExtResource("1_attack")
+id = "ftilt"
+startup = 11
+active = 4
+recovery = 22
+landing_lag = 0
+hitbox_offset = Vector2(68, -14)
+hitbox_radius = 36.0
+damage = 14.0
+angle = 32.0
+base_knockback = 360.0
+knockback_growth = 6.8
+
+[sub_resource type="Resource" id="Resource_utilt"]
+script = ExtResource("1_attack")
+id = "utilt"
+startup = 9
+active = 5
+recovery = 20
+landing_lag = 0
+hitbox_offset = Vector2(28, -76)
+hitbox_radius = 38.0
+damage = 11.0
+angle = 88.0
+base_knockback = 330.0
+knockback_growth = 6.2
+
+[sub_resource type="Resource" id="Resource_dtilt"]
+script = ExtResource("1_attack")
+id = "dtilt"
+startup = 8
+active = 4
+recovery = 18
+landing_lag = 0
+hitbox_offset = Vector2(64, 40)
+hitbox_radius = 34.0
+damage = 9.0
+angle = 22.0
+base_knockback = 290.0
+knockback_growth = 5.2
+
+[sub_resource type="Resource" id="Resource_nair"]
+script = ExtResource("1_attack")
+id = "nair"
+startup = 6
+active = 11
+recovery = 18
+landing_lag = 12
+hitbox_offset = Vector2(0, 0)
+hitbox_radius = 54.0
+damage = 8.5
+angle = 45.0
+base_knockback = 290.0
+knockback_growth = 4.6
+
+[sub_resource type="Resource" id="Resource_fair"]
+script = ExtResource("1_attack")
+id = "fair"
+startup = 10
+active = 5
+recovery = 22
+landing_lag = 15
+hitbox_offset = Vector2(66, -14)
+hitbox_radius = 36.0
+damage = 14.0
+angle = 38.0
+base_knockback = 390.0
+knockback_growth = 6.8
+
+[sub_resource type="Resource" id="Resource_bair"]
+script = ExtResource("1_attack")
+id = "bair"
+startup = 10
+active = 5
+recovery = 20
+landing_lag = 14
+hitbox_offset = Vector2(-66, -8)
+hitbox_radius = 36.0
+damage = 13.0
+angle = 148.0
+base_knockback = 370.0
+knockback_growth = 6.5
+
+[sub_resource type="Resource" id="Resource_uair"]
+script = ExtResource("1_attack")
+id = "uair"
+startup = 10
+active = 6
+recovery = 20
+landing_lag = 13
+hitbox_offset = Vector2(14, -84)
+hitbox_radius = 40.0
+damage = 10.0
+angle = 88.0
+base_knockback = 320.0
+knockback_growth = 5.9
+
+[sub_resource type="Resource" id="Resource_dair"]
+script = ExtResource("1_attack")
+id = "dair"
+startup = 15
+active = 5
+recovery = 24
+landing_lag = 20
+hitbox_offset = Vector2(0, 72)
+hitbox_radius = 38.0
+damage = 14.0
+angle = -78.0
+base_knockback = 340.0
+knockback_growth = 6.2
+
+[sub_resource type="Resource" id="Resource_special_neutral"]
+script = ExtResource("1_attack")
+id = "special_neutral"
+startup = 16
+active = 3
+recovery = 26
+landing_lag = 14
+hitbox_offset = Vector2(0, -300)
+hitbox_radius = 1.0
+damage = 0.0
+angle = 40.0
+base_knockback = 0.0
+knockback_growth = 0.0
+
+[sub_resource type="Resource" id="Resource_special_side"]
+script = ExtResource("1_attack")
+id = "special_side"
+startup = 18
+active = 3
+recovery = 26
+landing_lag = 14
+hitbox_offset = Vector2(0, -300)
+hitbox_radius = 1.0
+damage = 0.0
+angle = 40.0
+base_knockback = 0.0
+knockback_growth = 0.0
+
+[sub_resource type="Resource" id="Resource_special_up"]
+script = ExtResource("1_attack")
+id = "special_up"
+startup = 12
+active = 3
+recovery = 30
+landing_lag = 20
+hitbox_offset = Vector2(0, -300)
+hitbox_radius = 1.0
+damage = 0.0
+angle = 80.0
+base_knockback = 0.0
+knockback_growth = 0.0
+helpless_after = true
+
+[sub_resource type="Resource" id="Resource_special_down"]
+script = ExtResource("1_attack")
+id = "special_down"
+startup = 12
+active = 5
+recovery = 34
+landing_lag = 16
+hitbox_offset = Vector2(64, -6)
+hitbox_radius = 40.0
+damage = 0.0
+angle = 38.0
+base_knockback = 0.0
+knockback_growth = 0.0
+
+[resource]
+script = ExtResource("2_moveset")
+jab = SubResource("Resource_jab")
+ftilt = SubResource("Resource_ftilt")
+utilt = SubResource("Resource_utilt")
+dtilt = SubResource("Resource_dtilt")
+nair = SubResource("Resource_nair")
+fair = SubResource("Resource_fair")
+bair = SubResource("Resource_bair")
+uair = SubResource("Resource_uair")
+dair = SubResource("Resource_dair")
+special_neutral = SubResource("Resource_special_neutral")
+special_side = SubResource("Resource_special_side")
+special_up = SubResource("Resource_special_up")
+special_down = SubResource("Resource_special_down")
