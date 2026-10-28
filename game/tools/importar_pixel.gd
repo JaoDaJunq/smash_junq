@@ -22,7 +22,7 @@ const NATIVE := 64
 ## Personagens com quadros mais largos que 64 (bico/cauda que passa da célula):
 ## margem extra de cada lado. As folhas dele vêm de tools/recentrar_folha.py --margem N
 ## (3 células de 64+2N). No jogo, center_x da cena = 32 + N.
-const MARGEM := {"tucano": 8, "onca": 10, "cutia": 16, "calango": 16, "bugio": 12, "preguica": 10}
+const MARGEM := {"tucano": 8, "onca": 10, "cutia": 16, "calango": 16, "bugio": 12, "preguica": 10, "jacare": 12, "ourico": 8, "mourisco": 8, "tamandua": 12, "beija_flor": 8, "macaco_prego": 8}
 var FW := NATIVE  # largura do quadro nativo deste personagem
 var _char_fw := NATIVE  # FW do personagem (FW muda por folha nos efeitos/objetos)
 
@@ -61,7 +61,7 @@ const SEM_ALINHAR := ["pendurado"]
 ## São lidos na largura de célula DA PRÓPRIA FOLHA (folha 1536 = quadros de 64 mesmo
 ## em personagem com MARGEM) e gravados nessa largura ("largura" no animacoes.json).
 const OBJETOS := ["castanha", "pandeiro", "semente", "nota", "laco_cauda", "estandarte", "arco", "cama_elastica",
-	"castanha_enterrada", "rabo", "rabo_solto", "pipoca", "areia", "faixa_interditado"]
+	"castanha_enterrada", "rabo", "rabo_solto", "pipoca", "areia", "faixa_interditado", "anzol", "rede", "espinho", "bola_volei", "skate", "coquinho", "prego", "escada", "ferramentas"]
 ## Animações em loop (recebem também o intermediário entre o último e o primeiro).
 const LOOPS := ["parado", "andar", "correr", "vitoria", "tonto", "descanso", "pendurado"]
 ## Folhas com mais de uma animação: folha -> {animação: quadros}.
