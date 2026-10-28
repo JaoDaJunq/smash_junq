@@ -6,6 +6,7 @@
 [sub_resource type="Resource" id="Resource_xlrhq"]
 script = ExtResource("1_fi7xw")
 id = "bair"
+signature_layer = "assinatura_pandeiro"
 startup = 11
 active = 5
 recovery = 20
@@ -20,6 +21,7 @@ knockback_growth = 6.50
 [sub_resource type="Resource" id="Resource_i6xa3"]
 script = ExtResource("1_fi7xw")
 id = "dair"
+signature_layer = "assinatura_pandeiro"
 startup = 16
 active = 5
 recovery = 24
@@ -34,6 +36,7 @@ knockback_growth = 6.17
 [sub_resource type="Resource" id="Resource_lgvey"]
 script = ExtResource("1_fi7xw")
 id = "dtilt"
+signature_layer = "assinatura_pandeiro"
 startup = 9
 active = 4
 recovery = 20
@@ -48,6 +51,7 @@ knockback_growth = 5.20
 [sub_resource type="Resource" id="Resource_vv3jt"]
 script = ExtResource("1_fi7xw")
 id = "fair"
+signature_layer = "assinatura_pandeiro"
 startup = 14
 active = 5
 recovery = 24
@@ -62,6 +66,7 @@ knockback_growth = 6.83
 [sub_resource type="Resource" id="Resource_k1i3u"]
 script = ExtResource("1_fi7xw")
 id = "ftilt"
+signature_layer = "assinatura_pandeiro"
 startup = 12
 active = 4
 recovery = 24
@@ -76,6 +81,7 @@ knockback_growth = 6.83
 [sub_resource type="Resource" id="Resource_c6fpk"]
 script = ExtResource("1_fi7xw")
 id = "jab"
+signature_layer = "assinatura_pandeiro"
 startup = 5
 active = 3
 recovery = 12
@@ -90,6 +96,7 @@ knockback_growth = 1.62
 [sub_resource type="Resource" id="Resource_4brvn"]
 script = ExtResource("1_fi7xw")
 id = "nair"
+signature_layer = "assinatura_pandeiro"
 startup = 6
 active = 10
 recovery = 18
@@ -104,6 +111,7 @@ knockback_growth = 4.55
 [sub_resource type="Resource" id="Resource_2hqab"]
 script = ExtResource("1_fi7xw")
 id = "special_down"
+signature_layer = "assinatura_pandeiro"
 startup = 40
 active = 4
 recovery = 20
@@ -118,6 +126,7 @@ knockback_growth = 5.0
 [sub_resource type="Resource" id="Resource_jccda"]
 script = ExtResource("1_fi7xw")
 id = "special_neutral"
+signature_layer = "assinatura_pandeiro"
 startup = 8
 active = 6
 recovery = 18
@@ -132,6 +141,7 @@ knockback_growth = 1.5
 [sub_resource type="Resource" id="Resource_lww1q"]
 script = ExtResource("1_fi7xw")
 id = "special_side"
+signature_layer = "assinatura_pandeiro"
 startup = 16
 active = 4
 recovery = 18
@@ -147,6 +157,7 @@ self_velocity = Vector2(380, 0)
 [sub_resource type="Resource" id="Resource_oatvb"]
 script = ExtResource("1_fi7xw")
 id = "special_up"
+signature_layer = "assinatura_pandeiro"
 startup = 8
 active = 10
 recovery = 12
@@ -162,6 +173,7 @@ helpless_after = true
 [sub_resource type="Resource" id="Resource_qqjgh"]
 script = ExtResource("1_fi7xw")
 id = "uair"
+signature_layer = "assinatura_pandeiro"
 startup = 9
 active = 5
 recovery = 19
@@ -176,6 +188,7 @@ knockback_growth = 5.85
 [sub_resource type="Resource" id="Resource_2jte8"]
 script = ExtResource("1_fi7xw")
 id = "utilt"
+signature_layer = "assinatura_pandeiro"
 startup = 10
 active = 5
 recovery = 22

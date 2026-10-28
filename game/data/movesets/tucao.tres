@@ -6,6 +6,7 @@
 [sub_resource type="Resource" id="Resource_56h3u"]
 script = ExtResource("1_24tt8")
 id = "bair"
+signature_layer = "assinatura_apito"
 startup = 5
 recovery = 13
 landing_lag = 8
@@ -17,6 +18,7 @@ angle = 150.0
 [sub_resource type="Resource" id="Resource_0sov3"]
 script = ExtResource("1_24tt8")
 id = "dair"
+signature_layer = "assinatura_apito"
 startup = 8
 recovery = 16
 landing_lag = 12
@@ -30,6 +32,7 @@ knockback_growth = 6.30
 [sub_resource type="Resource" id="Resource_uxjf2"]
 script = ExtResource("1_24tt8")
 id = "dtilt"
+signature_layer = "assinatura_apito"
 landing_lag = 0
 hitbox_offset = Vector2(50, 40)
 hitbox_radius = 24.0
@@ -41,6 +44,7 @@ knockback_growth = 4.90
 [sub_resource type="Resource" id="Resource_p7b15"]
 script = ExtResource("1_24tt8")
 id = "fair"
+signature_layer = "assinatura_apito"
 startup = 5
 recovery = 13
 landing_lag = 8
@@ -54,6 +58,7 @@ knockback_growth = 7.70
 [sub_resource type="Resource" id="Resource_yaqdf"]
 script = ExtResource("1_24tt8")
 id = "ftilt"
+signature_layer = "assinatura_apito"
 startup = 9
 recovery = 13
 landing_lag = 0
@@ -66,6 +71,7 @@ hitbox_radius = 32.0
 [sub_resource type="Resource" id="Resource_a4ddq"]
 script = ExtResource("1_24tt8")
 id = "jab"
+signature_layer = "assinatura_apito"
 startup = 2
 active = 2
 recovery = 7
@@ -80,6 +86,7 @@ knockback_growth = 2.10
 [sub_resource type="Resource" id="Resource_n0he7"]
 script = ExtResource("1_24tt8")
 id = "nair"
+signature_layer = "assinatura_apito"
 startup = 3
 active = 7
 hitbox_offset = Vector2(0, 0)
@@ -92,6 +99,7 @@ knockback_growth = 4.90
 [sub_resource type="Resource" id="Resource_pqh0r"]
 script = ExtResource("1_24tt8")
 id = "special_down"
+signature_layer = "assinatura_apito"
 startup = 14
 active = 8
 recovery = 22
@@ -106,6 +114,7 @@ knockback_growth = 6.0
 [sub_resource type="Resource" id="Resource_gnyn0"]
 script = ExtResource("1_24tt8")
 id = "special_neutral"
+signature_layer = "assinatura_apito"
 startup = 12
 active = 2
 recovery = 18
@@ -120,6 +129,7 @@ knockback_growth = 2.50
 [sub_resource type="Resource" id="Resource_qm6ai"]
 script = ExtResource("1_24tt8")
 id = "special_side"
+signature_layer = "assinatura_apito"
 startup = 10
 active = 12
 recovery = 24
@@ -135,6 +145,7 @@ self_velocity = Vector2(0, 0)
 [sub_resource type="Resource" id="Resource_6x1f0"]
 script = ExtResource("1_24tt8")
 id = "special_up"
+signature_layer = "assinatura_apito"
 startup = 6
 active = 12
 recovery = 12
@@ -150,6 +161,7 @@ damage = 7.0
 [sub_resource type="Resource" id="Resource_yso0c"]
 script = ExtResource("1_24tt8")
 id = "uair"
+signature_layer = "assinatura_apito"
 hitbox_offset = Vector2(10, -80)
 hitbox_radius = 30.0
 damage = 6.5
@@ -160,6 +172,7 @@ knockback_growth = 6.30
 [sub_resource type="Resource" id="Resource_nuf65"]
 script = ExtResource("1_24tt8")
 id = "utilt"
+signature_layer = "assinatura_apito"
 recovery = 11
 landing_lag = 0
 hitbox_offset = Vector2(20, -80)
