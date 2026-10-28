@@ -40,6 +40,61 @@ func _ready() -> void:
 func _run() -> void:
 	await _test_hitstop()
 	await _test_target_shake()
+	await _test_camera()
+
+
+# --- 3. Câmera ---
+
+func _test_camera() -> void:
+	Settings.screen_shake = true
+	await _face_off(0.0)
+	await _frames(40)   # câmera assenta e o tremor anterior some
+	var pos0 := cam.global_position
+	var zoom0 := cam.zoom
+	foe.receive_hit(me, me.moveset.jab, 1)
+	var moved_in_stop := false
+	var shaking := 0
+	var biggest := 0.0
+	var whole := true
+	var trail: Array[int] = []
+	for i in 40:
+		await get_tree().process_frame
+		await get_tree().physics_frame
+		if foe._hitstop > 0 and (cam.global_position != pos0 or cam.zoom != zoom0):
+			moved_in_stop = true
+		var px := cam.offset * cam.zoom   # pixels na tela
+		if i < 14:
+			trail.append(int(round(px.length())))
+		if px.length() > 0.0:
+			shaking += 1
+			biggest = maxf(biggest, px.length())
+		if not (px - px.round()).is_zero_approx():
+			whole = false
+	_check("Câmera: golpe leve (jab %.0f%%) também treme" % me.moveset.jab.damage, shaking >= 4 and biggest >= 2.0,
+		"%d quadros tremendo, maior %.1f px na tela, px por quadro %s" % [shaking, biggest, str(trail)])
+	_check("Câmera: tremor em pixel inteiro na tela", whole, "")
+	_check("Câmera: não anda nem muda zoom durante a pausa de impacto", not moved_in_stop, "")
+	# tremor desligado: nem tremor nem clarão
+	Settings.screen_shake = false
+	await _face_off(0.0)
+	await _frames(40)
+	var fx := m.get_node_or_null("Fx")
+	foe.receive_hit(me, me.moveset.ftilt, 1)
+	fx._screen_flash(0.3)
+	await _frames(2)
+	_check("Tremor desligado: câmera parada e sem clarão de tela",
+		cam.offset.is_zero_approx() and fx._flash.color.a == 0.0, "offset %s, clarão %.2f" % [cam.offset, fx._flash.color.a])
+	Settings.screen_shake = true
+	# zoom mínimo 0.6: os dois longe ainda cabem na tela
+	_check("Câmera: zoom mínimo 0.6", is_equal_approx(cam.min_zoom, 0.6), str(cam.min_zoom))
+	await _place(me, Vector2(-1000, -60), 1)
+	await _place(foe, Vector2(1000, -60), -1)
+	await _frames(45)
+	var view := Rect2(cam.get_screen_center_position() - get_viewport().get_visible_rect().size / cam.zoom * 0.5,
+		get_viewport().get_visible_rect().size / cam.zoom)
+	_check("Câmera: lutadores a 2000 px um do outro cabem na tela",
+		view.grow(-40).has_point(me.global_position) and view.grow(-40).has_point(foe.global_position),
+		"vista %s, zoom %.2f" % [view, cam.zoom.x])
 
 
 # --- 1. Pausa de impacto ---

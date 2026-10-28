@@ -746,7 +746,7 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 	_hitstop = stop
 	if attacker is Fighter:
 		attacker._hitstop = stop
-	get_tree().call_group("fight_camera", "shake", speed)
+	get_tree().call_group("fight_camera", "shake", speed, data.damage)
 	damage_changed.emit(damage_percent)
 	hit_taken.emit(attacker, data, _launch)
 	return true

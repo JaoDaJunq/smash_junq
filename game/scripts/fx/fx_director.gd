@@ -278,8 +278,10 @@ func _burst(tex: Texture2D, at: Vector2, amount: int, life: float, speed: float,
 	p.finished.connect(p.queue_free)
 
 
+## Clarão na tela inteira. Obedece à opção "Tremor de tela" (quem desliga o
+## tremor costuma querer menos coisa piscando também).
 func _screen_flash(strength: float, color := Color.WHITE) -> void:
-	if _flash == null:
+	if _flash == null or not Settings.screen_shake:
 		return
 	_flash.color = Color(color.r, color.g, color.b, strength)
 	var tw := _flash.create_tween()
