@@ -4,12 +4,12 @@ extends Node2D
 ## dentro (menos o dono, que usa máscara) tosse: não consegue segurar o escudo e
 ## toma DAMAGE % a cada TICK s. Só existe uma nuvem por Bandeira.
 
-const RADIUS := 78.0
+const RADIUS := 46.0   # era 78: a nuvem ficava grande demais (João, 28/10)
 const TIME := 3.0
 const TICK := 0.5
 const DAMAGE := 1.0
 const SPRITE_PATH := "res://assets/characters/tamandua/pixel/fx_nuvem_veneno.png"
-const SPRITE_SCALE := 3.0
+const SPRITE_SCALE := 1.5
 
 var owner_fighter: Fighter
 var _t := 0.0

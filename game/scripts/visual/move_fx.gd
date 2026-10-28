@@ -79,7 +79,7 @@ const RULES := {
 	],
 	"jacare": [
 		# o anzol e a rede são nós próprios (anzol_pesca.gd, rede_pesca.gd)
-		{"on": "splash", "fx": "fx_splash_rio", "at": "front_feet", "base": 58, "time": 0.4, "ground": true},
+		{"on": "splash", "fx": "fx_splash_rio", "at": "front_feet", "base": 58, "px": 1.25, "time": 0.4, "ground": true},
 		{"on": "dente", "fx": "fx_dente", "at": "target_head", "time": 0.9, "follow": true, "draw": "estrelas"},
 	],
 	"ourico": [

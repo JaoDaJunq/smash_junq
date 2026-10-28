@@ -11,8 +11,8 @@ extends Fighter
 ##  - baixo "Abraço de tamanduá": abraço lento e muito forte: segura, aperta e joga.
 ## Mecânica própria "come praga": tudo que a língua engole de projétil cura 2%.
 
-const JATO_OFFSET := Vector2(62.0, -14.0)
-const NUVEM_OFFSET := Vector2(85.0, -10.0)
+const JATO_OFFSET := Vector2(108.0, -4.0)   # sai do bico da bomba (era na altura do joelho)
+const NUVEM_OFFSET := Vector2(80.0, -40.0)
 const TONGUE_FROM := Vector2(34.0, -14.0)      # boca (x vezes o facing)
 const TONGUE_TIP := Vector2(138.0, -14.0)
 const TONGUE_REACH := 38.0
@@ -56,7 +56,7 @@ func _on_attack_frame(move_id: String, frame: int) -> void:
 	match move_id:
 		"ftilt":
 			if frame == attack.startup and move_fx != null:
-				move_fx.play_at("fx_jato", global_position + Vector2(JATO_OFFSET.x * facing, JATO_OFFSET.y), 2.0, 0.3)   # jato do bico da bomba
+				move_fx.play_at("fx_jato", global_position + Vector2(JATO_OFFSET.x * facing, JATO_OFFSET.y), 1.5, 0.3)   # jato do bico da bomba
 		"special_neutral":
 			if frame == attack.startup:
 				if is_instance_valid(_nuvem):
