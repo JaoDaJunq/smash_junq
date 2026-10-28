@@ -106,7 +106,7 @@ func _on_hit(attacker: Node2D, data: AttackData, launch: Vector2, target: Fighte
 		_pop(TEX_BURST, contact, 1.6, 0.2, SPARK_CORE)
 		_pop(TEX_SLASH, contact, 1.4, 0.18, tint, 0.3, dir.angle())
 		_screen_flash(0.12)
-	Sfx.play("hit_heavy" if heavy else "hit_light")
+	Sfx.play_hit(data, speed, heavy)  # mesmo quadro do acerto (início da pausa de impacto)
 
 
 func _on_blocked(data: AttackData, f: Fighter) -> void:
