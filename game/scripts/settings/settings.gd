@@ -99,14 +99,22 @@ func _apply(key: String) -> void:
 					DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
 
 
-## Cria os barramentos SFX e Music (saindo no Master) se ainda não existirem.
+## Os barramentos vêm de default_bus_layout.tres (Master com limitador, SFX,
+## Music com compressor sidechain pelo Impacto, Impacto, Voz). Aqui só confere:
+## se faltar algum (layout apagado), cria sem efeitos para o jogo não ficar mudo.
+## O volume do jogador é sempre o volume do barramento; o sidechain e a abaixada
+## da música são efeitos dentro do Music e não mexem nesse volume.
+const BUS_SENDS := {"SFX": "Master", "Music": "Master", "Impacto": "SFX", "Voz": "SFX"}
+
+
 func _ensure_buses() -> void:
-	for bus_name in [BUS_SFX, BUS_MUSIC]:
+	for bus_name in BUS_SENDS:
 		if AudioServer.get_bus_index(bus_name) < 0:
+			push_warning("Barramento '%s' faltando no default_bus_layout.tres; criando sem efeitos." % bus_name)
 			AudioServer.add_bus()
 			var index := AudioServer.bus_count - 1
 			AudioServer.set_bus_name(index, bus_name)
-			AudioServer.set_bus_send(index, "Master")
+			AudioServer.set_bus_send(index, BUS_SENDS[bus_name])
 
 
 func _set_bus_volume(bus_name: String, linear: float) -> void:
