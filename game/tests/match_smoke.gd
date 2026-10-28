@@ -346,6 +346,8 @@ func _test_rematch_and_pause() -> void:
 	await _wait(0.2)
 	_check("Pausa: lutadores congelados", is_equal_approx(p1._clock, clock_paused) and clock_paused > clock_before, "")
 	_check("Pausa: Continuar tem foco", m.pause_menu.buttons[0].has_focus(), "")
+	var cel_atk := m.pause_menu.control_cells[[3, "p1"]] as Label
+	_check("Pausa: tabela mostra o Ataque do P1 do mapeamento", cel_atk.text.begins_with(Controles.describe("p1_attack", "teclado")), cel_atk.text)
 	await _shot("match-pausa")
 	await _tap("p1_pause", 1.0, 3)
 	_check("Pausa: p1_pause de novo continua", not get_tree().paused and not m.pause_menu.visible, "")
@@ -358,7 +360,16 @@ func _test_rematch_and_pause() -> void:
 	await _frames(3)
 	_check("Pausa: Reiniciar zera o placar e despausa", not get_tree().paused and m.kos["p1"] == 0 and m.phase == MatchManager.Phase.COUNTDOWN, str(m.kos))
 	await _start_fight()
+	# Troca a tecla do Ataque do P1 e reabre: a pausa mostra a nova (não é fixa)
+	Controles.file_path = "user://controles_teste.cfg"
+	var k := InputEventKey.new()
+	k.physical_keycode = KEY_K
+	Controles.rebind("p1_attack", k)
 	m.pause_menu.open()
+	var cel := m.pause_menu.control_cells[[3, "p1"]] as Label
+	_check("Pausa: tabela segue o mapeamento trocado (Ataque P1 = K)", cel.text.begins_with("K"), cel.text)
+	Controles.reset_to_defaults()
+	Controles.file_path = Controles.FILE_PATH
 	_check("Pausa: aberta por código", get_tree().paused, "")
 	Game.requested_scene = ""
 	m.pause_menu.buttons[2].pressed.emit()
