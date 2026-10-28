@@ -152,6 +152,22 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 		"id": "macaco_prego",
 		"stats": {"Velocidade": 3, "Força": 3, "Peso": 3, "Volta ao palco": 3},
 	},
+	{
+		"name": "Mourisco",
+		"scene": "res://scenes/characters/mourisco.tscn",
+		"desc": "Gato do vôlei de praia. Saca, corta e rebate a bola e projétil.",
+		"weight": "Médio",
+		"id": "mourisco",
+		"stats": {"Velocidade": 3, "Força": 3, "Peso": 3, "Volta ao palco": 4},
+	},
+	{
+		"name": "Bandeira",
+		"scene": "res://scenes/characters/tamandua.tscn",
+		"desc": "Tamanduá dedetizador. Forte: nuvem de veneno e língua que come projétil.",
+		"weight": "Pesado",
+		"id": "tamandua",
+		"stats": {"Velocidade": 2, "Força": 4, "Peso": 4, "Volta ao palco": 3},
+	},
 ]
 
 ## Arenas. "Ruínas da Mata" é a original (desenhada por código); as outras usam

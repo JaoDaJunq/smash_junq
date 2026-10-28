@@ -22,7 +22,7 @@ const GROUPS: Array[Dictionary] = [
 		{"name": "Maracajá", "animal": "jaguatirica", "char": 2},
 		{"name": "Dona Onça", "animal": "onça-pintada", "char": 8},
 		{"name": "Suçuarana", "animal": "onça-parda", "char": -1},
-		{"name": "Mourisco", "animal": "gato-mourisco", "char": -1},
+		{"name": "Mourisco", "animal": "gato-mourisco", "char": 17},
 	]},
 	{"name": "Aves", "color": Color("e8503a"), "slots": [
 		{"name": "Beija", "animal": "beija-flor", "char": 15},
@@ -39,7 +39,7 @@ const GROUPS: Array[Dictionary] = [
 	{"name": "Garrudos", "color": Color("a58c6a"), "slots": [
 		{"name": "Bolinha", "animal": "tatu-bola", "char": -1},
 		{"name": "Seu Preguiçoso", "animal": "preguiça", "char": 12},
-		{"name": "Bandeira", "animal": "tamanduá-bandeira", "char": -1},
+		{"name": "Bandeira", "animal": "tamanduá-bandeira", "char": 18},
 		{"name": "Seu Peba", "animal": "tatu-galinha", "char": 6},
 	]},
 ]
