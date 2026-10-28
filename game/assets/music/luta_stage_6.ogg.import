@@ -12,8 +12,8 @@ dest_files=["res://.godot/imported/luta_stage_6.ogg-e9d8de14e0370db051ca354aa658
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
-bpm=0
-beat_count=0
+bpm=104
+beat_count=96
 bar_beats=4
