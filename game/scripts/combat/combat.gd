@@ -26,9 +26,19 @@ static func hitstun_time(speed: float) -> float:
 	return speed * HITSTUN_PER_SPEED
 
 
-## Pausa no impacto: golpes com mais dano congelam um pouco mais.
-static func hitstop_frames(damage: float) -> int:
-	return 3 + int(damage * 0.35)
+## Lançamento a partir do qual o golpe já pode matar: a pausa ganha uns quadros
+## a mais (o "segura... PAH" do golpe final).
+const KILL_LAUNCH := 1500.0
+
+
+## Pausa no impacto (quadros a 60/s): golpes com mais dano congelam mais.
+## 8% = 9 quadros, 20% = 16, teto 18 (Smash Ultimate: 0.65*dano+6). Com o
+## lançamento (launch_speed > 0) de golpe que pode matar, +4 a +6 quadros.
+static func hitstop_frames(damage: float, launch_speed := 0.0) -> int:
+	var frames := mini(5 + int(damage * 0.55), 18)
+	if launch_speed >= KILL_LAUNCH:
+		frames += 4 + int(clampf((launch_speed - KILL_LAUNCH) / 500.0, 0.0, 1.0) * 2.0)
+	return frames
 
 
 static func circle_hits_rect(center: Vector2, radius: float, rect: Rect2) -> bool:
