@@ -85,26 +85,49 @@ func _physics_process(_delta: float) -> void:
 
 # --- Acertos ---
 
+## Golpe médio (a partir deste lançamento) já ganha um corte pequeno na cor de quem bateu.
+@export var medium_launch := 500.0
+## Quanto a faísca sai do centro de quem apanhou para o lado de quem bateu
+## (fica na borda do corpo, sem tapar o rosto).
+@export var spark_pull := 20.0
+
+
 func _on_hit(attacker: Node2D, data: AttackData, launch: Vector2, target: Fighter) -> void:
 	var speed := launch.length()
 	var contact := target.global_position + Vector2(0, -15)
 	if attacker != null and is_instance_valid(attacker):
-		# Um pouco para o lado de quem bateu, mas sempre colado em quem apanhou
+		# Para o lado de quem bateu, mas sempre colado em quem apanhou
 		# (com a castanha, quem bateu pode estar do outro lado da arena).
-		contact += ((attacker.global_position + Vector2(0, -15) - contact) * 0.35).limit_length(36.0)
+		var dx := attacker.global_position.x - target.global_position.x
+		var side := signf(dx) if absf(dx) > 1.0 else float(-target.facing)
+		contact.x += side * (minf(absf(dx) * 0.35, 16.0) + spark_pull)
 	var heavy := speed >= heavy_launch
+	var medium := speed >= medium_launch
 	var tint := Color.WHITE
+	var body := Color.WHITE
 	if attacker is Fighter:
-		tint = (attacker as Fighter).body_color.lerp(Color.WHITE, 0.55)
+		body = (attacker as Fighter).body_color
+		tint = body.lerp(Color.WHITE, 0.55)
 	var dir := launch.normalized() if speed > 1.0 else Vector2.RIGHT
-	# núcleo brilhante + estrelas espalhadas na direção do lançamento
-	_pop(TEX_SPARK, contact, 1.3 if heavy else 0.95, 0.18, SPARK_CORE)
+	# faísca: núcleo claro com contorno escuro (lê no céu claro e no escuro),
+	# nasce grande e encolhe; estrelas espalhadas na direção do lançamento
+	var spark := HitSpark.new()
+	spark.global_position = contact
+	spark.radius = 44.0 if heavy else (36.0 if medium else 30.0)
+	spark.scale_from = 0.9 if not heavy else 1.0
+	spark.life = 0.22 if heavy else 0.16
+	spark.accent = Color.WHITE
+	spark.core = SPARK_CORE
+	spark.glow = tint
+	spark.add_to_group("match_cleanup")
+	add_child(spark)
 	_burst(TEX_TWINKLE, contact, 14 if heavy else 9, 0.4, 560.0 if heavy else 400.0, 50.0,
 		0.5, tint, dir, 0.0)
 	_pop(TEX_RING, contact, 1.8 if heavy else 1.2, 0.24, tint * Color(1, 1, 1, 0.85), 0.2)
+	if medium:
+		# corte na cor do jogador, em mistura normal (aditivo some no céu claro)
+		_pop(TEX_SLASH, contact, 1.4 if heavy else 0.9, 0.18, body.lerp(Color.WHITE, 0.2), 0.3 if heavy else 0.25, dir.angle(), false)
 	if heavy:
-		_pop(TEX_BURST, contact, 1.6, 0.2, SPARK_CORE)
-		_pop(TEX_SLASH, contact, 1.4, 0.18, tint, 0.3, dir.angle())
 		_screen_flash(0.12)
 	Sfx.play("hit_heavy" if heavy else "hit_light")
 
@@ -216,7 +239,7 @@ func _visible_rect() -> Rect2:
 
 
 ## Uma imagem que cresce e some (flash, anel, estouro).
-func _pop(tex: Texture2D, at: Vector2, scale_to: float, time: float, color: Color, scale_from := 0.4, angle := 0.0) -> void:
+func _pop(tex: Texture2D, at: Vector2, scale_to: float, time: float, color: Color, scale_from := 0.4, angle := 0.0, additive := true) -> void:
 	var s := Sprite2D.new()
 	s.texture = tex
 	s.global_position = at
@@ -225,9 +248,10 @@ func _pop(tex: Texture2D, at: Vector2, scale_to: float, time: float, color: Colo
 	s.z_index = 7
 	s.modulate = color
 	s.scale = Vector2.ONE * scale_from
-	var mat := CanvasItemMaterial.new()
-	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-	s.material = mat
+	if additive:
+		var mat := CanvasItemMaterial.new()
+		mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+		s.material = mat
 	s.add_to_group("match_cleanup")
 	add_child(s)
 	var tw := s.create_tween().set_parallel(true)

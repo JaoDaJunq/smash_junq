@@ -41,6 +41,42 @@ func _run() -> void:
 	await _test_hitstop()
 	await _test_target_shake()
 	await _test_camera()
+	await _test_spark()
+
+
+# --- 4. Faísca ---
+
+func _test_spark() -> void:
+	await _face_off(60.0)
+	var fx: Node = m.get_node("Fx")
+	for c in fx.get_children():
+		if c is HitSpark:
+			c.free()
+	foe.receive_hit(me, me.moveset.ftilt, 1)   # me à esquerda, foe à direita
+	var speed := foe._launch.length()
+	var spark: HitSpark = null
+	var slash: Sprite2D = null
+	for c in fx.get_children():
+		if c is HitSpark:
+			spark = c
+		elif c is Sprite2D and (c as Sprite2D).texture == preload("res://assets/fx/slash_02.png"):
+			slash = c
+	_check("Faísca: nasce uma HitSpark no acerto", spark != null, "")
+	if spark == null:
+		return
+	var dx := spark.global_position.x - foe.global_position.x
+	_check("Faísca: puxada ~20 px para o lado de quem bateu (não tapa o rosto)", dx <= -20.0 and dx >= -40.0, "%.0f px do centro do alvo" % dx)
+	_check("Faísca: nasce grande (>= 0.9) e encolhe", spark.scale.x >= 0.89, "escala inicial %.2f" % spark.scale.x)
+	_check("Faísca: núcleo em mistura normal com contorno #2A0F12", spark.material == null and HitSpark.OUTLINE == Color("2A0F12"), "")
+	var halo_add := false
+	for c in spark.get_children():
+		if c is Sprite2D and c.material is CanvasItemMaterial and c.material.blend_mode == CanvasItemMaterial.BLEND_MODE_ADD and c.show_behind_parent:
+			halo_add = true
+	_check("Faísca: brilho aditivo atrás", halo_add, "")
+	await _frames(6)
+	_check("Faísca: encolheu", is_instance_valid(spark) and spark.scale.x < 0.8, "escala %.2f" % (spark.scale.x if is_instance_valid(spark) else -1.0))
+	_check("Faísca: golpe médio (lançamento %.0f) tem corte em mistura normal" % speed,
+		speed < fx.medium_launch or (slash != null and slash.material == null), "corte=%s" % [slash != null])
 
 
 # --- 3. Câmera ---
