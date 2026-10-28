@@ -72,9 +72,9 @@
     "impacto": 2
   },
   "especial_baixo": {
-    "quadros": 5,
+    "quadros": 6,
     "fator": 1,
-    "impacto": 2
+    "impacto": 3
   },
   "especial_cima": {
     "quadros": 6,
