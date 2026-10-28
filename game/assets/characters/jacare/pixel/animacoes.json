@@ -122,9 +122,9 @@
     "impacto": 1
   },
   "jab_c": {
-    "quadros": 3,
+    "quadros": 4,
     "fator": 1,
-    "impacto": 1
+    "impacto": 2
   },
   "parado": {
     "quadros": 4,
