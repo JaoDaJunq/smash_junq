@@ -49,6 +49,9 @@ var training: TrainingMode = null
 var log_enabled := true
 var _match_time := 0.0
 var _last_hits := {}
+## Estatísticas da partida por jogador (tela de resultado): dano causado, acertos
+## e acertos por golpe. Zeradas em start_match().
+var stats := {}
 
 @onready var hud: Hud = $Hud
 @onready var pause_menu: PauseMenu = $UiLayer/PauseMenu
@@ -136,6 +139,7 @@ func start_match() -> void:
 	_count_index = -1
 	_match_time = 0.0
 	_last_hits.clear()
+	_reset_stats()
 	if training != null:
 		training.on_dummy_respawned()
 		skip_countdown()  # treino começa direto
@@ -250,6 +254,22 @@ func _on_fighter_hit(attacker: Node2D, data: AttackData, launch: Vector2, victim
 		move = (attacker as Fighter).attack_id
 	_last_hits[victim] = {"golpe": move, "lancamento": roundi(launch.length()), "tempo": _match_time,
 		"de": (attacker as Fighter).display_name if attacker is Fighter else "?"}
+	# Estatísticas: quem bateu é o outro lado (projéteis também contam para o dono)
+	var by := other(victim)
+	if not stats.has(by):
+		_reset_stats()
+	var st: Dictionary = stats[by]
+	st["dano"] = float(st["dano"]) + data.damage
+	st["acertos"] = int(st["acertos"]) + 1
+	var per: Dictionary = st["golpes"]
+	var key := move if move != "" else "?"
+	per[key] = int(per.get(key, 0)) + 1
+
+
+func _reset_stats() -> void:
+	stats = {}
+	for pid in IDS:
+		stats[pid] = {"dano": 0.0, "acertos": 0, "golpes": {}}
 
 
 func _log_ko(victim: String) -> void:
@@ -331,7 +351,23 @@ func result_data(winner: String) -> Dictionary:
 		labels[pid] = Game.player_label(pid)
 		names[pid] = (fighters[pid] as Fighter).display_name
 		indices[pid] = UiArt.char_index_of(fighters[pid])
-	return {"winner": winner, "kos": kos.duplicate(), "labels": labels, "characters": names, "indices": indices}
+	# Por jogador: dano causado, KOs e golpe que mais acertou (id e nome legível)
+	var per_player := {}
+	if stats.is_empty():
+		_reset_stats()
+	for pid in IDS:
+		var st: Dictionary = stats[pid]
+		var top := ""
+		var top_n := 0
+		var per: Dictionary = st["golpes"]
+		for move: String in per:
+			if int(per[move]) > top_n:
+				top = move
+				top_n = int(per[move])
+		per_player[pid] = {"dano": roundi(float(st["dano"])), "kos": int(kos[pid]), "acertos": int(st["acertos"]),
+			"golpe_top": top, "golpe_top_nome": MoveNames.label(top) if top != "" else "", "golpe_top_acertos": top_n}
+	return {"winner": winner, "kos": kos.duplicate(), "labels": labels, "characters": names, "indices": indices,
+		"stats": per_player}
 
 
 ## Muda o rosto do boneco de um jogador por um tempo (se ele tiver expressões).

@@ -34,6 +34,7 @@ var _last_sound_ms := 0
 
 
 func _ready() -> void:
+	scrim = true
 	var col := build_column("Opções")
 	col.add_theme_constant_override("separation", 14)
 	_add_slider(col, "Volume geral", "master_volume")

@@ -38,6 +38,7 @@ func _run() -> void:
 	await _test_simultaneous_and_sudden_death()
 	await _test_rematch_and_pause()
 	await _test_cpu_mode()
+	await _test_mirror()
 
 
 # --- Partida ---
@@ -70,8 +71,9 @@ func _damage_text(pid: String) -> String:
 	return (m.hud.panels[pid]["damage"] as Label).text
 
 
-func _hud_kos(pid: String) -> int:
-	return (m.hud.panels[pid]["markers"] as Hud.KoMarkers).count
+## Vidas acesas no HUD (cada KO do adversário apaga uma).
+func _hud_lives(pid: String) -> int:
+	return m.hud.lives_of(pid)
 
 
 # --- Testes ---
@@ -98,11 +100,25 @@ func _test_menus() -> void:
 	_check("Seleção começa com Juba e Seu Capivas", sel.choice["p1"] == 0 and sel.choice["p2"] == 1, str(sel.choice))
 	_check("Grade mostra todos os 24 do elenco", sel.tiles.size() == 24, str(sel.tiles.size()))
 	await _tap("p1_right")
-	_check("p1_right anda para um \"?\" (em breve)", sel.choice["p1"] == -1 and sel.cursor["p1"] == Vector2i(1, 0), str(sel.cursor))
+	_check("p1_right pula o \"?\" e chega no Berrante", sel.choice["p1"] == 11 and sel.cursor["p1"] == Vector2i(2, 0), str(sel.cursor))
+	await _tap("p1_left")
+	await _tap("p1_left")
+	_check("p1_left dá a volta pulando os \"?\" (Berrante -> Juba -> Berrante)", sel.choice["p1"] == 11, str(sel.cursor))
+	# \"?\" à força (mouse/teste): não confirma
+	sel._set_cursor("p1", Vector2i(1, 0))
+	sel._refresh()
 	await _tap("p1_attack")
 	_check("\"?\" não confirma", not sel.locked["p1"], str(sel.locked))
+	sel._set_cursor("p1", Vector2i(2, 0))
 	await _tap("p1_down")
-	_check("p1_down chega no Seu Capivas", sel.choice["p1"] == 1, str(sel.choice))
+	_check("p1_down pula o \"?\" de baixo e chega no Seu Capivas (coluna mais perto)", sel.choice["p1"] == 1 and sel.cursor["p1"] == Vector2i(1, 1), str(sel.cursor))
+	var empty_hits := 0
+	var probe := Vector2i.ZERO
+	for i in 40:
+		probe = sel.next_cell(probe, [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP][i % 4])
+		if not sel.cell_playable(probe):
+			empty_hits += 1
+	_check("Navegação nunca para num \"?\"", empty_hits == 0, str(empty_hits))
 	await _tap("p2_left")
 	await _tap("p2_up")
 	_check("P2 anda pela grade até o Juba", sel.choice["p2"] == 0, str(sel.choice))
@@ -175,7 +191,7 @@ func _test_countdown_and_ko() -> void:
 			fell = true
 			break
 	_check("KO ao cair pela zona (natural): P1 marca", fell and m.kos["p2"] == 0, str(m.kos))
-	_check("KO: HUD mostra 1 KO para P1", _hud_kos("p1") == 1 and _hud_kos("p2") == 0, "%d/%d" % [_hud_kos("p1"), _hud_kos("p2")])
+	_check("KO: HUD apaga 1 vida do P2 (KO do P1)", _hud_lives("p2") == m.ko_target - 1 and _hud_lives("p1") == m.ko_target, "%d/%d" % [_hud_lives("p1"), _hud_lives("p2")])
 	_check("Retorno: P2 reaparece no alto", p2.global_position.y < -380 and p2.global_position.y > -470 and absf(p2.global_position.x - 300.0) < 5.0, str(p2.global_position))
 	_check("Retorno: invencível por ~2 s", p2.invincible_time > 1.9, "%.2f" % p2.invincible_time)
 	_check("Retorno: dano zerado e HUD em 0%", p2.damage_percent == 0.0 and _damage_text("p2") == "0%", _damage_text("p2"))
@@ -221,17 +237,33 @@ func _test_normal_win_and_results() -> void:
 	await _start_fight()
 	var ended := []
 	m.match_ended.connect(func(w: String) -> void: ended.append(w))
+	# Acertos reais para as estatísticas do resultado: 2 jabs e 1 ftilt do P1, 1 dtilt do P2
+	var dano_p1 := 0.0
+	for mv in ["jab", "jab", "ftilt"]:
+		var d: AttackData = p1.moveset.move(mv)
+		p2.invincible_time = 0.0
+		p2.receive_hit(p1, d, 1)
+		dano_p1 += d.damage
+		await _frames(2)
+	p1.invincible_time = 0.0
+	p1.receive_hit(p2, p2.moveset.move("dtilt"), -1)
+	await _frames(2)
 	for i in 3:
 		_check("Placar parcial %d x 0: partida segue" % i, m.phase == MatchManager.Phase.FIGHT and ended.is_empty(), str(m.kos))
 		_teleport(p2, Vector2(1500, 0))
 		await _frames(3)
 	_check("3 KOs encerram a partida", m.phase == MatchManager.Phase.ENDED and ended == ["p1"], str(ended))
 	_check("Fim: lutadores param", not p1.is_physics_processing(), "")
-	_check("Fim: HUD com 3 KOs do P1", _hud_kos("p1") == 3 and _hud_kos("p2") == 0, "")
+	_check("Fim: HUD com P2 sem vidas e P1 com todas", _hud_lives("p2") == 0 and _hud_lives("p1") == m.ko_target, "%d/%d" % [_hud_lives("p1"), _hud_lives("p2")])
 	await _wait(m.results_delay + 0.3)
 	_check("Resultado aparece", m.results.visible, "")
 	_check("Resultado: vencedor", m.results.title_label.text == "Jogador 1 venceu!", m.results.title_label.text)
 	_check("Resultado: KOs de cada um", m.results.kos_label.text.contains("3") and m.results.kos_label.text.contains("0"), m.results.kos_label.text)
+	var st: Dictionary = Game.last_result.get("stats", {})
+	_check("Resultado: stats do P1 (dano somado, 3 KOs, golpe top = jab)", st.has("p1") and int(st["p1"]["dano"]) == roundi(dano_p1) and st["p1"]["kos"] == 3 and st["p1"]["golpe_top"] == "jab" and st["p1"]["golpe_top_acertos"] == 2, str(st.get("p1")))
+	_check("Resultado: stats do P2 (1 acerto de dtilt, 0 KO)", st.has("p2") and st["p2"]["acertos"] == 1 and st["p2"]["golpe_top"] == "dtilt" and st["p2"]["kos"] == 0, str(st.get("p2")))
+	_check("Resultado: nome legível do golpe na tela", (m.results.stat_cards["p1"]["golpe"] as Label).text.begins_with("Soco rápido"), (m.results.stat_cards["p1"]["golpe"] as Label).text)
+	_check("Resultado: dano causado na tela", (m.results.stat_cards["p1"]["dano"] as Label).text == "%d%%" % roundi(dano_p1), (m.results.stat_cards["p1"]["dano"] as Label).text)
 	_check("Resultado: não dá para pausar", not m.can_pause(), "")
 	await _wait(ResultsScreen.INPUT_LOCK + 0.1)
 	await _shot("match-resultado")
@@ -294,7 +326,7 @@ func _test_rematch_and_pause() -> void:
 	_check("Botão Menu volta ao menu", Game.requested_scene == Game.MENU_SCENE, Game.requested_scene)
 	m.results.buttons[0].pressed.emit()
 	await _frames(3)
-	_check("Revanche: placar 0 x 0", m.kos["p1"] == 0 and m.kos["p2"] == 0 and _hud_kos("p1") == 0 and _hud_kos("p2") == 0, str(m.kos))
+	_check("Revanche: placar 0 x 0", m.kos["p1"] == 0 and m.kos["p2"] == 0 and _hud_lives("p1") == m.ko_target and _hud_lives("p2") == m.ko_target, str(m.kos))
 	_check("Revanche: resultado some e contagem recomeça", not m.results.visible and m.phase == MatchManager.Phase.COUNTDOWN, "")
 	_check("Revanche: mesmos personagens e dano zerado", p1.display_name == "Juba" and p2.display_name == "Seu Capivas" and p2.damage_percent == 0.0 and _damage_text("p2") == "0%", "")
 	_check("Revanche: lutadores nas posições iniciais", p1.global_position.distance_to(Vector2(-300, -400)) < 5.0 and p2.global_position.distance_to(Vector2(300, -400)) < 5.0, str(p2.global_position))
@@ -315,6 +347,8 @@ func _test_rematch_and_pause() -> void:
 	await _wait(0.2)
 	_check("Pausa: lutadores congelados", is_equal_approx(p1._clock, clock_paused) and clock_paused > clock_before, "")
 	_check("Pausa: Continuar tem foco", m.pause_menu.buttons[0].has_focus(), "")
+	var cel_atk := m.pause_menu.control_cells[[3, "p1"]] as Label
+	_check("Pausa: tabela mostra o Ataque do P1 do mapeamento", cel_atk.text.begins_with(Controles.describe("p1_attack", "teclado")), cel_atk.text)
 	await _shot("match-pausa")
 	await _tap("p1_pause", 1.0, 3)
 	_check("Pausa: p1_pause de novo continua", not get_tree().paused and not m.pause_menu.visible, "")
@@ -327,7 +361,16 @@ func _test_rematch_and_pause() -> void:
 	await _frames(3)
 	_check("Pausa: Reiniciar zera o placar e despausa", not get_tree().paused and m.kos["p1"] == 0 and m.phase == MatchManager.Phase.COUNTDOWN, str(m.kos))
 	await _start_fight()
+	# Troca a tecla do Ataque do P1 e reabre: a pausa mostra a nova (não é fixa)
+	Controles.file_path = "user://controles_teste.cfg"
+	var k := InputEventKey.new()
+	k.physical_keycode = KEY_K
+	Controles.rebind("p1_attack", k)
 	m.pause_menu.open()
+	var cel := m.pause_menu.control_cells[[3, "p1"]] as Label
+	_check("Pausa: tabela segue o mapeamento trocado (Ataque P1 = K)", cel.text.begins_with("K"), cel.text)
+	Controles.reset_to_defaults()
+	Controles.file_path = Controles.FILE_PATH
 	_check("Pausa: aberta por código", get_tree().paused, "")
 	Game.requested_scene = ""
 	m.pause_menu.buttons[2].pressed.emit()
@@ -337,11 +380,38 @@ func _test_rematch_and_pause() -> void:
 	await _frames(2)
 
 
+## Espelho: mesmo lutador dos dois lados -> P2 com a paleta trocada (só ele).
+func _test_mirror() -> void:
+	var old_mode := Game.mode
+	Game.mode = "versus"
+	Game.set_character("p1", 0)
+	Game.set_character("p2", 1)
+	await _new_match()
+	_check("Espelho: lutadores diferentes não trocam paleta", not Espelho.is_applied(p2) and not m.hud.mirror, "")
+	for idx in [0, 1, 8]:
+		Game.set_character("p1", idx)
+		Game.set_character("p2", idx)
+		await _new_match()
+		var s1 := p1.get_node_or_null("Visual/Quadro") as CanvasItem
+		var s2 := p2.get_node_or_null("Visual/Quadro") as CanvasItem
+		var ok2 := s2 != null and s2.material is ShaderMaterial and (s2.material as ShaderMaterial).shader == Espelho.SHADER
+		var ok1 := s1 != null and s1.material is ShaderMaterial and (s1.material as ShaderMaterial).shader != Espelho.SHADER
+		_check("Espelho %s: P2 com paleta trocada, P1 normal" % Game.CHARACTERS[idx]["name"], ok1 and ok2 and m.hud.mirror, "%s %s" % [s1, s2])
+	Game.set_character("p1", 0)
+	Game.set_character("p2", 1)
+	Game.mode = old_mode
+
+
 func _test_cpu_mode() -> void:
 	Game.mode = "cpu"
 	await _new_match()
 	_check("Modo CPU: P2 controlado pela CPU", p2.brain != null and p1.brain == null, "")
-	_check("Modo CPU: HUD chama o P2 de CPU", (m.hud.panels["p2"]["name"] as Label).text.begins_with("CPU"), (m.hud.panels["p2"]["name"] as Label).text)
+	var selo := (m.hud.panels["p2"]["tag"] as Control).get_node("Texto") as Label
+	_check("Modo CPU: selo do HUD chama o P2 de CPU", selo.text == "CPU", selo.text)
+	var cor_selo := ((m.hud.panels["p2"]["tag"] as Panel).get_theme_stylebox("panel") as StyleBoxFlat).bg_color
+	_check("Modo CPU: selo na cor do jogador 2", cor_selo.is_equal_approx(Game.PLAYER_COLORS["p2"]), str(cor_selo))
+	var box := m.hud.panels["p1"]["box"] as Control
+	_check("HUD: painel compacto (<= 400x145 em 1080p)", box.size.x <= 400.0 and box.size.y <= 145.0, str(box.size))
 	# Escolha de personagem no modo CPU: P1 escolhe os dois
 	var sel := CHAR_SELECT.instantiate()
 	add_child(sel)

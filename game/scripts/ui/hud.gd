@@ -1,9 +1,9 @@
 class_name Hud
 extends CanvasLayer
-## Interface da luta (T18): por jogador, nome, dano % grande que muda de cor e
-## marcadores de KO; mais um aviso grande no centro (contagem, "MORTE SÚBITA").
+## Interface da luta (T18): por jogador, painel compacto com retrato, selo
+## P1/P2/CPU, nome, dano % que muda de cor e VIDAS (cabecinhas que apagam); mais um aviso grande no centro (contagem, "MORTE SÚBITA").
 ## Atualiza na hora pelo sinal damage_changed e por set_kos(). Os números "estouram"
-## quando o dano sobe, os marcadores de KO animam e o aviso entra com um quique.
+## quando o dano sobe, as vidas apagam e o aviso entra com um quique.
 
 const MAX_SHOWN_DAMAGE := 999
 ## Cores do dano: 0% branco, 50% amarelo, 100% laranja, 150% ou mais vermelho.
@@ -15,47 +15,55 @@ const DAMAGE_STOPS: Array[Array] = [
 ]
 const PUNCH_TIME := 0.22
 const BANNER_TIME := 0.3
-const PORTRAIT := 112.0
+const PORTRAIT := 96.0
+## Largura da coluna de texto (nome, dano, vidas) do painel.
+const NAME_W := 254.0
+const DAMAGE_SIZE := 58
 
-## Círculos de KO de um jogador: cheios os marcados, vazios os que faltam.
-## Ganhar um KO faz o círculo estourar com um anel; perder um faz ele murchar.
-class KoMarkers extends Control:
+## Vidas de um jogador: uma cabecinha (retrato) por vida. A partida é de
+## "primeiro a ko_target KOs", então, num 1 contra 1, cada KO do adversário é
+## uma vida a menos: vidas = ko_target - KOs do outro. Vida perdida APAGA
+## (cabecinha escura e transparente) com um tranco; ganhar de volta (revanche)
+## acende de novo.
+class Lives extends Control:
 	var total := 3
-	var count := 0
+	var lives := 3
 	var color := Color.WHITE
+	var head: Texture2D = null
+	var head_src := Rect2()
 	const SIZE := 30.0
-	const GAP := 12.0
-	const ANIM_TIME := 0.42
+	const GAP := 6.0
+	const ANIM_TIME := 0.45
+	const OFF := Color(0.22, 0.22, 0.27, 0.45)
 
-	var _gained: Array[int] = []
-	var _lost: Array[int] = []
-	## Progresso da animação de 0 a 1 (1 = parado).
+	var _changed: Array[int] = []
 	var _t := 1.0
 	var _tween: Tween
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	func configure(new_total: int, new_color: Color) -> void:
+	func configure(new_total: int, new_color: Color, portrait: Texture2D) -> void:
 		total = new_total
+		lives = new_total
 		color = new_color
+		head = portrait
+		if head != null:
+			# Recorte quadrado do alto do retrato (a cabeça)
+			var w := float(head.get_width())
+			var side := w * 0.62
+			head_src = Rect2((w - side) * 0.5, float(head.get_height()) * 0.02, side, side)
 		custom_minimum_size = Vector2(total * (SIZE + GAP) - GAP, SIZE)
 		queue_redraw()
 
-	## Muda a quantidade marcada e anima só os círculos que mudaram.
-	func set_count(new_count: int) -> void:
-		new_count = clampi(new_count, 0, total)
-		if new_count == count:
+	func set_lives(n: int) -> void:
+		n = clampi(n, 0, total)
+		if n == lives:
 			return
-		_gained.clear()
-		_lost.clear()
-		if new_count > count:
-			for i in range(count, new_count):
-				_gained.append(i)
-		else:
-			for i in range(new_count, count):
-				_lost.append(i)
-		count = new_count
+		_changed.clear()
+		for i in range(mini(n, lives), maxi(n, lives)):
+			_changed.append(i)
+		lives = n
 		if _tween != null and _tween.is_valid():
 			_tween.kill()
 		if not is_inside_tree():
@@ -72,27 +80,31 @@ class KoMarkers extends Control:
 
 	func _draw() -> void:
 		for i in total:
-			var center := Vector2(SIZE * 0.5 + i * (SIZE + GAP), SIZE * 0.5)
-			var radius := SIZE * 0.5
-			if i < count:
-				var grow := 1.0
-				if i in _gained and _t < 1.0:
-					# Estoura grande e assenta com um quique; o anel se abre e some
-					grow = 1.0 + 0.7 * pow(1.0 - _t, 2.0) * cos(_t * PI * 2.5)
-					draw_arc(center, radius * (1.0 + 1.6 * _t), 0.0, TAU, 28, Color(1, 1, 1, 0.9 * (1.0 - _t)), 3.0, true)
-				draw_circle(center, radius * grow, color)
-				draw_arc(center, radius * grow, 0.0, TAU, 24, Color.WHITE, 2.0, true)
+			var alive := i < lives
+			var grow := 1.0
+			var tint := Color.WHITE if alive else OFF
+			if i in _changed and _t < 1.0:
+				if alive:   # acendeu: cresce e assenta
+					grow = 1.0 + 0.5 * pow(1.0 - _t, 2.0)
+				else:       # apagou: dá um tranco, fica vermelha e vai escurecendo
+					grow = 1.0 + 0.45 * sin(_t * PI) * (1.0 - _t)
+					tint = Color(1.6, 0.5, 0.45).lerp(OFF, _t)
+			var c := Vector2(SIZE * 0.5 + i * (SIZE + GAP), SIZE * 0.5)
+			var half := SIZE * 0.5 * grow
+			var r := Rect2(c - Vector2(half, half), Vector2(half, half) * 2.0)
+			draw_rect(r.grow(2.0), Color(0.03, 0.03, 0.05, 0.9 if alive else 0.5))
+			if head != null:
+				draw_texture_rect_region(head, r, head_src, tint)
 			else:
-				draw_arc(center, radius - 1.0, 0.0, TAU, 24, Color(1, 1, 1, 0.45), 3.0, true)
-				if i in _lost and _t < 1.0:
-					# Murcha: o círculo cheio encolhe e esmaece sobre o vazio
-					var fade := 1.0 - _t
-					draw_circle(center, radius * (0.4 + 0.6 * fade), Color(color, 0.85 * fade))
+				draw_circle(c, half, Color(color, tint.a) * Color(tint.r, tint.g, tint.b))
+			draw_rect(r.grow(1.0), (color if alive else Color(0.4, 0.4, 0.45, 0.6)), false, 2.0)
 
 ## player_id -> {name, damage, markers, fighter, shown, tweens}
 var panels := {}
 var banner: Label
 var ko_target := 3
+## P1 e P2 com o mesmo lutador (P2 de paleta trocada).
+var mirror := false
 var _banner_id := 0
 var _banner_tween: Tween
 
@@ -115,6 +127,12 @@ func _ready() -> void:
 ## Monta os painéis. fighters: player_id -> Fighter.
 func setup(fighters: Dictionary, target: int) -> void:
 	ko_target = target
+	# Luta-espelho: P2 com o mesmo lutador do P1 ganha a paleta trocada (sprite,
+	# retrato e vidas), para os dois não se confundirem.
+	mirror = fighters.has("p1") and fighters.has("p2") \
+		and Espelho.is_mirror(UiArt.char_index_of(fighters["p1"]), UiArt.char_index_of(fighters["p2"]))
+	if mirror and not Espelho.is_applied(fighters["p2"]):
+		Espelho.apply_fighter(fighters["p2"])
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -154,14 +172,21 @@ func setup(fighters: Dictionary, target: int) -> void:
 
 func _build_panel(pid: String, fighter: Fighter) -> Control:
 	var box := PanelContainer.new()
+	box.name = "Painel" + pid.to_upper()
 	box.theme_type_variation = "HudPanel"
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Faixa de cor do topo é a cor do lutador
+	# Painel compacto (~393x138 em 1080p): faixa do topo na cor do jogador
 	var style := MenuScreen.theme_shared().get_stylebox("panel", "HudPanel").duplicate() as StyleBoxFlat
 	style.border_color = fighter.body_color
+	style.border_width_top = 5
+	style.content_margin_left = 12
+	style.content_margin_right = 16
+	style.content_margin_top = 9
+	style.content_margin_bottom = 9
+	style.set_corner_radius_all(12)
 	box.add_theme_stylebox_override("panel", style)
 	var h := HBoxContainer.new()
-	h.add_theme_constant_override("separation", 14)
+	h.add_theme_constant_override("separation", 10)
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(h)
 	var portrait := _build_portrait(fighter)
@@ -172,29 +197,83 @@ func _build_panel(pid: String, fighter: Fighter) -> Control:
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	h.add_child(v)
 
+	# Linha de cima: selo P1/P2/CPU na cor do jogador + nome do lutador
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 8)
+	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(top)
+	var tag := _build_tag(pid, fighter.body_color)
+	top.add_child(tag)
 	var name_label := Label.new()
-	name_label.text = "%s · %s" % [Game.player_label(pid), fighter.display_name]
-	name_label.add_theme_font_size_override("font_size", 30)
-	name_label.add_theme_color_override("font_color", fighter.body_color.lightened(0.25))
+	name_label.text = fighter.display_name
+	name_label.tooltip_text = "%s · %s" % [Game.player_label(pid), fighter.display_name]
+	name_label.add_theme_font_size_override("font_size", 22)
+	name_label.add_theme_color_override("font_color", fighter.body_color.lightened(0.45))
 	name_label.add_theme_color_override("font_outline_color", Color(0.03, 0.04, 0.08, 0.9))
-	name_label.add_theme_constant_override("outline_size", 6)
-	v.add_child(name_label)
+	name_label.add_theme_constant_override("outline_size", 5)
+	name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	name_label.clip_text = true
+	name_label.custom_minimum_size = Vector2(NAME_W - tag.custom_minimum_size.x - 8, 0)
+	top.add_child(name_label)
 
 	var damage := Label.new()
 	damage.theme_type_variation = "DamageLabel"
-	damage.custom_minimum_size = Vector2(260, 0)
+	damage.add_theme_font_size_override("font_size", DAMAGE_SIZE)
+	damage.add_theme_constant_override("outline_size", 9)
+	damage.custom_minimum_size = Vector2(NAME_W, DAMAGE_SIZE)
+	damage.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	v.add_child(damage)
 
-	var markers := KoMarkers.new()
-	markers.configure(ko_target, fighter.body_color.lightened(0.15))
-	v.add_child(markers)
+	var lives := Lives.new()
+	var idx := UiArt.char_index_of(fighter)
+	var head: Texture2D = UiArt.portrait(String(Game.CHARACTERS[idx].get("id", ""))) if idx >= 0 else null
+	lives.configure(ko_target, fighter.body_color.lightened(0.15), head)
+	v.add_child(lives)
+	if mirror and pid == "p2":
+		Espelho.set_on(lives, true)
+		if portrait != null:
+			Espelho.set_on(portrait.get_node("Retrato") as CanvasItem, true)
 
-	panels[pid] = {"name": name_label, "damage": damage, "markers": markers, "fighter": fighter,
-		"shown": 0.0, "tweens": [], "portrait": portrait}
+	panels[pid] = {"name": name_label, "tag": tag, "damage": damage, "lives": lives, "fighter": fighter,
+		"shown": 0.0, "tweens": [], "portrait": portrait, "box": box}
 	if not fighter.damage_changed.is_connected(_on_damage_changed.bind(pid)):
 		fighter.damage_changed.connect(_on_damage_changed.bind(pid))
 	_show_damage(pid, fighter.damage_percent, false)
 	return box
+
+
+## Selo "P1" / "P2" / "CPU" (ou "BON" no treino) com fundo na cor do jogador,
+## o mesmo texto da setinha em cima do lutador.
+func _build_tag(pid: String, color: Color) -> Control:
+	var text := pid.to_upper()
+	if pid == "p2" and Game.mode == "cpu":
+		text = "CPU"
+	elif pid == "p2" and Game.mode == "training":
+		text = "BON"
+	var chip := Panel.new()
+	chip.name = "Selo"
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.custom_minimum_size = Vector2(26 + 15 * text.length(), 28)
+	chip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var s := StyleBoxFlat.new()
+	s.bg_color = color
+	s.border_color = color.lightened(0.45)
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(7)
+	chip.add_theme_stylebox_override("panel", s)
+	var l := Label.new()
+	l.name = "Texto"
+	l.text = text
+	l.set_anchors_preset(Control.PRESET_FULL_RECT)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.add_theme_font_size_override("font_size", 20)
+	l.add_theme_color_override("font_color", Color.WHITE)
+	l.add_theme_color_override("font_outline_color", color.darkened(0.65))
+	l.add_theme_constant_override("outline_size", 5)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.add_child(l)
+	return chip
 
 
 ## Retrato em pixel art do lutador, numa moldura com a cor do jogador
@@ -214,17 +293,17 @@ func _build_portrait(fighter: Fighter) -> Control:
 	var s := StyleBoxFlat.new()
 	s.bg_color = fighter.body_color.darkened(0.6)
 	s.border_color = fighter.body_color.lightened(0.2)
-	s.set_border_width_all(4)
-	s.set_corner_radius_all(10)
+	s.set_border_width_all(3)
+	s.set_corner_radius_all(9)
 	frame.add_theme_stylebox_override("panel", s)
 	var pic := TextureRect.new()
 	pic.name = "Retrato"
 	pic.texture = tex
 	pic.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for side in ["left", "top"]:
-		pic.set("offset_" + side, 4)
+		pic.set("offset_" + side, 3)
 	for side in ["right", "bottom"]:
-		pic.set("offset_" + side, -4)
+		pic.set("offset_" + side, -3)
 	pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	pic.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -296,12 +375,23 @@ func _clear_punch(info: Dictionary) -> void:
 		portrait.modulate = Color.WHITE
 
 
-## kos: player_id -> KOs marcados por esse jogador.
+## kos: player_id -> KOs marcados por esse jogador. Mostra VIDAS: cada KO do
+## adversário apaga uma cabecinha (vidas = ko_target - KOs do outro). Na morte
+## súbita (empate na meta) cada um fica com 1 vida acesa: o próximo KO decide.
 func set_kos(kos: Dictionary) -> void:
+	var a: int = int(kos.get("p1", 0))
+	var b: int = int(kos.get("p2", 0))
+	var sudden := a == b and a >= ko_target
 	for pid in panels:
-		var markers: KoMarkers = panels[pid]["markers"]
-		markers.set_count(mini(kos.get(pid, 0), ko_target))
-		markers.queue_redraw()
+		var lives: Lives = panels[pid]["lives"]
+		var other_kos: int = int(kos.get("p2" if pid == "p1" else "p1", 0))
+		lives.set_lives(1 if sudden else ko_target - other_kos)
+		lives.queue_redraw()
+
+
+## Vidas acesas de um jogador (testes).
+func lives_of(pid: String) -> int:
+	return (panels[pid]["lives"] as Lives).lives
 
 
 func refresh_damage() -> void:

@@ -1,7 +1,8 @@
 extends MenuScreen
 ## Escolha de personagem no estilo Street Fighter: todos os lutadores numa grade
 ## de fotinhos, uma linha por grupo de bichos (Roster) e uma coluna por tipo.
-## Os que ainda não existem aparecem como "?". Cada jogador tem um cursor (azul /
+## Os que ainda não existem aparecem como "?" escuro e o cursor PULA essas vagas
+## (vai ao próximo jogável na direção). Cada jogador tem um cursor (azul /
 ## vermelho), anda com o direcional, confirma com Ataque ou Pulo e desfaz com
 ## Especial; o mouse escolhe pelo clique na foto. Dos lados, o lutador escolhido
 ## aparece grande e animado, com grupo, tipo e barrinhas.
@@ -12,8 +13,13 @@ const TILE := 112.0
 const GAP := 10.0
 const GROUP_W := 190.0
 const WAITING := Color("6b7390")
-const LOCKED_TILE := Color(0.05, 0.04, 0.07)
-const STAGE := Vector2(460, 340)
+const LOCKED_TILE := Color(0.025, 0.018, 0.03, 0.85)
+const LOCKED_BORDER := Color(0.13, 0.09, 0.1)
+## Tamanhos de texto pensados para TV (lidos do sofá).
+const HINT_SIZE := 28
+const DESC_SIZE := 28
+const LABEL_SIZE := 28
+const STAGE := Vector2(460, 330)
 const NAME_SIZE := 46
 ## Fração da altura da arte de apresentação que aparece (do topo; corta no joelho).
 const SPLASH_SHOWN := 0.74
@@ -29,7 +35,7 @@ var _starting := false
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(UiArt.backdrop(0.5))
+	add_child(UiArt.backdrop(0.5, true, true))
 	for pid in PLAYERS:
 		_set_cursor(pid, Roster.cell_of(Game.character_index(pid)))
 	var root := Control.new()
@@ -55,19 +61,22 @@ func _ready() -> void:
 	for pid in PLAYERS:
 		root.add_child(_panels[pid]["root"])
 
-	var hint_text := "Direcional anda  ·  Ataque ou Pulo confirma  ·  Especial desfaz  ·  Pausa volta  ·  ou clique na foto"
+	# Dica de rodapé: no máximo 3 comandos (o resto o jogador descobre na tela)
+	var hint_text := "Direcional escolhe  ·  Ataque confirma\nEspecial desfaz"
 	if Game.is_single_player():
-		hint_text += "\nVocê escolhe o seu lutador e depois o " + ("do boneco" if Game.mode == "training" else "da CPU")
+		hint_text += "\nVocê escolhe o seu e depois o " + ("do boneco" if Game.mode == "training" else "da CPU")
 	var hint := make_label(hint_text, "HintLabel")
-	UiArt.outlined(hint, 22, UiArt.CREAM, 6)
-	hint.position = Vector2(360, 1080 - 92)
-	hint.size = Vector2(1200, 70)
+	hint.name = "Dica"
+	UiArt.outlined(hint, HINT_SIZE, UiArt.CREAM, 7)
+	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	hint.position = Vector2(550, 934)
+	hint.size = Vector2(820, 130)
 	root.add_child(hint)
 	var back := Button.new()
 	back.text = "Voltar"
 	back.focus_mode = Control.FOCUS_NONE
 	back.size = Vector2(200, 60)
-	back.position = Vector2(40, 1080 - 84)
+	back.position = Vector2(40, 34)
 	UiArt.style_button(back, 26)
 	setup_button_fx(back)
 	back.pressed.connect(_back)
@@ -81,15 +90,16 @@ func _ready() -> void:
 func _build_grid(root: Control, origin: Vector2) -> void:
 	for c in Roster.cols():
 		var h := make_label(Roster.TYPES[c].to_upper())
-		UiArt.outlined(h, 20, UiArt.GOLD, 6)
-		h.position = origin + Vector2(GROUP_W + c * (TILE + GAP), 0)
-		h.size = Vector2(TILE, 28)
+		UiArt.outlined(h, LABEL_SIZE, UiArt.GOLD, 7)
+		h.position = origin + Vector2(GROUP_W + c * (TILE + GAP) - GAP * 0.5, -8)
+		h.size = Vector2(TILE + GAP, 36)
+		UiArt.fit_size(h, LABEL_SIZE, TILE + GAP - 2, 22)
 		root.add_child(h)
 	for r in Roster.rows():
 		var g: Dictionary = Roster.GROUPS[r]
 		var y := origin.y + 34 + r * (TILE + GAP)
 		var gl := make_label(String(g["name"]).to_upper())
-		UiArt.outlined(gl, 24, g["color"], 7)
+		UiArt.outlined(gl, LABEL_SIZE, g["color"], 7)
 		gl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		gl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		gl.position = Vector2(origin.x - 10, y)
@@ -124,7 +134,8 @@ func _tile(cell: Vector2i, group_color: Color) -> Panel:
 	p.add_child(pic)
 	if not playable:
 		var q := make_label("?")
-		UiArt.outlined(q, 64, group_color.darkened(0.35), 8)
+		UiArt.outlined(q, 46, group_color.darkened(0.72), 6)
+		q.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.6))
 		q.set_anchors_preset(Control.PRESET_FULL_RECT)
 		q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		q.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -168,7 +179,7 @@ func _portrait(char_index: int) -> Texture2D:
 func _build_side(pid: String, at: Vector2) -> Dictionary:
 	var panel := PanelContainer.new()
 	panel.position = at
-	panel.custom_minimum_size = Vector2(500, 820)
+	panel.custom_minimum_size = Vector2(500, 900)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	panel.add_child(v)
@@ -185,19 +196,19 @@ func _build_side(pid: String, at: Vector2) -> Dictionary:
 	name_label.clip_text = true
 	v.add_child(name_label)
 	var kind := make_label("")
-	UiArt.outlined(kind, 24, UiArt.GOLD, 6)
+	UiArt.outlined(kind, 28, UiArt.GOLD, 7)
 	v.add_child(kind)
 	# Descrição em parágrafo único com altura fixa de 3 linhas: o resto do
 	# painel não pula quando troca de lutador.
 	var desc := make_label("", "HintLabel")
-	desc.add_theme_font_size_override("font_size", 21)
+	desc.add_theme_font_size_override("font_size", DESC_SIZE)
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	desc.custom_minimum_size = Vector2(460, 96)
+	desc.custom_minimum_size = Vector2(460, 4 * 33)
 	v.add_child(desc)
 	var bars := VBoxContainer.new()
 	bars.add_theme_constant_override("separation", 4)
-	bars.custom_minimum_size = Vector2(0, 4 * 22 + 3 * 4)
+	bars.custom_minimum_size = Vector2(0, 4 * 30 + 3 * 4)
 	v.add_child(bars)
 	var push := Control.new()
 	push.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -265,6 +276,7 @@ func _show_splash(pid: String, stage: Control, idx: int) -> void:
 	var w := h * art.get_width() / art.get_height()
 	var r := TextureRect.new()
 	r.name = "Apresentacao"
+	r.set_meta("arte_lutador", true)   # o nome pode ganhar sufixo enquanto o antigo sai
 	r.texture = art
 	r.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -311,14 +323,16 @@ func _fill_bars(bars: VBoxContainer, stats: Dictionary) -> void:
 		row.add_theme_constant_override("separation", 10)
 		var l := Label.new()
 		l.text = key
-		row.custom_minimum_size = Vector2(0, 22)
-		l.custom_minimum_size = Vector2(190, 0)
+		row.custom_minimum_size = Vector2(0, 30)
+		l.custom_minimum_size = Vector2(236, 0)
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		UiArt.outlined(l, 20, UiArt.CREAM, 5)
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		UiArt.outlined(l, 26, UiArt.CREAM, 6)
 		row.add_child(l)
 		for i in 5:
 			var pip := Panel.new()
-			pip.custom_minimum_size = Vector2(38, 18)
+			pip.custom_minimum_size = Vector2(32, 20)
+			pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 			var s := StyleBoxFlat.new()
 			s.bg_color = UiArt.GOLD if i < int(stats[key]) else Color(0.2, 0.15, 0.13)
 			s.border_color = UiArt.INK
@@ -390,15 +404,47 @@ func _move(slot: String, step: Vector2i) -> void:
 	if locked[slot] or not slot_active(slot):
 		return
 	var c: Vector2i = cursor[slot]
-	_set_cursor(slot, Vector2i(posmod(c.x + step.x, Roster.cols()), posmod(c.y + step.y, Roster.rows())))
+	var to := next_cell(c, step)
+	if to == c:
+		return
+	_set_cursor(slot, to)
 	Sfx.play("ui_move")
 	_refresh()
 	pop(tiles[cursor[slot]]["root"], 1.12)
 
 
+## A vaga tem lutador jogável?
+static func cell_playable(cell: Vector2i) -> bool:
+	return Game.character_ready(int(Roster.slot(cell)["char"]))
+
+
+## Próxima vaga JOGÁVEL a partir de "from" na direção "step" (as vagas "?" são
+## puladas). Na horizontal, segue na mesma linha (dando a volta); na vertical,
+## vai à próxima linha que tenha jogável, na coluna mais perto da atual. Sem
+## nenhuma, fica onde está.
+static func next_cell(from: Vector2i, step: Vector2i) -> Vector2i:
+	var cell := from
+	if step.x != 0:
+		for k in range(1, Roster.cols()):
+			var c := Vector2i(posmod(from.x + signi(step.x) * k, Roster.cols()), from.y)
+			if cell_playable(c):
+				cell = c
+				break
+	if step.y != 0:
+		for k in range(1, Roster.rows()):
+			var r := posmod(cell.y + signi(step.y) * k, Roster.rows())
+			var best := -1
+			for c in Roster.cols():
+				if cell_playable(Vector2i(c, r)) and (best < 0 or absi(c - cell.x) < absi(best - cell.x)):
+					best = c
+			if best >= 0:
+				return Vector2i(best, r)
+	return cell
+
+
 func _mouse_hover(cell: Vector2i) -> void:
 	var slot := _mouse_slot()
-	if locked[slot] or not slot_active(slot) or cursor[slot] == cell:
+	if locked[slot] or not slot_active(slot) or cursor[slot] == cell or not cell_playable(cell):
 		return
 	_set_cursor(slot, cell)
 	Sfx.play("ui_move")
@@ -505,13 +551,17 @@ func _refresh() -> void:
 			width = 6
 			if locked[here[0]]:
 				border = border.lightened(0.35)
+		if not t["playable"] and here.is_empty():
+			border = LOCKED_BORDER
+			width = 2
 		var s := StyleBoxFlat.new()
 		s.bg_color = (t["color"] as Color).darkened(0.55) if t["playable"] else LOCKED_TILE
 		s.border_color = border
 		s.set_border_width_all(width)
 		s.set_corner_radius_all(10)
 		(t["root"] as Panel).add_theme_stylebox_override("panel", s)
-		(t["root"] as Panel).modulate = Color.WHITE if t["playable"] or not here.is_empty() else Color(1, 1, 1, 0.75)
+		# vagas "?" discretas: escuras e meio apagadas (o cursor não para nelas)
+		(t["root"] as Panel).modulate = Color.WHITE if t["playable"] or not here.is_empty() else Color(1, 1, 1, 0.55)
 	for pid in PLAYERS:
 		var p: Dictionary = _panels[pid]
 		var cell: Vector2i = cursor[pid]
@@ -554,3 +604,13 @@ func _refresh() -> void:
 			border = GOOD
 		(p["root"] as PanelContainer).add_theme_stylebox_override("panel", UiArt.panel(border, 5 if active or locked[pid] else 3))
 		(p["stage"] as Control).modulate = Color.WHITE if active or locked[pid] else Color(1, 1, 1, 0.4)
+	_apply_mirror()
+
+
+## Os dois no mesmo lutador: o painel do P2 mostra a paleta trocada (a mesma
+## que ele terá na luta).
+func _apply_mirror() -> void:
+	var on := Espelho.is_mirror(choice["p1"], choice["p2"])
+	for c in (_panels["p2"]["stage"] as Control).get_children():
+		if c is UiArt.FighterIdle or c.has_meta("arte_lutador"):
+			Espelho.set_on(c as CanvasItem, on)

@@ -15,6 +15,8 @@ const GOLD := Color("ffc83d")
 const CREAM := Color("fff1d0")
 const RIBBON := Color("2fa84f")   # verde da faixa de campeonato
 const PANEL_BG := Color(0.11, 0.07, 0.06, 0.88)
+## Opacidade da camada escura das telas de painel (ver scrim_layer).
+const SCRIM := 0.5
 
 
 static func tex(path: String) -> Texture2D:
@@ -82,7 +84,7 @@ static func fit_size(l: Label, size: int, width: float, min_size := 18) -> void:
 
 ## Fundo pintado cobrindo a tela (escurecido por "dim"), com um zoom lento de
 ## "respiração" para a tela não ficar parada.
-static func backdrop(dim := 0.0, breathe := true) -> Control:
+static func backdrop(dim := 0.0, breathe := true, scrim := false) -> Control:
 	var t := tex(MENU_BG)
 	var root := Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -114,7 +116,20 @@ static func backdrop(dim := 0.0, breathe := true) -> Control:
 		d.set_anchors_preset(Control.PRESET_FULL_RECT)
 		d.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		root.add_child(d)
+	if scrim:
+		root.add_child(scrim_layer())
 	return root
+
+
+## Camada escura (~50%) atrás dos painéis das telas cheias de texto (seleção,
+## opções, como jogar): a pintura do fundo não briga com os painéis.
+static func scrim_layer(alpha := SCRIM) -> ColorRect:
+	var d := ColorRect.new()
+	d.name = "CamadaEscura"
+	d.color = Color(0.02, 0.01, 0.03, alpha)
+	d.set_anchors_preset(Control.PRESET_FULL_RECT)
+	d.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return d
 
 
 ## Placa de madeira (botão do menu, painéis). focused: borda dourada.

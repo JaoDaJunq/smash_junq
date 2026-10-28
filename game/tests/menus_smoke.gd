@@ -254,6 +254,24 @@ func _test_how_to_play() -> void:
 	var h: HowToPlayScreen = HOW_TO_PLAY.instantiate()
 	add_child(h)
 	await _frames(6)
+	_check("Como jogar: abre na aba Básico com 4 cartões", h.tab == 0 and h.basics.visible and not h.scroll.visible and h.cards.size() == 4, "%d %d" % [h.tab, h.cards.size()])
+	var animados := 0
+	for c in h.cards:
+		var d: UiArt.FighterIdle = c["demo"]
+		if d.texture != null and d.frames > 1:
+			animados += 1
+	_check("Como jogar: Juba animado em todos os cartões", animados == 4, str(animados))
+	var largas := 0
+	for c in h.cards:
+		var l: Label = c["line"]
+		if l.get_line_count() > 1 or l.get_theme_font("font").get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size")).x > l.size.x:
+			largas += 1
+	_check("Como jogar: texto de cada cartão em 1 linha", largas == 0, str(largas))
+	_check("Como jogar: cartão de ataque mostra a tecla do mapeamento", (h.cards[1]["keys"] as Label).text.begins_with(Controles.describe("p1_attack", "teclado")), (h.cards[1]["keys"] as Label).text)
+	await _tap("p1_right")
+	_check("Como jogar: direita abre a aba de teclas", h.tab == 1 and h.scroll.visible and not h.basics.visible, str(h.tab))
+	await _tap("p1_left")
+	_check("Como jogar: esquerda volta ao básico", h.tab == 0 and h.basics.visible, str(h.tab))
 	_check("Como jogar: tabela com cabeçalho e 7 linhas", h.table.get_child_count() == 4 * (1 + HowToPlayScreen.CONTROLS.size()), str(h.table.get_child_count()))
 	_check("Como jogar: textos dos 3 controles", _has_text(h.table, "Shift") and _has_text(h.table, "RT") and _has_text(h.table, "Numpad 3"), "")
 	_check("Como jogar: 3 a 5 regras", HowToPlayScreen.RULES.size() >= 3 and HowToPlayScreen.RULES.size() <= 5, str(HowToPlayScreen.RULES.size()))

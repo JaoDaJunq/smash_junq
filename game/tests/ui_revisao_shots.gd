@@ -28,8 +28,19 @@ func _ready() -> void:
 		await _hud()
 	if _want("resultado"):
 		await _results()
+	if _want("espelho"):
+		await _mirror()
 	if _want("outras"):
 		await _screen("como_jogar", "res://scenes/ui/how_to_play.tscn")
+		var h: Node = (load("res://scenes/ui/how_to_play.tscn") as PackedScene).instantiate()
+		add_child(h)
+		await _frames(70)
+		await _shot("como_jogar_basico_quadro2")
+		h.show_tab(1)
+		await _frames(10)
+		await _shot("como_jogar_teclas")
+		h.queue_free()
+		await _frames(3)
 		await _screen("opcoes", "res://scenes/ui/options.tscn")
 		await _screen("controles", "res://scenes/ui/controls.tscn")
 		var m := await _new_match(4, 8)
@@ -71,6 +82,14 @@ func _selection() -> void:
 	add_child(s)
 	await _frames(30)
 	await _shot("selecao_inicio")
+	# navegação: o cursor pula os "?" (Juba -> direita -> Berrante -> baixo -> Capivas)
+	s._move("p1", Vector2i.RIGHT)
+	await _frames(20)
+	await _shot("selecao_nav_1_direita_pula")
+	s._move("p1", Vector2i.DOWN)
+	s._move("p2", Vector2i.DOWN)
+	await _frames(20)
+	await _shot("selecao_nav_2_baixo_pula")
 	# cada jogável: P1 nele, P2 no próximo
 	for k in ids.size():
 		s._set_cursor("p1", Roster.cell_of(ids[k]))
@@ -142,6 +161,29 @@ func _hud() -> void:
 		await _shot("hud_%s_x_%s" % [Game.CHARACTERS[a]["id"], Game.CHARACTERS[b]["id"]])
 		m.queue_free()
 		await _frames(5)
+	# Estrelas da ficha da Dona Onça x setinha P1/CPU em cima do alvo (não podem
+	# se cobrir): Onça P1 contra CPU com 2 fichas; depois CPU-Onça marca o P1 com 3.
+	var onca := -1
+	for i in Game.CHARACTERS.size():
+		if Game.CHARACTERS[i]["id"] == "onca":
+			onca = i
+	if onca >= 0 and Game.character_ready(onca):
+		Game.mode = "cpu"
+		for side in ["p1", "p2"]:
+			var m := await _new_match(onca if side == "p1" else 0, 0 if side == "p1" else onca)
+			var dona: Node = m.fighters[side]
+			var alvo: Fighter = m.fighters["p2" if side == "p1" else "p1"]
+			await _frames(50)
+			m.fighters["p2"].set_physics_process(false)
+			m.fighters["p1"].set_physics_process(false)
+			dona.set_ficha(alvo, 2 if side == "p1" else 3)
+			m.kos = {"p1": 0, "p2": 1}
+			m.hud.set_kos(m.kos)
+			await _frames(30)
+			await _shot("hud_ficha_onca_%s" % side)
+			m.queue_free()
+			await _frames(5)
+		Game.mode = "versus"
 
 
 func _results() -> void:
@@ -151,12 +193,65 @@ func _results() -> void:
 		pairs.append([ids[7], ids[8], "p2"])
 	for pr in pairs:
 		var m := await _new_match(pr[0], pr[1])
+		# acertos de verdade para os números do resultado
+		var seq := {"p1": ["jab", "jab", "fair", "special_side", "jab", "dtilt"], "p2": ["fair", "fair", "utilt", "special_side"]}
+		for by in seq:
+			var atk: Fighter = m.fighters[by]
+			var vic: Fighter = m.fighters["p2" if by == "p1" else "p1"]
+			for mv in seq[by]:
+				var d: AttackData = atk.moveset.move(mv)
+				if d != null:
+					vic.invincible_time = 0.0
+					vic.receive_hit(atk, d, 1)
+					await _frames(2)
 		m.kos = {"p1": 3 if pr[2] == "p1" else 1, "p2": 3 if pr[2] == "p2" else 2}
 		m.end_match(pr[2])
 		await get_tree().create_timer(1.2).timeout
 		await _shot("resultado_%s_vence_%s" % [pr[2], Game.CHARACTERS[pr[0] if pr[2] == "p1" else pr[1]]["id"]])
 		m.queue_free()
 		await _frames(5)
+
+
+## Luta-espelho (Juba, Capivas, Onça): os dois lado a lado no chão, print
+## inteiro e um recorte em volta deles; e a seleção com os dois no Juba.
+func _mirror() -> void:
+	for idx in [0, 1, 8]:
+		if not Game.character_ready(idx):
+			continue
+		var m := await _new_match(idx, idx)
+		var a: Fighter = m.fighters["p1"]
+		var b: Fighter = m.fighters["p2"]
+		a.global_position = Vector2(-110, -60)
+		b.global_position = Vector2(110, -60)
+		a.facing = 1
+		b.facing = -1
+		await _frames(60)
+		var key := "espelho_%s" % Game.CHARACTERS[idx]["id"]
+		await _shot(key)
+		var xf := get_viewport().get_canvas_transform()
+		var mid := xf * ((a.global_position + b.global_position) * 0.5)
+		var img := get_viewport().get_texture().get_image()
+		var r := Rect2i(Vector2i(mid) - Vector2i(320, 260), Vector2i(640, 360)).intersection(Rect2i(Vector2i.ZERO, img.get_size()))
+		img.get_region(r).save_png(out.path_join(key + "_recorte.png"))
+		m.queue_free()
+		await _frames(5)
+	var mr := await _new_match(8, 8)
+	mr.kos = {"p1": 1, "p2": 3}
+	mr.end_match("p2")
+	await get_tree().create_timer(1.2).timeout
+	await _shot("espelho_resultado_onca")
+	mr.queue_free()
+	await _frames(5)
+	var s: Node = (load("res://scenes/ui/character_select.tscn") as PackedScene).instantiate()
+	add_child(s)
+	await _frames(10)
+	s._set_cursor("p1", Roster.cell_of(0))
+	s._set_cursor("p2", Roster.cell_of(0))
+	s._refresh()
+	await _frames(30)
+	await _shot("espelho_selecao_juba")
+	s.queue_free()
+	await _frames(3)
 
 
 func _shot(key: String) -> void:
