@@ -16,9 +16,9 @@ weight = 130.0
 walk_speed = 275.0
 run_speed = 490.0
 air_speed = 340.0
-gravity = 2800.0
-jump_velocity = 980.0
-double_jump_velocity = 880.0
+gravity = 2750.0
+jump_velocity = 1000.0
+double_jump_velocity = 900.0
 
 [node name="Body" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_body")
