@@ -73,6 +73,14 @@ const DIVIDIR := {
 const IMPACTO := {
 	"seu_capivas": {"especial_neutro": 4, "especial_lado": 2, "especial_baixo": 2},
 }
+## Quadro de impacto JÁ NA TIRA FINAL (conta os intermediários; pode ser um deles).
+## Vem de tools/medir_impacto.py (quadro mais esticado na direção do golpe),
+## conferido a olho em evidence/impacto/folha_candidatos_*.png. Ganha de IMPACTO.
+const IMPACTO_TIRA := {
+	"seu_capivas": {"golpe_frente": 5, "golpe_baixo": 2},
+	"tatu_peba": {"golpe_cima": 6},
+	"sucuri": {"aereo_tras": 3},
+}
 
 
 func _initialize() -> void:
@@ -243,7 +251,8 @@ func _save(dst: String, anim: String, frames: Array[Image], factor: int, meta: D
 	strip.save_png(dst.path_join(anim + ".png"))
 	var n0 := frames.size() if factor == 1 else (frames.size() + 1) / 2
 	var impact: int = IMPACTO.get(who, {}).get(anim, 1 if n0 <= 3 else (2 if n0 <= 5 else 3))
-	meta[anim] = {"quadros": frames.size(), "fator": factor, "impacto": impact * factor}
+	var impact_strip: int = IMPACTO_TIRA.get(who, {}).get(anim, impact * factor)
+	meta[anim] = {"quadros": frames.size(), "fator": factor, "impacto": mini(impact_strip, frames.size() - 1)}
 	if FW != _char_fw:
 		meta[anim]["largura"] = FW
 	print("%s: %d quadros%s" % [anim, frames.size(), " (intercalada)" if factor == 2 else ""])

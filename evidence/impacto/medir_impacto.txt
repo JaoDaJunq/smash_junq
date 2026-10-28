@@ -1,0 +1,48 @@
+arara_canga  dtilt            golpe_baixo      frente  impacto=4 mais_esticado=0 ganho=+3 px  [60 56 54 56 57* 58 59 58 53]  <-- CLARO: 6 (+2 px)
+arara_canga  fair             aereo_frente     frente  impacto=4 mais_esticado=5 ganho=+2 px  [56 58 57 60 61* 63 56 57 52]  <-- CLARO: 5 (+2 px)
+arara_canga  uair             aereo_cima       cima    impacto=4 mais_esticado=6 ganho=+2 px  [-4 -4 -3 -3 -2* -2 0 -2 -3]  <-- CLARO: 6 (+2 px)
+arara_canga  special_neutral  especial_neutro  largura impacto=3 mais_esticado=2 ganho=+3 px  [56 59 60 57* 59 60]
+arara_canga  special_side     especial_lado    frente  impacto=3 mais_esticado=2 ganho=+2 px  [52 55 61 59* 60 50]  <-- CLARO: 2 (+2 px)
+arara_canga  special_down     especial_baixo   largura impacto=6 mais_esticado=1 ganho=+8 px  [50 58 55 55 47 52 50* 52 52 49 49]
+bugio        ftilt            golpe_frente     frente  impacto=2 mais_esticado=0 ganho=+2 px  [75 69 73* 70 67]
+bugio        uair             aereo_cima       cima    impacto=2 mais_esticado=3 ganho=+3 px  [-8 -9 -7* -4 -5]  <-- CLARO: 3 (+3 px)
+calango      nair             aereo_neutro     largura impacto=2 mais_esticado=3 ganho=+11 px  [44 50 45* 56 44]
+calango      uair             aereo_cima       cima    impacto=2 mais_esticado=1 ganho=+3 px  [-9 0 -3* -5 -9]  <-- CLARO: 1 (+3 px)
+calango      special_down     especial_baixo   largura impacto=3 mais_esticado=1 ganho=+7 px  [58 64 58 57* 55 54]
+cutia        ftilt            golpe_frente     frente  impacto=2 mais_esticado=1 ganho=+2 px  [66 74 72* 73 64]  <-- CLARO: 1 (+2 px)
+cutia        dair             aereo_baixo      baixo   impacto=2 mais_esticado=1 ganho=+2 px  [59 59 57* 51 55]  <-- CLARO: 1 (+2 px)
+cutia        special_side     especial_lado    frente  impacto=3 mais_esticado=2 ganho=+8 px  [76 75 76 68* 70 64]  <-- CLARO: 2 (+8 px)
+juba         utilt            golpe_cima       cima    impacto=4 mais_esticado=5 ganho=+3 px  [-15 -18 -15 -14 -16* -13 -15 -13 -15]  <-- CLARO: 5 (+3 px)
+juba         fair             aereo_frente     frente  impacto=4 mais_esticado=7 ganho=+3 px  [57 57 58 59 60* 60 57 63 57]
+juba         uair             aereo_cima       cima    impacto=4 mais_esticado=5 ganho=+2 px  [-17 -15 -8 -7 -8* -6 -8 -8 -9]  <-- CLARO: 5 (+2 px)
+juba         special_neutral  especial_neutro  largura impacto=6 mais_esticado=7 ganho=+4 px  [50 52 56 54 54 55 54* 58 54 54 54]
+juba         special_side     especial_lado    frente  impacto=6 mais_esticado=7 ganho=+2 px  [60 60 60 59 60 60 60* 62 60 62 60]  <-- CLARO: 7 (+2 px)
+juba         special_up       especial_cima    cima    impacto=6 mais_esticado=5 ganho=+6 px  [-24 -22 -11 -10 -12 -7 -13* -7 -8 -11 -12]  <-- CLARO: 5 (+6 px)
+maracaja     dtilt            golpe_baixo      frente  impacto=4 mais_esticado=5 ganho=+2 px  [57 56 57 53 61* 63 55 55 53]  <-- CLARO: 5 (+2 px)
+maracaja     uair             aereo_cima       cima    impacto=4 mais_esticado=5 ganho=+2 px  [-13 -11 -9 -9 -2* 0 -7 -7 -10]  <-- CLARO: 5 (+2 px)
+maracaja     special_side     especial_lado    frente  impacto=6 mais_esticado=5 ganho=+5 px  [60 60 59 58 60 62 57* 55 60 61 59]  <-- CLARO: 5 (+5 px)
+maracaja     special_up       especial_cima    cima    impacto=6 mais_esticado=8 ganho=+8 px  [-20 -14 -7 -9 -9 -8 -9* -11 -1 -8 -5]  <-- CLARO: 8 (+8 px)
+marianinha   fair             aereo_frente     frente  impacto=4 mais_esticado=7 ganho=+5 px  [48 46 51 53 56* 57 49 61 46]
+marianinha   dair             aereo_baixo      baixo   impacto=2 mais_esticado=1 ganho=+3 px  [58 59 56* 56]  <-- CLARO: 1 (+3 px)
+marianinha   special_down     especial_baixo   largura impacto=3 mais_esticado=4 ganho=+3 px  [30 39 37 36* 39 31]
+onca         special_up       especial_cima    cima    impacto=3 mais_esticado=2 ganho=+3 px  [-26 -22 0 -3* 0 -5]  <-- CLARO: 2 (+3 px)
+preguica     special_side     especial_lado    frente  impacto=3 mais_esticado=2 ganho=+10 px  [69 69 70 60* 67 61]  <-- CLARO: 2 (+10 px)
+preguica     special_down     especial_baixo   largura impacto=3 mais_esticado=2 ganho=+3 px  [46 45 50 47* 47 43]
+seu_capivas  nair             aereo_neutro     largura impacto=4 mais_esticado=8 ganho=+4 px  [43 39 39 40 41* 39 42 39 45]
+seu_capivas  uair             aereo_cima       cima    impacto=4 mais_esticado=1 ganho=+2 px  [-5 -2 -5 -7 -4* -6 -6 -7 -6]
+seu_capivas  special_neutral  especial_neutro  largura impacto=8 mais_esticado=7 ganho=+4 px  [43 42 38 39 42 44 46 47 43* 43 39]
+seu_capivas  special_side     especial_lado    frente  impacto=4 mais_esticado=9 ganho=+11 px  [58 56 57 59 50* 58 53 54 56 61 52]  <-- CLARO: 3 (+9 px)
+seu_capivas  special_up       especial_cima    cima    impacto=6 mais_esticado=3 ganho=+6 px  [-17 -16 -6 -6 -14 -14 -12* -14 -12 -14 -13]
+seu_capivas  special_down     especial_baixo   largura impacto=4 mais_esticado=3 ganho=+3 px  [37 38 43 45 42* 43 42 40 41 39 36]
+sucuri       nair             aereo_neutro     largura impacto=4 mais_esticado=5 ganho=+12 px  [35 40 40 52 45* 57 57 40 45]
+sucuri       uair             aereo_cima       cima    impacto=4 mais_esticado=6 ganho=+2 px  [-20 -20 -8 -9 -4* -3 -2 -6 -14]  <-- CLARO: 6 (+2 px)
+sucuri       special_neutral  especial_neutro  largura impacto=6 mais_esticado=4 ganho=+11 px  [43 44 42 41 59 42 48* 47 48 47 52]
+sucuri       special_down     especial_baixo   largura impacto=6 mais_esticado=10 ganho=+4 px  [49 52 37 45 36 42 52* 40 38 41 56]
+tatu_peba    ftilt            golpe_frente     frente  impacto=4 mais_esticado=6 ganho=+2 px  [51 50 51 54 61* 62 63 63 56]  <-- CLARO: 6 (+2 px)
+tatu_peba    dtilt            golpe_baixo      frente  impacto=4 mais_esticado=3 ganho=+3 px  [56 59 62 63 60* 62 63 54 57]  <-- CLARO: 3 (+3 px)
+tatu_peba    nair             aereo_neutro     largura impacto=4 mais_esticado=0 ganho=+14 px  [57 54 43 49 43* 45 50 46 55]
+tatu_peba    bair             aereo_tras       tras    impacto=4 mais_esticado=8 ganho=+8 px  [-5 -4 -6 -4 -8* -5 -5 -3 0]  <-- CLARO: 3 (+4 px)
+tatu_peba    uair             aereo_cima       cima    impacto=2 mais_esticado=3 ganho=+2 px  [-9 -3 -2* 0 -9]  <-- CLARO: 3 (+2 px)
+tatu_peba    special_side     especial_lado    frente  impacto=3 mais_esticado=4 ganho=+3 px  [58 53 52 55* 58 54]  <-- CLARO: 4 (+3 px)
+tucano       special_up       especial_cima    cima    impacto=3 mais_esticado=4 ganho=+3 px  [-26 -13 -4 -4* -1 -16]  <-- CLARO: 4 (+3 px)
+MEDIDOS: 195 golpe(s); 47 com quadro mais esticado != impacto (ganho >= 2 px); 28 caso(s) claro(s) (vizinho do impacto, golpe com direção)

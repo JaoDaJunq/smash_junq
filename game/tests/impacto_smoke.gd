@@ -42,6 +42,49 @@ func _run() -> void:
 	await _test_target_shake()
 	await _test_camera()
 	await _test_spark()
+	await _test_windup()
+
+
+# --- 5. Desenho do preparo e do impacto ---
+
+## Em todo golpe do Juba com preparo, o 1º quadro do golpe mostra o 1º desenho
+## do preparo e os quadros ativos mostram o desenho de impacto.
+func _test_windup() -> void:
+	await _place(me, Vector2(-300, -60), 1)
+	await _frames(20)
+	var vis := _visual(me)
+	var total := 0
+	var shows_first := 0
+	var shows_impact := 0
+	var missing: Array[String] = []
+	var missing_hit: Array[String] = []
+	for move_id in PixelSprite.ATTACK_ANIM:
+		var data: AttackData = me.moveset.move(move_id)
+		var a: String = PixelSprite.ATTACK_ANIM[move_id]
+		if data == null or not vis.has_anim(a) or int(vis._impact[a]) <= 0:
+			continue
+		total += 1
+		me.attack = data
+		me.attack_id = move_id
+		me.attack_frame = 1
+		var first: Array = vis._attack()
+		me.attack_frame = data.startup + 1
+		var hit: Array = vis._attack()
+		if first[1] == 0:
+			shows_first += 1
+		else:
+			missing.append("%s(1º=%d)" % [move_id, first[1]])
+		if data.active <= 0:
+			shows_impact += 1   # projétil (sem quadros ativos no corpo)
+		elif hit[1] == int(vis._impact[a]):
+			shows_impact += 1
+		else:
+			missing_hit.append("%s(%s q%d, impacto %d)" % [move_id, hit[0], hit[1], int(vis._impact[a])])
+	me.attack = null
+	me.attack_id = ""
+	_check("Preparo: 1º quadro do golpe mostra o 1º desenho em todos os golpes do Juba",
+		shows_first == total, "%d de %d %s" % [shows_first, total, str(missing)])
+	_check("Impacto: quadro ativo mostra o desenho de impacto", shows_impact == total, "%d de %d %s" % [shows_impact, total, str(missing_hit)])
 
 
 # --- 4. Faísca ---

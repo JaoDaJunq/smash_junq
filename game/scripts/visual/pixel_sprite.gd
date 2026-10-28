@@ -412,7 +412,9 @@ func _attack() -> Array:
 	var i := int(_impact[a])
 	var f := fighter.attack_frame
 	if f <= data.startup:
-		return [a, mini(i - 1, int(float(f) / maxf(1.0, data.startup) * i)) if i > 0 else 0]
+		# attack_frame começa em 1: (f - 1) faz o 1º quadro do preparo aparecer
+		# (com f / startup ele sumia em golpes de preparo curto).
+		return [a, mini(i - 1, int(float(f - 1) / maxf(1.0, data.startup) * i)) if i > 0 else 0]
 	if f <= data.startup + data.active:
 		return [a, i]
 	var r := float(f - data.startup - data.active) / maxf(1.0, data.recovery)

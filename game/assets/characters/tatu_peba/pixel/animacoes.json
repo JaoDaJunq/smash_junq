@@ -112,7 +112,7 @@
   "golpe_cima": {
     "quadros": 9,
     "fator": 2,
-    "impacto": 4
+    "impacto": 6
   },
   "golpe_frente": {
     "quadros": 9,
