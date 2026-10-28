@@ -27,7 +27,7 @@
   "aereo_tras": {
     "quadros": 5,
     "fator": 1,
-    "impacto": 2
+    "impacto": 3
   },
   "agarrar": {
     "quadros": 6,

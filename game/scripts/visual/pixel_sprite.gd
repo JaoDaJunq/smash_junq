@@ -69,6 +69,7 @@ var _flip := -1.0        # pulo duplo com cambalhota (>= 0 = em andamento)
 var _since_jump := 9.0
 var _throw := 0.0        # tempo mostrando o arremesso depois de segurar
 var _hit_time := 0.0
+var _hitstop_total := 0  # quadros da pausa do último golpe levado (tremor do alvo)
 var _mood := ""
 var _mood_time := 0.0
 var _mood_age := 0.0
@@ -130,7 +131,8 @@ func _ready() -> void:
 			_dash = 0.0)
 		fighter.hit_taken.connect(func(_a: Node2D, _d: AttackData, _l: Vector2) -> void:
 			_kick(0.12)
-			_hit_time = 0.0)
+			_hit_time = 0.0
+			_hitstop_total = maxi(1, fighter._hitstop))
 	position = Vector2(0, FEET_Y)
 	if _textures.has("pendurado"):
 		_hang_hand = _top_pixel(_textures["pendurado"])
@@ -188,6 +190,7 @@ func _process(delta: float) -> void:
 	if anim == "pendurado" and _hang_hand.x >= 0.0 and fighter._ledge != null:
 		# A mão do desenho fica exatamente na quina da plataforma.
 		_sprite.position = to_local(fighter._ledge.global_position) - _hang_hand
+	_sprite.position += _hitstop_shake()
 	if charge >= 0.0:
 		var amp := 0.3 + 1.2 * charge
 		_sprite.position.x += amp * sin(_clock * 70.0)
@@ -196,6 +199,21 @@ func _process(delta: float) -> void:
 		if charge >= 1.0 and int(_clock * 16.0) % 2 == 0:
 			c = Color(2.2, 2.2, 2.2, c.a)
 	modulate = c
+
+
+## Alvo treme na pausa de impacto: só o DESENHO sai do lugar (a caixa de colisão
+## não), HITSTOP_SHAKE px do mundo no 1º quadro caindo a 0, trocando de lado a
+## cada quadro; de lado no chão, de cima para baixo no ar. Quem bateu não treme.
+const HITSTOP_SHAKE := 4.0
+
+
+func _hitstop_shake() -> Vector2:
+	if fighter.state != Fighter.State.HITSTUN or fighter._hitstop <= 0 or _hitstop_total <= 0:
+		return Vector2.ZERO
+	var ratio := clampf(float(fighter._hitstop) / float(_hitstop_total), 0.0, 1.0)
+	var px := roundf(HITSTOP_SHAKE * ratio / pixel_scale)   # em pixels nativos inteiros
+	var side := 1.0 if fighter._hitstop % 2 == 0 else -1.0
+	return Vector2(px * side, 0.0) if fighter.is_on_floor() else Vector2(0.0, px * side)
 
 
 func a_charge() -> String:
@@ -394,7 +412,9 @@ func _attack() -> Array:
 	var i := int(_impact[a])
 	var f := fighter.attack_frame
 	if f <= data.startup:
-		return [a, mini(i - 1, int(float(f) / maxf(1.0, data.startup) * i)) if i > 0 else 0]
+		# attack_frame começa em 1: (f - 1) faz o 1º quadro do preparo aparecer
+		# (com f / startup ele sumia em golpes de preparo curto).
+		return [a, mini(i - 1, int(float(f - 1) / maxf(1.0, data.startup) * i)) if i > 0 else 0]
 	if f <= data.startup + data.active:
 		return [a, i]
 	var r := float(f - data.startup - data.active) / maxf(1.0, data.recovery)

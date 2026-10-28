@@ -742,11 +742,11 @@ func receive_hit(attacker: Node2D, data: AttackData, direction_sign: int) -> boo
 	_hitstun = Combat.hitstun_time(speed)
 	_hitstun_total = _hitstun
 	state = State.HITSTUN
-	var stop := Combat.hitstop_frames(data.damage)
+	var stop := Combat.hitstop_frames(data.damage, speed)
 	_hitstop = stop
 	if attacker is Fighter:
 		attacker._hitstop = stop
-	get_tree().call_group("fight_camera", "shake", speed)
+	get_tree().call_group("fight_camera", "shake", speed, data.damage)
 	damage_changed.emit(damage_percent)
 	hit_taken.emit(attacker, data, _launch)
 	return true

@@ -1,0 +1,170 @@
+p1_idx,p2_idx,p1_nome,p2_nome,arena,semente,vencedor,sem_vencedor,dur_jogo_s,ko_p1,ko_p2
+0,0,Juba,Juba,0,1,p2,nao,33.7,0,3
+0,1,Juba,Seu Capivas,0,1,p1,nao,202.7,3,1
+0,2,Juba,Maracajá,0,1,p2,nao,58.4,1,3
+0,3,Juba,Dona Canga,0,1,p2,nao,154.6,1,3
+0,4,Juba,Marianinha,0,1,p2,nao,142.2,1,3
+0,5,Juba,Mestra Sucuri,0,1,p1,nao,104.0,3,0
+0,6,Juba,Seu Peba,0,1,p1,nao,121.4,3,0
+0,7,Juba,Tucão,0,1,p2,nao,90.8,1,3
+0,8,Juba,Dona Onça,0,1,p2,nao,54.5,2,3
+0,9,Juba,Cutia Ligeira,0,1,p1,nao,98.5,3,1
+0,10,Juba,Calango,0,1,p2,nao,91.9,1,3
+0,11,Juba,Berrante,0,1,p1,nao,97.8,3,1
+0,12,Juba,Seu Preguiçoso,0,1,p1,nao,65.7,3,0
+1,0,Seu Capivas,Juba,0,1,p2,nao,128.3,0,3
+1,1,Seu Capivas,Seu Capivas,0,1,p1,nao,156.1,3,2
+1,2,Seu Capivas,Maracajá,0,1,p1,nao,75.0,3,1
+1,3,Seu Capivas,Dona Canga,0,1,p1,nao,150.8,3,2
+1,4,Seu Capivas,Marianinha,0,1,p2,nao,156.1,0,3
+1,5,Seu Capivas,Mestra Sucuri,0,1,p1,nao,193.3,3,2
+1,6,Seu Capivas,Seu Peba,0,1,p2,nao,98.4,0,3
+1,7,Seu Capivas,Tucão,0,1,p2,nao,182.1,1,3
+1,8,Seu Capivas,Dona Onça,0,1,p2,nao,140.7,0,3
+1,9,Seu Capivas,Cutia Ligeira,0,1,p2,nao,101.3,2,3
+1,10,Seu Capivas,Calango,0,1,p2,nao,222.5,2,3
+1,11,Seu Capivas,Berrante,0,1,p2,nao,115.6,1,3
+1,12,Seu Capivas,Seu Preguiçoso,0,1,p2,nao,127.3,1,3
+2,0,Maracajá,Juba,0,1,p2,nao,108.8,2,3
+2,1,Maracajá,Seu Capivas,0,1,p1,nao,67.4,3,1
+2,2,Maracajá,Maracajá,0,1,p1,nao,159.6,3,2
+2,3,Maracajá,Dona Canga,0,1,p1,nao,128.5,3,2
+2,4,Maracajá,Marianinha,0,1,p2,nao,102.8,1,3
+2,5,Maracajá,Mestra Sucuri,0,1,p1,nao,142.0,3,0
+2,6,Maracajá,Seu Peba,0,1,p1,nao,87.7,3,0
+2,7,Maracajá,Tucão,0,1,p1,nao,60.6,3,1
+2,8,Maracajá,Dona Onça,0,1,p2,nao,141.6,1,3
+2,9,Maracajá,Cutia Ligeira,0,1,p2,nao,166.5,2,3
+2,10,Maracajá,Calango,0,1,p1,nao,139.3,3,2
+2,11,Maracajá,Berrante,0,1,p1,nao,104.3,3,1
+2,12,Maracajá,Seu Preguiçoso,0,1,p1,nao,140.6,3,1
+3,0,Dona Canga,Juba,0,1,p2,nao,128.5,2,3
+3,1,Dona Canga,Seu Capivas,0,1,p1,nao,116.0,3,2
+3,2,Dona Canga,Maracajá,0,1,p2,nao,81.1,0,3
+3,3,Dona Canga,Dona Canga,0,1,p2,nao,112.1,2,3
+3,4,Dona Canga,Marianinha,0,1,p2,nao,86.7,1,3
+3,5,Dona Canga,Mestra Sucuri,0,1,p2,nao,181.4,2,3
+3,6,Dona Canga,Seu Peba,0,1,p2,nao,134.2,2,3
+3,7,Dona Canga,Tucão,0,1,p1,nao,136.2,3,2
+3,8,Dona Canga,Dona Onça,0,1,p2,nao,124.9,2,3
+3,9,Dona Canga,Cutia Ligeira,0,1,p2,nao,100.8,2,3
+3,10,Dona Canga,Calango,0,1,p2,nao,141.8,2,3
+3,11,Dona Canga,Berrante,0,1,p2,nao,150.4,1,3
+3,12,Dona Canga,Seu Preguiçoso,0,1,p2,nao,83.0,2,3
+4,0,Marianinha,Juba,0,1,p2,nao,131.5,1,3
+4,1,Marianinha,Seu Capivas,0,1,p1,nao,98.1,3,1
+4,2,Marianinha,Maracajá,0,1,p2,nao,163.3,2,3
+4,3,Marianinha,Dona Canga,0,1,p1,nao,99.7,3,0
+4,4,Marianinha,Marianinha,0,1,p1,nao,153.0,3,2
+4,5,Marianinha,Mestra Sucuri,0,1,p1,nao,109.4,3,1
+4,6,Marianinha,Seu Peba,0,1,p2,nao,52.9,1,3
+4,7,Marianinha,Tucão,0,1,p2,nao,107.3,1,3
+4,8,Marianinha,Dona Onça,0,1,p1,nao,77.6,3,1
+4,9,Marianinha,Cutia Ligeira,0,1,p1,nao,146.5,3,2
+4,10,Marianinha,Calango,0,1,p1,nao,143.7,3,2
+4,11,Marianinha,Berrante,0,1,p2,nao,190.1,2,3
+4,12,Marianinha,Seu Preguiçoso,0,1,p1,nao,110.3,3,1
+5,0,Mestra Sucuri,Juba,0,1,p2,nao,135.3,2,3
+5,1,Mestra Sucuri,Seu Capivas,0,1,p2,nao,114.4,1,3
+5,2,Mestra Sucuri,Maracajá,0,1,p2,nao,107.1,0,3
+5,3,Mestra Sucuri,Dona Canga,0,1,p1,nao,84.4,3,1
+5,4,Mestra Sucuri,Marianinha,0,1,p2,nao,152.3,0,3
+5,5,Mestra Sucuri,Mestra Sucuri,0,1,p2,nao,125.0,2,3
+5,6,Mestra Sucuri,Seu Peba,0,1,p2,nao,139.8,0,3
+5,7,Mestra Sucuri,Tucão,0,1,p1,nao,139.1,3,2
+5,8,Mestra Sucuri,Dona Onça,0,1,p2,nao,74.5,0,3
+5,9,Mestra Sucuri,Cutia Ligeira,0,1,p2,nao,176.3,1,3
+5,10,Mestra Sucuri,Calango,0,1,p2,nao,201.8,2,3
+5,11,Mestra Sucuri,Berrante,0,1,p2,nao,115.3,1,3
+5,12,Mestra Sucuri,Seu Preguiçoso,0,1,p2,nao,108.8,1,3
+6,0,Seu Peba,Juba,0,1,p2,nao,60.9,1,3
+6,1,Seu Peba,Seu Capivas,0,1,p1,nao,83.6,3,0
+6,2,Seu Peba,Maracajá,0,1,p1,nao,165.8,3,2
+6,3,Seu Peba,Dona Canga,0,1,p1,nao,86.0,3,2
+6,4,Seu Peba,Marianinha,0,1,p2,nao,133.4,1,3
+6,5,Seu Peba,Mestra Sucuri,0,1,p1,nao,103.7,3,0
+6,6,Seu Peba,Seu Peba,0,1,p2,nao,139.6,1,3
+6,7,Seu Peba,Tucão,0,1,p1,nao,87.1,3,1
+6,8,Seu Peba,Dona Onça,0,1,p2,nao,86.9,1,3
+6,9,Seu Peba,Cutia Ligeira,0,1,p1,nao,272.0,3,2
+6,10,Seu Peba,Calango,0,1,p1,nao,115.8,3,1
+6,11,Seu Peba,Berrante,0,1,p2,nao,217.7,2,3
+6,12,Seu Peba,Seu Preguiçoso,0,1,p1,nao,206.6,3,0
+7,0,Tucão,Juba,0,1,p2,nao,100.2,1,3
+7,1,Tucão,Seu Capivas,0,1,p1,nao,110.8,3,0
+7,2,Tucão,Maracajá,0,1,p1,nao,126.1,3,1
+7,3,Tucão,Dona Canga,0,1,p1,nao,132.4,3,2
+7,4,Tucão,Marianinha,0,1,p2,nao,115.0,1,3
+7,5,Tucão,Mestra Sucuri,0,1,p1,nao,150.2,3,1
+7,6,Tucão,Seu Peba,0,1,p1,nao,99.6,3,1
+7,7,Tucão,Tucão,0,1,p2,nao,76.6,1,3
+7,8,Tucão,Dona Onça,0,1,p1,nao,127.6,3,2
+7,9,Tucão,Cutia Ligeira,0,1,p1,nao,99.6,3,1
+7,10,Tucão,Calango,0,1,p2,nao,122.2,1,3
+7,11,Tucão,Berrante,0,1,p1,nao,165.4,3,1
+7,12,Tucão,Seu Preguiçoso,0,1,p1,nao,118.6,3,0
+8,0,Dona Onça,Juba,0,1,p2,nao,73.4,1,3
+8,1,Dona Onça,Seu Capivas,0,1,p1,nao,90.4,3,1
+8,2,Dona Onça,Maracajá,0,1,p2,nao,94.6,0,3
+8,3,Dona Onça,Dona Canga,0,1,p2,nao,88.8,1,3
+8,4,Dona Onça,Marianinha,0,1,p2,nao,121.6,1,3
+8,5,Dona Onça,Mestra Sucuri,0,1,p1,nao,133.5,3,0
+8,6,Dona Onça,Seu Peba,0,1,p2,nao,141.9,2,3
+8,7,Dona Onça,Tucão,0,1,p2,nao,91.2,1,3
+8,8,Dona Onça,Dona Onça,0,1,p2,nao,181.6,2,3
+8,9,Dona Onça,Cutia Ligeira,0,1,p1,nao,222.6,3,2
+8,10,Dona Onça,Calango,0,1,p1,nao,142.2,3,2
+8,11,Dona Onça,Berrante,0,1,p2,nao,180.4,1,3
+8,12,Dona Onça,Seu Preguiçoso,0,1,p1,nao,177.2,3,1
+9,0,Cutia Ligeira,Juba,0,1,p1,nao,136.6,3,2
+9,1,Cutia Ligeira,Seu Capivas,0,1,p1,nao,69.4,3,0
+9,2,Cutia Ligeira,Maracajá,0,1,p1,nao,204.7,3,2
+9,3,Cutia Ligeira,Dona Canga,0,1,p1,nao,91.9,3,0
+9,4,Cutia Ligeira,Marianinha,0,1,p1,nao,192.3,3,2
+9,5,Cutia Ligeira,Mestra Sucuri,0,1,p1,nao,150.0,3,1
+9,6,Cutia Ligeira,Seu Peba,0,1,p1,nao,130.6,3,1
+9,7,Cutia Ligeira,Tucão,0,1,p1,nao,105.2,3,1
+9,8,Cutia Ligeira,Dona Onça,0,1,p2,nao,208.6,2,3
+9,9,Cutia Ligeira,Cutia Ligeira,0,1,p2,nao,221.0,2,3
+9,10,Cutia Ligeira,Calango,0,1,p2,nao,204.2,2,3
+9,11,Cutia Ligeira,Berrante,0,1,p1,nao,99.3,3,2
+9,12,Cutia Ligeira,Seu Preguiçoso,0,1,p1,nao,68.4,3,0
+10,0,Calango,Juba,0,1,p2,nao,118.3,1,3
+10,1,Calango,Seu Capivas,0,1,p1,nao,158.0,3,2
+10,2,Calango,Maracajá,0,1,p2,nao,71.7,0,3
+10,3,Calango,Dona Canga,0,1,p1,nao,104.9,3,1
+10,4,Calango,Marianinha,0,1,p2,nao,186.1,2,3
+10,5,Calango,Mestra Sucuri,0,1,p2,nao,158.6,2,3
+10,6,Calango,Seu Peba,0,1,p2,nao,184.0,2,3
+10,7,Calango,Tucão,0,1,p1,nao,118.4,3,2
+10,8,Calango,Dona Onça,0,1,p2,nao,169.6,1,3
+10,9,Calango,Cutia Ligeira,0,1,p2,nao,203.7,2,3
+10,10,Calango,Calango,0,1,p1,nao,190.8,3,2
+10,11,Calango,Berrante,0,1,p2,nao,245.0,2,3
+10,12,Calango,Seu Preguiçoso,0,1,p1,nao,122.3,3,2
+11,0,Berrante,Juba,0,1,p2,nao,148.3,1,3
+11,1,Berrante,Seu Capivas,0,1,p1,nao,198.8,3,2
+11,2,Berrante,Maracajá,0,1,p2,nao,116.3,1,3
+11,3,Berrante,Dona Canga,0,1,p1,nao,203.1,3,2
+11,4,Berrante,Marianinha,0,1,p2,nao,74.4,1,3
+11,5,Berrante,Mestra Sucuri,0,1,p1,nao,153.8,3,1
+11,6,Berrante,Seu Peba,0,1,p2,nao,141.2,2,3
+11,7,Berrante,Tucão,0,1,p2,nao,182.0,2,3
+11,8,Berrante,Dona Onça,0,1,p2,nao,122.8,2,3
+11,9,Berrante,Cutia Ligeira,0,1,p2,nao,135.2,2,3
+11,10,Berrante,Calango,0,1,p1,nao,150.7,3,2
+11,11,Berrante,Berrante,0,1,p1,nao,197.8,3,2
+11,12,Berrante,Seu Preguiçoso,0,1,p1,nao,109.4,3,1
+12,0,Seu Preguiçoso,Juba,0,1,p2,nao,105.3,0,3
+12,1,Seu Preguiçoso,Seu Capivas,0,1,p2,nao,144.5,2,3
+12,2,Seu Preguiçoso,Maracajá,0,1,p2,nao,110.0,2,3
+12,3,Seu Preguiçoso,Dona Canga,0,1,p2,nao,169.6,2,3
+12,4,Seu Preguiçoso,Marianinha,0,1,p2,nao,65.5,0,3
+12,5,Seu Preguiçoso,Mestra Sucuri,0,1,p1,nao,85.4,3,0
+12,6,Seu Preguiçoso,Seu Peba,0,1,p2,nao,125.7,1,3
+12,7,Seu Preguiçoso,Tucão,0,1,p2,nao,113.8,1,3
+12,8,Seu Preguiçoso,Dona Onça,0,1,p2,nao,108.7,0,3
+12,9,Seu Preguiçoso,Cutia Ligeira,0,1,p2,nao,171.8,1,3
+12,10,Seu Preguiçoso,Calango,0,1,p2,nao,128.6,2,3
+12,11,Seu Preguiçoso,Berrante,0,1,p2,nao,198.2,1,3
+12,12,Seu Preguiçoso,Seu Preguiçoso,0,1,p1,nao,111.3,3,1

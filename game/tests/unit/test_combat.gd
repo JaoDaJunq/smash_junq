@@ -48,6 +48,12 @@ func test_launch_vector_respects_angle_and_side() -> void:
 func test_hitstun_and_hitstop_grow_with_strength() -> void:
 	assert_float(Combat.hitstun_time(1000.0)).is_greater(Combat.hitstun_time(400.0))
 	assert_int(Combat.hitstop_frames(20.0)).is_greater(Combat.hitstop_frames(3.0))
+	assert_int(Combat.hitstop_frames(8.0)).is_equal(9)
+	assert_int(Combat.hitstop_frames(60.0)).is_equal(18)   # teto
+	# golpe que pode matar: +4 a +6 quadros
+	var normal := Combat.hitstop_frames(12.0, 900.0)
+	assert_int(Combat.hitstop_frames(12.0, Combat.KILL_LAUNCH) - normal).is_equal(4)
+	assert_int(Combat.hitstop_frames(12.0, 3000.0) - normal).is_equal(6)
 
 
 func test_circle_hits_rect() -> void:

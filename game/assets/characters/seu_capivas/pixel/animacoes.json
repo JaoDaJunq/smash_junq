@@ -107,7 +107,7 @@
   "golpe_baixo": {
     "quadros": 9,
     "fator": 2,
-    "impacto": 4
+    "impacto": 2
   },
   "golpe_cima": {
     "quadros": 9,
@@ -117,7 +117,7 @@
   "golpe_frente": {
     "quadros": 9,
     "fator": 2,
-    "impacto": 4
+    "impacto": 5
   },
   "jab": {
     "quadros": 5,
