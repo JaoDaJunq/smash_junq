@@ -152,8 +152,6 @@ func _check_swings() -> void:
 			res = default_hit(f, f.attack)
 		knock(f, res["v"], res.get("live", true))
 		f._hitstop = maxi(f._hitstop, 3)
-		if f.move_fx != null:
-			f.move_fx.play_at("fx_poof", global_position, 1.5, 0.3, "poof")
 
 
 ## Velocidade de um golpe qualquer na bola: segue o ângulo e a força do golpe.
@@ -182,8 +180,6 @@ func _check_hurt() -> void:
 		var dir := 1 if velocity.x >= 0.0 else -1
 		_cool[t] = 0.5
 		if t.receive_hit(owner_fighter, d, dir):
-			if owner_fighter != null and is_instance_valid(owner_fighter) and owner_fighter.move_fx != null:
-				owner_fighter.move_fx.play("fx_poof", "target", t, 2.0, false, 0.3, "poof")
 			velocity = Vector2(-float(dir) * 160.0, -420.0)   # quica no adversário
 			live = false
 			_grounded = false

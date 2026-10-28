@@ -124,7 +124,7 @@ func _land_during_attack() -> void:
 		velocity.y = -BOUNCE_VELOCITY
 		velocity.x *= 0.7
 		if move_fx != null:
-			move_fx.play_at("fx_poof", global_position + Vector2(0, 50), 2.0, 0.3, "poof")
+			move_fx.play_at("fx_stage_dive", global_position + Vector2(0, 30), 2.0, 0.3)
 		return
 	super()
 

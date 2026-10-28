@@ -85,8 +85,6 @@ func _eat_projectiles() -> void:
 			var h := minf(EAT_HEAL, damage_percent)
 			if h > 0.0:
 				add_damage(-h)
-			if move_fx != null:
-				move_fx.play_at("fx_poof", p.global_position, 1.5, 0.3, "poof")
 			p.queue_free()
 
 

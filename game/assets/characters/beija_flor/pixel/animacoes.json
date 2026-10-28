@@ -140,6 +140,12 @@
     "fator": 1,
     "impacto": 3
   },
+  "skate": {
+    "quadros": 2,
+    "fator": 1,
+    "impacto": 1,
+    "largura": 64
+  },
   "tonto": {
     "quadros": 4,
     "fator": 1,

@@ -114,9 +114,6 @@ func _trap() -> void:
 
 
 func _poof() -> void:
-	var o := owner_fighter
-	if o != null and is_instance_valid(o) and o.move_fx != null:
-		o.move_fx.play_at("fx_poof", global_position, 2.0, 0.35, "poof")
 	queue_free()
 
 

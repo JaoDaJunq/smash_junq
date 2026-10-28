@@ -2,9 +2,14 @@ class_name SkateVoador
 extends Projectile
 ## Skate do Beija (especial para o lado): segue sozinho como projétil. Rola rente ao
 ## chão e, quando o chão acaba (borda do palco), cai e some. Lançado no ar, voa reto.
-## Desenhado por código (a arte não tem folha própria do skate).
+## Arte: assets/characters/beija_flor/pixel/skate.png (2 quadros, mesmo skate do parado, 31 px).
 
 const FLOOR_PROBE := 70.0
+const SHEET := "res://assets/characters/beija_flor/pixel/skate.png"
+const PX := 2.0   # mesma escala de pixel do lutador
+
+var _tex: Texture2D
+var _n := 2
 
 ## Segue rente ao chão: perde o chão na borda e então cai.
 var needs_floor := true
@@ -27,6 +32,10 @@ static func launch(owner_f: Fighter, attack_data: AttackData, at: Vector2, dir: 
 	p.add_to_group("projectiles")
 	p.add_to_group("skates")
 	p.z_index = 3
+	p.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	if ResourceLoader.exists(SHEET):
+		p._tex = load(SHEET)
+		p._n = Projectile.strip_frames(p._tex)
 	owner_f.get_parent().add_child(p)
 	p.global_position = at
 	return p
@@ -49,21 +58,14 @@ func _floor_below() -> bool:
 
 
 func _draw() -> void:
+	if _tex == null:
+		return
 	var flip := -1.0 if velocity.x < 0.0 else 1.0
 	var tilt := 0.0 if needs_floor else sin(_spin * 14.0) * 0.25
 	draw_set_transform(Vector2.ZERO, tilt * flip, Vector2(flip, 1.0))
-	var ink := Color("2a0f12")
-	# shape (amarelo, pontas levantadas), trucks e rodinhas
-	draw_rect(Rect2(-24, -4, 48, 8), ink)
-	draw_rect(Rect2(-22, -3, 44, 5), Color("f2b52a"))
-	draw_rect(Rect2(-22, 0, 44, 2), Color("c98a1a"))
-	draw_rect(Rect2(-27, -7, 7, 5), ink)
-	draw_rect(Rect2(-26, -6, 5, 3), Color("f2b52a"))
-	draw_rect(Rect2(20, -7, 7, 5), ink)
-	draw_rect(Rect2(21, -6, 5, 3), Color("f2b52a"))
-	for x in [-14.0, 14.0]:
-		draw_rect(Rect2(x - 3, 4, 6, 3), Color("6b6b78"))
-		draw_circle(Vector2(x, 9), 5.0, ink)
-		draw_circle(Vector2(x, 9), 3.5, Color("fff4d6"))
-		draw_circle(Vector2(x, 9), 1.2, Color("c98a1a"))
+	var w := float(_tex.get_width()) / float(_n)
+	var h := float(_tex.get_height())
+	var f := int(_spin * 12.0) % maxi(1, _n)   # rodinhas girando
+	var size := Vector2(w, h) * PX
+	draw_texture_rect_region(_tex, Rect2(-size * 0.5, size), Rect2(f * w, 0, w, h))
 	draw_set_transform(Vector2.ZERO)

@@ -82,8 +82,6 @@ func _serve(frame: int) -> void:
 		if _ball.global_position.distance_to(hand) <= SPIKE_RANGE:
 			_ball.knock(self, _spike_vector() * SPIKE_SPEED, true)
 			_spike = false
-			if move_fx != null:
-				move_fx.play_at("fx_poof", _ball.global_position, 2.0, 0.3, "poof")
 
 
 ## Direção da cortada: a alavanca; sem alavanca, para frente e um pouco para baixo.
@@ -106,8 +104,6 @@ func _reflect() -> void:
 			p.return_after = -1.0
 			p.lifetime = maxf(p.lifetime, 1.0)
 			p.owner_fighter = self
-			if move_fx != null:
-				move_fx.play_at("fx_poof", p.global_position, 1.5, 0.25, "poof")
 
 
 ## Levantada e cortada: sobe alto; Especial/Ataque no caminho pula para a cravada.
@@ -143,8 +139,6 @@ func _dive(frame: int) -> void:
 		var b := _ball_near(global_position + Vector2(60.0 * facing, 30.0), LIFT_RANGE)
 		if b != null:
 			b.knock(self, Vector2(facing * 180.0, -1000.0), false)
-			if move_fx != null:
-				move_fx.play_at("fx_poof", b.global_position, 2.0, 0.3, "poof")
 
 
 ## A bola de vôlei mais perto de um ponto (qualquer dono), se estiver dentro do alcance.

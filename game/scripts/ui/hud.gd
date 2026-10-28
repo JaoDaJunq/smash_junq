@@ -215,6 +215,13 @@ func _build_panel(pid: String, fighter: Fighter) -> Control:
 	name_label.clip_text = true
 	name_label.custom_minimum_size = Vector2(NAME_W - tag.custom_minimum_size.x - 8, 0)
 	top.add_child(name_label)
+	# nome comprido (ex.: SEU PREGUIÇOSO) diminui a fonte até caber, em vez de ser cortado
+	var w := name_label.custom_minimum_size.x
+	var font: Font = name_label.get_theme_font("font")
+	var fs := 22
+	while fs > 14 and font.get_string_size(name_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w:
+		fs -= 1
+	name_label.add_theme_font_size_override("font_size", fs)
 
 	var damage := Label.new()
 	damage.theme_type_variation = "DamageLabel"

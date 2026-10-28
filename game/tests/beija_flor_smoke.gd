@@ -198,6 +198,7 @@ func _manobra() -> void:
 			skate = s[0]
 			break
 	_check("Manobra: o skate sai do Beija", skate != null and skate.owner_fighter == me, str(skate))
+	_check("Manobra: o skate usa a folha de arte (skate.png), não desenho por código", skate != null and skate.get("_tex") != null, "")
 	_check("Manobra: Beija andou de skate", me.global_position.x > x0 + 60.0, "%.0f px" % (me.global_position.x - x0))
 	var sx := skate.global_position.x if skate != null else 0.0
 	await _frames(20)

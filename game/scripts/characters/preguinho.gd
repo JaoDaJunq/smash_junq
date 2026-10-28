@@ -38,7 +38,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	_swap_pop = maxf(_swap_pop - delta * 4.0, 0.0)
+	_swap_pop = maxf(_swap_pop - delta * 1.5, 0.0)
 	super(delta)
 
 
@@ -200,9 +200,9 @@ func _nail() -> void:
 
 func _draw() -> void:
 	super()
-	# ferramenta da vez em cima da cabeça (pula quando troca)
-	if _icons != null:
-		var s := 38.0 * (1.0 + 0.35 * _swap_pop)
+	# ferramenta nova aparece por um instante em cima da cabeça SÓ quando troca
+	# (a ferramenta de verdade já está na mão, nas folhas _chave/_furadeira)
+	if _icons != null and _swap_pop > 0.01:
+		var s := 32.0 * (1.0 + 0.35 * _swap_pop)
 		var c := Vector2(0.0, -HEIGHT * 0.5 - 86.0)
-		draw_circle(c, s * 0.56, Color(0.16, 0.06, 0.07, 0.75))
-		draw_texture_rect_region(_icons, Rect2(c - Vector2(s, s) * 0.5, Vector2(s, s)), Rect2(tool * 64, 0, 64, 64))
+		draw_texture_rect_region(_icons, Rect2(c - Vector2(s, s) * 0.5, Vector2(s, s)), Rect2(tool * 64, 0, 64, 64), Color(1, 1, 1, _swap_pop))

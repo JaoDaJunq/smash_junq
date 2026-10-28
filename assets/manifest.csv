@@ -800,3 +800,8 @@ ourico_fx_espinhos_arrepiados,efeito,espinhos_arrepiados,OpenAI ImageGen com con
 ourico_fx_microfonia,efeito,microfonia,OpenAI ImageGen com conceito e referencias aprovadas,art/pixel/ourico/fx_microfonia.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
 ourico_fx_stage_dive,efeito,stage_dive,OpenAI ImageGen com conceito e referencias aprovadas,art/pixel/ourico/fx_stage_dive.png,1536x1024,proprio,gerado por OpenAI ImageGen,2026-10-28,candidato
 beija_skate,efeito,skate_beija,ChatGPT ImageGen + arte-final em pixel,art/pixel/beija_flor/skate.png,1536x1024,proprio,OpenAI ImageGen com referencias do projeto,2026-10-28,candidato
+beija_flor_especial_lado,personagem,animacao_especial_lado,art/prompts/pedidos/beija_flor/todos.md,art/pixel/beija_flor/especial_lado.png,1536x1024,proprio,gerado por OpenAI ImageGen com referencias do projeto,2026-10-28,candidato
+beija_flor_golpe_cima,personagem,animacao_golpe_cima,art/prompts/pedidos/beija_flor/todos.md,art/pixel/beija_flor/golpe_cima.png,1536x1024,proprio,gerado por OpenAI ImageGen com referencias do projeto,2026-10-28,candidato
+beija_flor_golpe_frente,personagem,animacao_golpe_frente,art/prompts/pedidos/beija_flor/todos.md,art/pixel/beija_flor/golpe_frente.png,1536x1024,proprio,gerado por OpenAI ImageGen com referencias do projeto,2026-10-28,candidato
+beija_flor_jab_c,personagem,animacao_jab_c,art/prompts/pedidos/beija_flor/todos.md,art/pixel/beija_flor/jab_c.png,1536x1024,proprio,gerado por OpenAI ImageGen com referencias do projeto,2026-10-28,candidato
+beija_flor_transicoes_a,personagem,animacao_transicoes_a,art/prompts/pedidos/beija_flor/todos.md,art/pixel/beija_flor/transicoes_a.png,1536x1024,proprio,gerado por OpenAI ImageGen com referencias do projeto,2026-10-28,candidato

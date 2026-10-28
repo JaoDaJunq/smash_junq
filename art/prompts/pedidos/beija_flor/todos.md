@@ -1014,7 +1014,7 @@ Cores estimadas visualmente do conceito aprovado e do candidato. O candidato ain
 ### `skate.png` (2 quadros)
 
 ```text
-Objeto: o SKATE do Beija (shape colorido como no concept, rodinhas amarelas), visto de lado, uns 20 pixels: 1) skate · 2) skate com rodinhas girando. 2 quadros.
+Objeto: o SKATE do Beija (shape e cores como em parado.png, rodinhas amarelas), visto de lado, exatamente 31 pixels lógicos de comprimento (248 px na folha ampliada 8×) e cerca de 5 pixels lógicos de altura com as rodas: 1) skate · 2) igual com as rodinhas girando. 2 quadros.
 
 Regras de EFEITO: imagem 1536x1024, grade 3x2, cada célula 512x512 com UM quadro de 64x64 pixels ampliado 8x (cada pixel vira um quadrado de 8x8), quadros na ordem da esquerda para a direita, de cima para baixo, células que sobrarem só com fundo. Fundo magenta chapado #FF00FF (NÃO use magenta nem rosa-choque no efeito). SÓ o efeito/objeto, SEM personagem, centralizado na célula, com folga; nada atravessa a célula vizinha. Pixel art sem anti-aliasing e sem brilho suave/degradê: blocos chapados de 2-3 tons, contorno 1 px #2A0F12 nas peças maiores (partículas pequenas podem ficar sem contorno). Mesmo estilo de pixel do jogo (anexe art/pixel/juba/fx_folhas.png). Sem texto, letras ou números.
 ```
