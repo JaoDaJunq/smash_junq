@@ -71,6 +71,14 @@ func _selection() -> void:
 	add_child(s)
 	await _frames(30)
 	await _shot("selecao_inicio")
+	# navegação: o cursor pula os "?" (Juba -> direita -> Berrante -> baixo -> Capivas)
+	s._move("p1", Vector2i.RIGHT)
+	await _frames(20)
+	await _shot("selecao_nav_1_direita_pula")
+	s._move("p1", Vector2i.DOWN)
+	s._move("p2", Vector2i.DOWN)
+	await _frames(20)
+	await _shot("selecao_nav_2_baixo_pula")
 	# cada jogável: P1 nele, P2 no próximo
 	for k in ids.size():
 		s._set_cursor("p1", Roster.cell_of(ids[k]))

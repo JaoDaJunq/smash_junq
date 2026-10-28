@@ -26,6 +26,7 @@ var _rows: Array[Array] = []   # linhas de botões navegáveis (grade + rodapé)
 
 
 func _ready() -> void:
+	scrim = true
 	var col := build_column("Controles")
 	col.add_theme_constant_override("separation", 12)
 	grid = GridContainer.new()

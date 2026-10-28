@@ -28,6 +28,9 @@ var _content: Control
 var _intro_tween: Tween
 ## Quando true, mudar o foco não toca som (foco inicial da tela).
 var _silent_focus := false
+## Telas de painel (opções, como jogar, controles): camada escura extra sobre o
+## fundo pintado. Defina antes de build_column(). O menu principal não usa.
+var scrim := false
 
 
 static func theme_shared() -> Theme:
@@ -75,7 +78,7 @@ func build_column(title: String, subtitle := "", dim_background := false, title_
 ## ela, o degradê vertical do anoitecer.
 func _make_backdrop() -> Control:
 	if UiArt.tex(UiArt.MENU_BG) != null:
-		return UiArt.backdrop(0.55)
+		return UiArt.backdrop(0.55, true, scrim)
 	var grad := Gradient.new()
 	grad.set_color(0, BG_TOP)
 	grad.set_color(1, BG_BOTTOM)

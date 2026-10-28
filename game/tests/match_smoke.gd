@@ -98,11 +98,25 @@ func _test_menus() -> void:
 	_check("Seleção começa com Juba e Seu Capivas", sel.choice["p1"] == 0 and sel.choice["p2"] == 1, str(sel.choice))
 	_check("Grade mostra todos os 24 do elenco", sel.tiles.size() == 24, str(sel.tiles.size()))
 	await _tap("p1_right")
-	_check("p1_right anda para um \"?\" (em breve)", sel.choice["p1"] == -1 and sel.cursor["p1"] == Vector2i(1, 0), str(sel.cursor))
+	_check("p1_right pula o \"?\" e chega no Berrante", sel.choice["p1"] == 11 and sel.cursor["p1"] == Vector2i(2, 0), str(sel.cursor))
+	await _tap("p1_left")
+	await _tap("p1_left")
+	_check("p1_left dá a volta pulando os \"?\" (Berrante -> Juba -> Berrante)", sel.choice["p1"] == 11, str(sel.cursor))
+	# \"?\" à força (mouse/teste): não confirma
+	sel._set_cursor("p1", Vector2i(1, 0))
+	sel._refresh()
 	await _tap("p1_attack")
 	_check("\"?\" não confirma", not sel.locked["p1"], str(sel.locked))
+	sel._set_cursor("p1", Vector2i(2, 0))
 	await _tap("p1_down")
-	_check("p1_down chega no Seu Capivas", sel.choice["p1"] == 1, str(sel.choice))
+	_check("p1_down pula o \"?\" de baixo e chega no Seu Capivas (coluna mais perto)", sel.choice["p1"] == 1 and sel.cursor["p1"] == Vector2i(1, 1), str(sel.cursor))
+	var empty_hits := 0
+	var probe := Vector2i.ZERO
+	for i in 40:
+		probe = sel.next_cell(probe, [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP][i % 4])
+		if not sel.cell_playable(probe):
+			empty_hits += 1
+	_check("Navegação nunca para num \"?\"", empty_hits == 0, str(empty_hits))
 	await _tap("p2_left")
 	await _tap("p2_up")
 	_check("P2 anda pela grade até o Juba", sel.choice["p2"] == 0, str(sel.choice))

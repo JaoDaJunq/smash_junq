@@ -41,6 +41,7 @@ var scroll: ScrollContainer
 
 
 func _ready() -> void:
+	scrim = true
 	var col := build_column("Como jogar")
 	scroll = ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
