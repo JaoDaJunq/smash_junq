@@ -1,30 +1,33 @@
 extends Node
 ## Sons do jogo (autoload "Sfx"). Toca efeitos por nome de evento, com leve
-## variação de tom para não cansar o ouvido. Arquivos em assets/sfx (Kenney, CC0).
+## variação de tom para não cansar o ouvido. Arquivos em assets/sfx: golpes,
+## escudo, KO e menu são sintetizados pelo projeto (tools/sintese_golpes.py);
+## pulo, pouso, corrida e contagem são Kenney (CC0).
 ##   Sfx.play("hit_heavy")      Sfx.play("ui_move", -6.0)
 
 ## Evento -> lista de arquivos (um é sorteado a cada vez).
 const SOUNDS := {
-	"hit_light": ["impactPunch_medium_000", "impactPunch_medium_001", "impactPunch_medium_002"],
-	"hit_heavy": ["impactPunch_heavy_000", "impactPunch_heavy_001", "impactPunch_heavy_002"],
+	"hit_light": ["golpe_leve_1", "golpe_leve_2", "golpe_leve_3"],
+	"hit_medium": ["golpe_medio_1", "golpe_medio_2", "golpe_medio_3"],
+	"hit_heavy": ["golpe_forte_1", "golpe_forte_2", "golpe_forte_3"],
 	"jump": ["impactSoft_medium_000", "impactSoft_medium_001"],
 	"land": ["impactSoft_heavy_000"],
 	"dash": ["footstep_concrete_000", "footstep_concrete_001"],
-	"shield_hit": ["impactMetal_light_000", "impactMetal_light_001"],
-	"shield_break": ["impactGlass_heavy_000"],
-	"ko": ["impactPlate_heavy_000"],
+	"shield_hit": ["escudo_bolha"],
+	"shield_break": ["escudo_quebra"],
+	"ko": ["golpe_ko_1", "golpe_ko_2", "golpe_ko_3"],
 	"ko_ring": ["impactBell_heavy_000"],
-	"ui_move": ["select_001", "select_002"],
-	"ui_confirm": ["confirmation_001"],
-	"ui_back": ["back_001"],
+	"ui_move": ["menu_mover"],
+	"ui_confirm": ["menu_confirmar"],
+	"ui_back": ["menu_voltar"],
 	"countdown": ["tick_001"],
 	"fight": ["confirmation_004"],
 	"match_end": ["bong_001"],
 }
 ## Volume base por evento (dB).
-const VOLUME := {"hit_light": -4.0, "hit_heavy": 0.0, "jump": -14.0, "land": -12.0, "dash": -14.0,
-	"shield_hit": -6.0, "shield_break": -2.0, "ko": 0.0, "ko_ring": -6.0, "ui_move": -10.0,
-	"ui_confirm": -6.0, "ui_back": -8.0, "countdown": -4.0, "fight": -2.0, "match_end": -2.0}
+const VOLUME := {"hit_light": -4.0, "hit_medium": -2.0, "hit_heavy": 0.0, "jump": -14.0, "land": -12.0,
+	"dash": -14.0, "shield_hit": -9.0, "shield_break": -6.0, "ko": -3.0, "ko_ring": -9.0, "ui_move": -10.0,
+	"ui_confirm": -10.0, "ui_back": -8.0, "countdown": -4.0, "fight": -2.0, "match_end": -2.0}
 const VOICES := 12
 
 ## Desliga todos os sons (útil em testes).
