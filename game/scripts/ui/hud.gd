@@ -127,8 +127,8 @@ func _ready() -> void:
 ## Monta os painéis. fighters: player_id -> Fighter.
 func setup(fighters: Dictionary, target: int) -> void:
 	ko_target = target
-	# Luta-espelho: P2 com o mesmo lutador do P1 ganha a paleta trocada (sprite,
-	# retrato e vidas), para os dois não se confundirem.
+	# Luta-espelho: apenas o sprite da luta ganha a cor 2. Retrato e vidas
+	# preservam as cores originais.
 	mirror = fighters.has("p1") and fighters.has("p2") \
 		and Espelho.is_mirror(UiArt.char_index_of(fighters["p1"]), UiArt.char_index_of(fighters["p2"]))
 	if mirror and not Espelho.is_applied(fighters["p2"]):
@@ -229,11 +229,6 @@ func _build_panel(pid: String, fighter: Fighter) -> Control:
 	var head: Texture2D = UiArt.portrait(String(Game.CHARACTERS[idx].get("id", ""))) if idx >= 0 else null
 	lives.configure(ko_target, fighter.body_color.lightened(0.15), head)
 	v.add_child(lives)
-	if mirror and pid == "p2":
-		Espelho.set_on(lives, true)
-		if portrait != null:
-			Espelho.set_on(portrait.get_node("Retrato") as CanvasItem, true)
-
 	panels[pid] = {"name": name_label, "tag": tag, "damage": damage, "lives": lives, "fighter": fighter,
 		"shown": 0.0, "tweens": [], "portrait": portrait, "box": box}
 	if not fighter.damage_changed.is_connected(_on_damage_changed.bind(pid)):

@@ -1,9 +1,7 @@
 class_name Espelho
 extends RefCounted
-## Luta-espelho: quando P1 e P2 escolhem o MESMO lutador, o P2 ganha a paleta
-## trocada (shaders/paleta_espelho.gdshader: matiz +150°, um pouco mais escuro,
-## contorno preservado) no sprite da luta, no retrato/vidas do HUD e na tela de
-## escolha, para os dois não se confundirem.
+## Luta-espelho: quando P1 e P2 escolhem o MESMO lutador, só o sprite da luta
+## do P2 ganha a "cor 2" (cores 15% mais escuras e contorno na cor do jogador).
 
 const SHADER := preload("res://shaders/paleta_espelho.gdshader")
 const PIXEL_SHADER := "res://shaders/pixel_nitido.gdshader"
@@ -19,6 +17,7 @@ static func material(nitido := false) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = SHADER
 	m.set_shader_parameter("nitido", nitido)
+	m.set_shader_parameter("outline_color", Game.PLAYER_COLORS["p2"])
 	return m
 
 
@@ -35,15 +34,11 @@ static func apply_fighter(f: Node) -> int:
 
 static func _apply_tree(n: Node) -> int:
 	var changed := 0
-	if n is CanvasItem:
-		var ci := n as CanvasItem
-		var sm := ci.material as ShaderMaterial
-		if sm != null and sm.shader != null and sm.shader.resource_path == PIXEL_SHADER:
-			ci.material = material(true)
-			changed += 1
-		elif ci.material == null and (n is Sprite2D or n is Polygon2D or n is AnimatedSprite2D):
-			ci.material = material(false)
-			changed += 1
+	# O shader fica exclusivamente no quadro animado do sprite de luta. Assim
+	# brilhos, roupa, retratos e arte pintada não ganham uma camada ciano.
+	if n is Sprite2D and n.name == "Quadro":
+		(n as CanvasItem).material = material(true)
+		changed += 1
 	for c in n.get_children():
 		changed += _apply_tree(c)
 	return changed

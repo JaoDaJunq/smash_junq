@@ -6,7 +6,7 @@ Mecânicas que o elenco já tem, para não repetir: projétil (vários), bumeran
 
 | id | Nome | Bicho · grupo · tipo | Concept | Altura no sprite |
 |---|---|---|---|---|
-| `tamandua` | **Bandeira** | tamanduá-bandeira · Cascudos · Forte | 1 dedetizador | ~56 px (cauda grande) |
+| `tamandua` | **Bandeira** | tamanduá-bandeira · Garrudos · Forte | 1 dedetizador | ~56 px (cauda grande) |
 | `beija_flor` | **Beija** | beija-flor · Aves · Rápido | 4 skatista | ~40 px (o menor do elenco) |
 | `ourico` | **Espeto** | ouriço-cacheiro · Roedores · Forte | 1 roqueiro de garagem | ~46 px |
 | `mourisco` | **Mourisco** | gato-mourisco · Felinos · Versátil | 1 vôlei de praia | ~50 px |

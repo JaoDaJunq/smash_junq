@@ -118,6 +118,7 @@ func _build_fighters() -> void:
 
 ## Zera o placar e os lutadores e começa a contagem. Usado na entrada e na revanche.
 func start_match() -> void:
+	hud.visible = true
 	get_tree().call_group("match_cleanup", "queue_free")  # projéteis etc. soltos
 	kos = {"p1": 0, "p2": 0}
 	sudden_death = false
@@ -340,6 +341,7 @@ func end_match(winner: String) -> void:
 	if phase != Phase.ENDED:
 		return  # reiniciou nesse meio tempo
 	hud.hide_banner()
+	hud.visible = false  # a tela de resultado mostra os números; o HUD por trás era coberto pela arte
 	results.show_result(Game.last_result)
 
 

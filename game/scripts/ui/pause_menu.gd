@@ -149,6 +149,8 @@ func open() -> void:
 		return
 	Sfx.play("ui_confirm", -3.0)
 	refresh_controls()
+	if match_manager != null and match_manager.get("hud") != null:
+		match_manager.hud.hide_banner()  # o "LUTEM!" da contagem não fica fantasma atrás da pausa
 	visible = true
 	get_tree().paused = true
 	focus_first()

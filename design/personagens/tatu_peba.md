@@ -7,7 +7,7 @@
 | **id** (pasta) | `tatu_peba` |
 | **Nome** | **Seu Peba** |
 | **Bicho** | Tatu-peba (*Euphractus sexcinctus*), o tatu cavador do Cerrado e da Caatinga. Também é chamado de tatu-galinha no nome popular da ficha |
-| **Grupo · Tipo** | Cascudos · **Versátil** |
+| **Grupo · Tipo** | Garrudos · **Versátil** |
 | **Profissão / papel** | **Sanfoneiro de forró pé-de-serra**, dono do forró de sábado no sertão. No torneio, ele entra tocando e luta no ritmo do xote |
 | **Personalidade** | Bonachão, trabalhador e piadista de obra, sempre com uma desculpa ("o cimento não secou"). Tique: confere a marmita entre um round e outro e assobia para quem passa |
 | **Acessório de assinatura** | **Chapéu de couro com estrela**, **gibão de couro com franjas**, alpercata e a **sanfona** vermelha, que vira arma |

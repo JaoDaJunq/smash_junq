@@ -1,13 +1,12 @@
-// Paleta trocada do ESPELHO (P1 e P2 com o mesmo lutador): gira a matiz
-// (+150° por padrão) e escurece de leve as cores do P2, deixando o contorno
-// escuro e os pretos como estão (só pixels com brilho acima de ~0,2 mudam).
+// Cor 2 do ESPELHO (P1 e P2 com o mesmo lutador): as cores do P2 ficam as
+// mesmas (só um pouco mais escuras) e o CONTORNO escuro vira a cor do P2.
+// Antes girava a matiz do corpo todo e parecia bug (revisão 28/10).
 // nitido = true repete o pixel nítido do pixel_nitido.gdshader (sprite da luta,
 // filtro linear); false lê a textura direto (retratos e artes da interface).
 shader_type canvas_item;
 
-uniform float hue_shift = 0.4167;   // fração da volta (150 / 360)
-uniform float darken = 0.86;        // multiplica o brilho das cores trocadas
-uniform float sat_boost = 1.0;
+uniform vec4 outline_color : source_color = vec4(0.36, 0.62, 1.0, 1.0);
+uniform float darken = 0.85;        // multiplica o brilho das cores do corpo
 uniform bool nitido = true;
 
 varying vec4 tint;  // cor do vértice (flash de dano, transparência)
@@ -44,9 +43,8 @@ void fragment() {
 		c = texture(TEXTURE, UV);
 	}
 	vec3 hsv = rgb2hsv(c.rgb);
-	vec3 swapped = hsv2rgb(vec3(fract(hsv.x + hue_shift), clamp(hsv.y * sat_boost, 0.0, 1.0), hsv.z * darken));
-	// contorno escuro e pretos ficam; cinzas/brancos quase sem cor também
-	float keep = 1.0 - smoothstep(0.16, 0.30, hsv.z);
-	c.rgb = mix(swapped, c.rgb, keep);
+	// contorno escuro (#2A0F12 e pretos) vira a cor do P2; o resto escurece de leve
+	float is_line = 1.0 - smoothstep(0.10, 0.18, hsv.z);
+	c.rgb = mix(c.rgb * darken, outline_color.rgb, is_line);
 	COLOR = c * tint;
 }

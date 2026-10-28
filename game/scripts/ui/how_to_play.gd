@@ -9,8 +9,8 @@ extends MenuScreen
 ## Esquerda/direita (ou clique na aba) troca de aba. Cabe em 1920x1080; o
 ## ScrollContainer da segunda aba só rola se algo crescer além do espaço.
 
-const CELL_SIZE := 24
-const BODY_SIZE := 22
+const CELL_SIZE := 26
+const BODY_SIZE := 24
 const SCROLL_STEP := 160
 const SCROLL_HEIGHT := 700.0
 const CONTENT_WIDTH := 1580.0
@@ -23,7 +23,7 @@ const CARDS: Array[Array] = [
 	["Andar e pular", ["andar", "pulo"], "Pula de novo no ar", ["left", "right", "jump"]],
 	["Atacar", ["jab", "golpe_frente", "golpe_cima"], "A direção muda o golpe", ["attack"]],
 	["Especial", ["especial_lado", "especial_neutro"], "Cada bicho tem o seu", ["special"]],
-	["Escudo e escape", ["defesa_esquiva"], "Defende e escapa rolando", ["shield"]],
+	["Escudo / escape", ["defesa_esquiva"], "Defende e escapa rolando", ["shield"]],
 ]
 
 ## Ação e as ações do mapa que ela mostra (as teclas vêm de Opções → Controles).
@@ -32,7 +32,7 @@ const CONTROLS: Array[Array] = [
 	["Pular", ["jump"]],
 	["Ataque", ["attack"]],
 	["Especial", ["special"]],
-	["Defesa / esquiva", ["shield"]],
+	["Escudo / escape", ["shield"]],
 	["Agarrão", ["grab"]],
 	["Pausa", ["pause"]],
 ]
@@ -73,15 +73,27 @@ func _ready() -> void:
 	scroll.custom_minimum_size = Vector2(CONTENT_WIDTH + 40.0, SCROLL_HEIGHT)
 	col.add_child(scroll)
 	content = VBoxContainer.new()
-	content.add_theme_constant_override("separation", 24)
+	content.add_theme_constant_override("separation", 10)
 	content.custom_minimum_size.x = CONTENT_WIDTH
 	scroll.add_child(content)
 	content.add_child(_build_table())
+	var blocks_panel := PanelContainer.new()
+	var blocks_style := StyleBoxFlat.new()
+	blocks_style.bg_color = Color(0.06, 0.07, 0.11, 0.94)
+	blocks_style.border_color = Color(0.204, 0.235, 0.345)
+	blocks_style.set_border_width_all(2)
+	blocks_style.set_corner_radius_all(12)
+	blocks_style.content_margin_left = 24.0
+	blocks_style.content_margin_right = 24.0
+	blocks_style.content_margin_top = 8.0
+	blocks_style.content_margin_bottom = 8.0
+	blocks_panel.add_theme_stylebox_override("panel", blocks_style)
+	content.add_child(blocks_panel)
 	var blocks := HBoxContainer.new()
-	blocks.add_theme_constant_override("separation", 40)
+	blocks.add_theme_constant_override("separation", 30)
+	blocks_panel.add_child(blocks)
 	blocks.add_child(_build_block("Regras", RULES))
 	blocks.add_child(_build_block("Movimento e dicas", TIPS))
-	content.add_child(blocks)
 	var back := add_button(col, "Voltar", func() -> void: Game.go_menu(), true)
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	show_tab(0)
@@ -240,13 +252,13 @@ func _build_table() -> Control:
 	style.set_corner_radius_all(12)
 	style.content_margin_left = 30.0
 	style.content_margin_right = 30.0
-	style.content_margin_top = 18.0
-	style.content_margin_bottom = 18.0
+	style.content_margin_top = 8.0
+	style.content_margin_bottom = 8.0
 	panel.add_theme_stylebox_override("panel", style)
 	table = GridContainer.new()
 	table.columns = 4
-	table.add_theme_constant_override("h_separation", 32)
-	table.add_theme_constant_override("v_separation", 8)
+	table.add_theme_constant_override("h_separation", 22)
+	table.add_theme_constant_override("v_separation", 2)
 	panel.add_child(table)
 	var heads := ["Ação", "Jogador 1 (teclado)", "Jogador 2 (teclado)", "Gamepad"]
 	var colors := [ACCENT, Game.PLAYER_COLORS["p1"], Game.PLAYER_COLORS["p2"], GOOD]

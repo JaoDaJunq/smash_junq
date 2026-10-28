@@ -28,7 +28,8 @@ var _confetti: CPUParticles2D
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	var dim := ColorRect.new()
-	dim.color = Color(0.04, 0.02, 0.06, 0.78)
+	# Fundo opaco: esconde os lutadores e as etiquetas da arena que continua viva por baixo.
+	dim.color = Color(0.04, 0.02, 0.06, 1.0)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
@@ -237,18 +238,20 @@ func show_result(result: Dictionary) -> void:
 	var labels: Dictionary = result["labels"]
 	kos_label.text = "%s  %d   x   %d  %s" % [labels["p1"], kos["p1"], kos["p2"], labels["p2"]]
 	var stats: Dictionary = result.get("stats", {})
-	# Luta-espelho: o P2 aparece com a paleta trocada (retrato e, se venceu, a arte)
+	# Luta-espelho: arte e retratos mantêm as cores originais; a borda do cartão
+	# identifica discretamente o P2 com a cor 2.
 	var mirror := Espelho.is_mirror(_char_index(result, "p1"), _char_index(result, "p2"))
-	Espelho.set_on(_faces["p2"], mirror)
-	Espelho.set_on(_faces["p1"], false)
-	Espelho.set_on(_art, mirror and winner == "p2")
 	for pid in PLAYERS:
 		var i := _char_index(result, pid)
 		var pic: TextureRect = _faces[pid]
 		pic.texture = UiArt.portrait(String(Game.CHARACTERS[i].get("id", ""))) if i >= 0 else null
 		(pic.get_parent() as Control).modulate = Color.WHITE if pid == winner else Color(0.45, 0.45, 0.5)
 		var c: Dictionary = stat_cards[pid]
-		(c["card"] as PanelContainer).add_theme_stylebox_override("panel", _card_style(pid, pid == winner))
+		var card_style := _card_style(pid, pid == winner)
+		if mirror and pid == "p2":
+			card_style.border_color = Game.PLAYER_COLORS["p2"]
+			card_style.set_border_width_all(5)
+		(c["card"] as PanelContainer).add_theme_stylebox_override("panel", card_style)
 		(c["who"] as Label).text = String(labels[pid])
 		(c["fighter"] as Label).text = String(result["characters"][pid])
 		var st: Dictionary = stats.get(pid, {})

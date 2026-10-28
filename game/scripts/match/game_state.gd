@@ -115,7 +115,7 @@ de bico ninguém interrompe, aguenta o tranco e bate.",
 	{
 		"name": "Seu Preguiçoso",
 		"scene": "res://scenes/characters/seu_preguicoso.tscn",
-		"desc": "Bicho-preguiça fiscal da prefeitura. Lento e pesado: solta uma bolha de câmera lenta, pega carona nas costas dos outros e cura tomando cafezinho.",
+		"desc": "Bicho-preguiça fiscal da prefeitura. Lento e pesado: câmera lenta, carona e cafezinho que cura.",
 		"weight": "Pesado",
 		"id": "preguica",
 		"stats": {"Velocidade": 1, "Força": 4, "Peso": 5, "Volta ao palco": 2},

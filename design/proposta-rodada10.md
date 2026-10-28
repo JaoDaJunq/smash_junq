@@ -15,7 +15,7 @@
 | 🐆 Felinos | **Dona Onça** (onça-pintada) | Pesado | **Síndica do prédio**, de roupão, bobes e prancheta | **Multa!**: cada patada "multa" o adversário (um carimbo aparece nele). Na 3ª multa, o próximo golpe dela cobra tudo com juros: dano extra e lançamento enorme |
 | 🦜 Aves | **Tucão** (tucano) | Forte | **Narrador de futebol de várzea**, com fone e microfone | **Bico blindado**: os golpes de bico não são interrompidos por pancada (aguenta o tranco e bate mesmo assim). Ao tirar um KO, solta o "GOOOOL" com a música da torcida |
 | 🐊 Répteis | **Calango** (calango) | Rápido | **Vendedor ambulante de praia** ("olha o picolé!"), com isopor e chapéu de palha | **Rabo solto**: 1 vez por vida, um golpe que o lançaria longe só arranca o rabo dele (fica um rabo se mexendo no chão de isca) e ele escapa. O rabo volta depois de um tempo. **Tomar sol** parado acelera ele |
-| 🦥 Cascudos | **Seu Preguiçoso** (preguiça) | Pesado | **Fiscal da prefeitura** sonolento, com crachá e garrafa de café | **Moleza**: cria uma bolha de câmera lenta. Quem está dentro (inclusive projéteis) fica em câmera lenta, menos ele. Luta "meio dormindo": se ninguém bate, ele cochila e recupera dano devagar |
+| 🦥 Garrudos | **Seu Preguiçoso** (preguiça) | Pesado | **Fiscal da prefeitura** sonolento, com crachá e garrafa de café | **Moleza**: cria uma bolha de câmera lenta. Quem está dentro (inclusive projéteis) fica em câmera lenta, menos ele. Luta "meio dormindo": se ninguém bate, ele cochila e recupera dano devagar |
 
 ## Ideia de golpes (resumo; a ficha completa detalha)
 

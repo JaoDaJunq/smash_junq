@@ -88,13 +88,21 @@ func _ready() -> void:
 # --- Grade ---
 
 func _build_grid(root: Control, origin: Vector2) -> void:
+	# Os 4 cabeçalhos com o MESMO tamanho (o do mais largo), alinhados embaixo
+	var heads: Array[Label] = []
+	var common := LABEL_SIZE
 	for c in Roster.cols():
 		var h := make_label(Roster.TYPES[c].to_upper())
 		UiArt.outlined(h, LABEL_SIZE, UiArt.GOLD, 7)
 		h.position = origin + Vector2(GROUP_W + c * (TILE + GAP) - GAP * 0.5, -8)
 		h.size = Vector2(TILE + GAP, 36)
+		h.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 		UiArt.fit_size(h, LABEL_SIZE, TILE + GAP - 2, 22)
+		common = mini(common, h.get_theme_font_size("font_size"))
+		heads.append(h)
 		root.add_child(h)
+	for h in heads:
+		h.add_theme_font_size_override("font_size", common)
 	for r in Roster.rows():
 		var g: Dictionary = Roster.GROUPS[r]
 		var y := origin.y + 34 + r * (TILE + GAP)
@@ -204,8 +212,14 @@ func _build_side(pid: String, at: Vector2) -> Dictionary:
 	desc.add_theme_font_size_override("font_size", DESC_SIZE)
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	desc.custom_minimum_size = Vector2(460, 4 * 33)
-	v.add_child(desc)
+	desc.custom_minimum_size = Vector2(440, 4 * 33)
+	desc.size = desc.custom_minimum_size
+	desc.max_lines_visible = 4  # nunca empurra o painel para fora da tela
+	var desc_box := MarginContainer.new()  # margem interna: o texto não encosta na borda
+	desc_box.add_theme_constant_override("margin_left", 12)
+	desc_box.add_theme_constant_override("margin_right", 12)
+	desc_box.add_child(desc)
+	v.add_child(desc_box)
 	var bars := VBoxContainer.new()
 	bars.add_theme_constant_override("separation", 4)
 	bars.custom_minimum_size = Vector2(0, 4 * 30 + 3 * 4)
@@ -222,6 +236,7 @@ func _build_side(pid: String, at: Vector2) -> Dictionary:
 	confirm.custom_minimum_size = Vector2(260, 58)
 	confirm.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	UiArt.style_button(confirm, 26)
+	confirm.add_theme_color_override("font_disabled_color", Color(0.86, 0.82, 0.74))
 	setup_button_fx(confirm)
 	confirm.pressed.connect(func() -> void: _toggle_lock(pid))
 	v.add_child(confirm)
@@ -284,7 +299,7 @@ func _show_splash(pid: String, stage: Control, idx: int) -> void:
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	r.size = Vector2(w, h)
 	# um pouco puxado para o centro da tela, deixando o canto de fora pro sprite
-	var end := Vector2((STAGE.x - w) * 0.5 - outer * 46.0, 4)
+	var end := Vector2((STAGE.x - w) * 0.5 - outer * 90.0, 4)
 	r.position = end + Vector2(outer * 90.0, 0)
 	r.modulate.a = 0.0
 	stage.add_child(r)
@@ -576,6 +591,7 @@ func _refresh() -> void:
 		if idx >= 0:
 			var info: Dictionary = Game.CHARACTERS[idx]
 			p["desc"].text = UiArt.flat(info["desc"])
+			_fit_desc(p["desc"])
 			if p.get("bars_for", -2) != idx:
 				_fill_bars(p["bars"], info.get("stats", {}))
 				p["bars_for"] = idx
@@ -607,10 +623,33 @@ func _refresh() -> void:
 	_apply_mirror()
 
 
-## Os dois no mesmo lutador: o painel do P2 mostra a paleta trocada (a mesma
-## que ele terá na luta).
+## Os dois no mesmo lutador: identifica o P2 com um selo discreto. A arte e o
+## retrato preservam as cores originais; só o sprite da luta recebe a cor 2.
 func _apply_mirror() -> void:
 	var on := Espelho.is_mirror(choice["p1"], choice["p2"])
-	for c in (_panels["p2"]["stage"] as Control).get_children():
-		if c is UiArt.FighterIdle or c.has_meta("arte_lutador"):
-			Espelho.set_on(c as CanvasItem, on)
+	var stage: Control = _panels["p2"]["stage"]
+	var badge := stage.get_node_or_null("Cor2") as Label
+	if on and badge == null:
+		badge = make_label("COR 2")
+		badge.name = "Cor2"
+		UiArt.outlined(badge, 20, Game.PLAYER_COLORS["p2"].lightened(0.35), 5)
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		badge.position = Vector2(STAGE.x - 116, 8)
+		badge.size = Vector2(104, 30)
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		stage.add_child(badge)
+	elif badge != null:
+		badge.queue_free()
+
+
+## Descrição longa: diminui a fonte (até 22) até caber em 4 linhas.
+func _fit_desc(l: Label) -> void:
+	var fs := DESC_SIZE
+	l.add_theme_font_size_override("font_size", fs)
+	var font: Font = l.get_theme_font("font")
+	while fs > 22:
+		var h := font.get_multiline_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, 400.0, fs).y
+		if h <= 4 * font.get_height(fs) + 2:
+			break
+		fs -= 1
+		l.add_theme_font_size_override("font_size", fs)

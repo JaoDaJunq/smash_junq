@@ -204,7 +204,7 @@ func _process(delta: float) -> void:
 ## Alvo treme na pausa de impacto: só o DESENHO sai do lugar (a caixa de colisão
 ## não), HITSTOP_SHAKE px do mundo no 1º quadro caindo a 0, trocando de lado a
 ## cada quadro; de lado no chão, de cima para baixo no ar. Quem bateu não treme.
-const HITSTOP_SHAKE := 4.0
+const HITSTOP_SHAKE := 7.0
 
 
 func _hitstop_shake() -> Vector2:

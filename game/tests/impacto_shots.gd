@@ -55,8 +55,12 @@ func _start() -> void:
 
 ## Lutadores longe um do outro: a câmera tem de mostrar os dois e as bordas.
 func _zoom_shot(arena: int) -> void:
-	await _place(me, Vector2(-1300, -300), 1)
-	await _place(foe, Vector2(1300, -300), -1)
+	# Pontas DENTRO da zona de KO da arena (o Cerrado é menor: em ±1300 os dois
+	# morriam e o print mostrava o feixe de KO atravessando a tela).
+	var zone: Rect2 = m.ko_zone
+	var x := minf(1300.0, -zone.position.x - 120.0)
+	await _place(me, Vector2(-x, -300), 1)
+	await _place(foe, Vector2(x, -300), -1)
 	await _frames(25)
 	await RenderingServer.frame_post_draw
 	var img := get_viewport().get_texture().get_image()

@@ -77,10 +77,8 @@ func _physics_process(_delta: float) -> void:
 		return
 	for f in get_tree().get_nodes_in_group("fighters"):
 		var fighter := f as Fighter
-		if fighter.state == Fighter.State.HITSTUN and fighter.velocity.length() >= trail_launch:
-			var strength := clampf((fighter.velocity.length() - trail_launch) / 900.0, 0.0, 1.0)
-			_burst(TEX_SMOKE, fighter.global_position, 1, 0.5, 0.0, 10.0, 0.35 + strength * 0.35,
-				fighter.body_color.lerp(Color.WHITE, 0.5) * Color(1, 1, 1, 0.5), Vector2.ZERO, 0.0, -1)
+		# Sem nuvem desfocada: o rastro no golpe forte fica a cargo dos cortes
+		# pixelados do acerto, mantendo a leitura limpa durante o voo.
 
 
 # --- Acertos ---
@@ -123,7 +121,6 @@ func _on_hit(attacker: Node2D, data: AttackData, launch: Vector2, target: Fighte
 	add_child(spark)
 	_burst(TEX_TWINKLE, contact, 14 if heavy else 9, 0.4, 560.0 if heavy else 400.0, 50.0,
 		0.5, tint, dir, 0.0)
-	_pop(TEX_RING, contact, 1.8 if heavy else 1.2, 0.24, tint * Color(1, 1, 1, 0.85), 0.2)
 	if medium:
 		# corte na cor do jogador, em mistura normal (aditivo some no céu claro)
 		_pop(TEX_SLASH, contact, 1.4 if heavy else 0.9, 0.18, body.lerp(Color.WHITE, 0.2), 0.3 if heavy else 0.25, dir.angle(), false)

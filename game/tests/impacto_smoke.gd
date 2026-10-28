@@ -217,7 +217,7 @@ func _test_target_shake() -> void:
 	var first := offs[0] if not offs.is_empty() else Vector2.ZERO
 	var alternates := offs.size() >= 3 and signf(offs[0].x) != signf(offs[1].x) and offs[0].x != 0.0
 	var last := offs[offs.size() - 1] if not offs.is_empty() else Vector2.ONE
-	_check("Alvo treme na pausa: começa com 3-4 px do mundo", absf(first.x) * vis_foe.pixel_scale >= 3.0 and absf(first.x) * vis_foe.pixel_scale <= 4.0 and is_zero_approx(first.y),
+	_check("Alvo treme na pausa: começa com 6-8 px do mundo (revisão: 3-4 quase não aparecia)", absf(first.x) * vis_foe.pixel_scale >= 6.0 and absf(first.x) * vis_foe.pixel_scale <= 8.0 and is_zero_approx(first.y),
 		"desenho %s px nativos (base %s)" % [str(offs), str(base_foe)])
 	_check("Alvo treme na pausa: alterna de lado a cada quadro, no chão de lado", alternates, str(offs))
 	_check("Alvo treme na pausa: termina parado", last.is_zero_approx(), str(last))

@@ -7,7 +7,7 @@
 | **id** (pasta) | `preguica` |
 | **Nome** | **Seu Preguiçoso** |
 | **Bicho** | bicho-preguiça-de-três-dedos (*Bradypus variegatus*): pelo cinza-amarronzado e desgrenhado, a "máscara" escura em volta dos olhos que parece um sorriso eterno, três garras compridas em cada mão, movimentos lentíssimos |
-| **Grupo · Tipo** | Cascudos · **Pesado** |
+| **Grupo · Tipo** | Garrudos · **Pesado** |
 | **Profissão / papel** | **Fiscal da prefeitura** sonolento: fiscaliza obra, feira e calçada… quando está acordado |
 | **Personalidade** | Lerdo, gentil, cochila no meio da frase, mas quando acerta é uma pancada |
 | **Acessório de assinatura** | **Camisa bege com crachá, calça verde-oliva, botina, prancheta** e garrafa térmica de café |

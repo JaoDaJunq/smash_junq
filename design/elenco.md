@@ -65,7 +65,7 @@ Pedidos da Alice: a **arara-canga sambista** e a **marianinha-de-cabeça-amarela
 | Forte | **Sucuri** (sucuri) | Rainha dos agarrões, aperta e arremessa |
 | Versátil | **Seu Jabuti** (jabuti) | Velhinho sábio, se esconde no casco para defender |
 
-### 🦥 Cascudos (tatus, tamanduás e preguiças)
+### 🦥 Garrudos (tatus, tamanduás e preguiças; as garras enormes são o que os três têm em comum. Antes "Cascudos", renomeado em 28/10)
 | Tipo | Bicho | Conceito |
 |---|---|---|
 | Rápido | **Bolinha** (tatu-bola) | Vira bola e rola pelo palco |
