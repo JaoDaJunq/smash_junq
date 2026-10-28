@@ -24,6 +24,19 @@ Nada é "pronto" porque compilou. Cada tipo de mudança tem a sua prova, rodada 
 
 Todo número em relatório sai de um comando, colado junto. Sem comando, escrever "não medido".
 
+## Quem faz cada tarefa (aprovado pelo João em 28/10/2026)
+
+O limite do Claude é o recurso mais caro: Opus só onde precisa.
+
+| Tarefa | Quem |
+|---|---|
+| Código bem especificado (receita pronta, arquivos definidos): telas, som, efeitos, ajustes de números, testes novos, ferramentas Python | **Codex** (`gpt-6-luna`, high) ou subagente **Sonnet** |
+| Imagens | **Codex** |
+| Núcleo da luta (fighter.gd, combat, match_manager), investigar bug sem causa conhecida, juntar branches | **Opus** (Hermes) |
+| Revisão: o que os outros fizeram, prints, arte | **Opus** (Hermes) + revisor separado |
+
+Codex em tarefa de código: pode editar e rodar testes no worktree que recebeu, mas NÃO roda git; o Hermes revisa o diff, roda a bateria e commita.
+
 ## Trabalho em paralelo
 
 Subagentes trabalham em worktrees separados (`git worktree add`), cada um com a lista de arquivos que pode mexer combinada antes; o Hermes junta, roda a bateria de novo e só então sobe para main.
