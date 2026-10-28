@@ -236,6 +236,17 @@ func _test_normal_win_and_results() -> void:
 	await _start_fight()
 	var ended := []
 	m.match_ended.connect(func(w: String) -> void: ended.append(w))
+	# Acertos reais para as estatísticas do resultado: 2 jabs e 1 ftilt do P1, 1 dtilt do P2
+	var dano_p1 := 0.0
+	for mv in ["jab", "jab", "ftilt"]:
+		var d: AttackData = p1.moveset.move(mv)
+		p2.invincible_time = 0.0
+		p2.receive_hit(p1, d, 1)
+		dano_p1 += d.damage
+		await _frames(2)
+	p1.invincible_time = 0.0
+	p1.receive_hit(p2, p2.moveset.move("dtilt"), -1)
+	await _frames(2)
 	for i in 3:
 		_check("Placar parcial %d x 0: partida segue" % i, m.phase == MatchManager.Phase.FIGHT and ended.is_empty(), str(m.kos))
 		_teleport(p2, Vector2(1500, 0))
@@ -247,6 +258,11 @@ func _test_normal_win_and_results() -> void:
 	_check("Resultado aparece", m.results.visible, "")
 	_check("Resultado: vencedor", m.results.title_label.text == "Jogador 1 venceu!", m.results.title_label.text)
 	_check("Resultado: KOs de cada um", m.results.kos_label.text.contains("3") and m.results.kos_label.text.contains("0"), m.results.kos_label.text)
+	var st: Dictionary = Game.last_result.get("stats", {})
+	_check("Resultado: stats do P1 (dano somado, 3 KOs, golpe top = jab)", st.has("p1") and int(st["p1"]["dano"]) == roundi(dano_p1) and st["p1"]["kos"] == 3 and st["p1"]["golpe_top"] == "jab" and st["p1"]["golpe_top_acertos"] == 2, str(st.get("p1")))
+	_check("Resultado: stats do P2 (1 acerto de dtilt, 0 KO)", st.has("p2") and st["p2"]["acertos"] == 1 and st["p2"]["golpe_top"] == "dtilt" and st["p2"]["kos"] == 0, str(st.get("p2")))
+	_check("Resultado: nome legível do golpe na tela", (m.results.stat_cards["p1"]["golpe"] as Label).text.begins_with("Soco rápido"), (m.results.stat_cards["p1"]["golpe"] as Label).text)
+	_check("Resultado: dano causado na tela", (m.results.stat_cards["p1"]["dano"] as Label).text == "%d%%" % roundi(dano_p1), (m.results.stat_cards["p1"]["dano"] as Label).text)
 	_check("Resultado: não dá para pausar", not m.can_pause(), "")
 	await _wait(ResultsScreen.INPUT_LOCK + 0.1)
 	await _shot("match-resultado")

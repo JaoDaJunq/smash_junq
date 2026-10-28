@@ -182,6 +182,17 @@ func _results() -> void:
 		pairs.append([ids[7], ids[8], "p2"])
 	for pr in pairs:
 		var m := await _new_match(pr[0], pr[1])
+		# acertos de verdade para os números do resultado
+		var seq := {"p1": ["jab", "jab", "fair", "special_side", "jab", "dtilt"], "p2": ["fair", "fair", "utilt", "special_side"]}
+		for by in seq:
+			var atk: Fighter = m.fighters[by]
+			var vic: Fighter = m.fighters["p2" if by == "p1" else "p1"]
+			for mv in seq[by]:
+				var d: AttackData = atk.moveset.move(mv)
+				if d != null:
+					vic.invincible_time = 0.0
+					vic.receive_hit(atk, d, 1)
+					await _frames(2)
 		m.kos = {"p1": 3 if pr[2] == "p1" else 1, "p2": 3 if pr[2] == "p2" else 2}
 		m.end_match(pr[2])
 		await get_tree().create_timer(1.2).timeout

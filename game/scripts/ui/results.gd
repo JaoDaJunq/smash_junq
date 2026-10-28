@@ -1,8 +1,9 @@
 class_name ResultsScreen
 extends MenuScreen
 ## Tela de resultado: a arte de apresentação do vencedor entra grande pela
-## esquerda; à direita, faixa "Jogador N venceu!" na cor dele, o lutador, o
-## placar com os retratos dos dois (o perdedor apagado), Revanche e Menu.
+## esquerda (sem passar da coluna dos números); à direita, faixa "Jogador N
+## venceu!" na cor dele, o lutador, o placar e um cartão por jogador com retrato
+## (o perdedor apagado), dano causado, KOs e o golpe que mais acertou; Revanche e Menu.
 ## Confete verde-amarelo cai enquanto a tela está aberta.
 
 signal rematch_requested
@@ -19,6 +20,8 @@ var _ribbon: PanelContainer
 var _art: TextureRect
 var _art_tween: Tween
 var _faces := {}   # pid -> TextureRect
+## pid -> {card, who, fighter, dano, kos, golpe} (Labels do cartão de estatísticas)
+var stat_cards := {}
 var _confetti: CPUParticles2D
 
 
@@ -69,20 +72,20 @@ func _ready() -> void:
 	UiArt.outlined(detail_label, 40, UiArt.GOLD, 10)
 	col.add_child(detail_label)
 
-	var score := HBoxContainer.new()
-	score.alignment = BoxContainer.ALIGNMENT_CENTER
-	score.add_theme_constant_override("separation", 22)
-	col.add_child(score)
+	kos_label = make_label("")
+	kos_label.name = "Placar"
+	UiArt.outlined(kos_label, 34, UiArt.CREAM, 8)
+	col.add_child(kos_label)
+
+	var cards := HBoxContainer.new()
+	cards.alignment = BoxContainer.ALIGNMENT_CENTER
+	cards.add_theme_constant_override("separation", 24)
+	col.add_child(cards)
 	for pid in PLAYERS:
-		if pid == "p2":
-			kos_label = make_label("")
-			UiArt.outlined(kos_label, 34, UiArt.CREAM, 8)
-			kos_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			score.add_child(kos_label)
-		score.add_child(_face(pid))
+		cards.add_child(_stat_card(pid))
 
 	var gap := Control.new()
-	gap.custom_minimum_size = Vector2(0, 16)
+	gap.custom_minimum_size = Vector2(0, 4)
 	col.add_child(gap)
 	for entry in [["Revanche", func() -> void: rematch_requested.emit(), false],
 			["Menu", func() -> void: Game.go_menu(), true]]:
@@ -93,9 +96,83 @@ func _ready() -> void:
 	visible = false
 
 
+const CARD_W := 470.0
+
+
+## Cartão de um jogador: retrato + nome, e as três linhas de números.
+func _stat_card(pid: String) -> Control:
+	var card := PanelContainer.new()
+	card.name = "Cartao" + pid.to_upper()
+	card.custom_minimum_size = Vector2(CARD_W, 0)
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	card.add_child(v)
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 14)
+	v.add_child(top)
+	top.add_child(_face(pid))
+	var names := VBoxContainer.new()
+	names.alignment = BoxContainer.ALIGNMENT_CENTER
+	names.add_theme_constant_override("separation", 2)
+	top.add_child(names)
+	var who := make_label("")
+	who.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	UiArt.outlined(who, 30, (Game.PLAYER_COLORS[pid] as Color).lightened(0.3), 7)
+	names.add_child(who)
+	var fighter := make_label("")
+	fighter.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	UiArt.outlined(fighter, 26, UiArt.CREAM, 6)
+	fighter.clip_text = true
+	fighter.custom_minimum_size = Vector2(CARD_W - 36 - 100 - 14, 0)
+	names.add_child(fighter)
+	var dano := _stat_row(v, "Dano causado")
+	var kos := _stat_row(v, "KOs")
+	var caption := make_label("Golpe que mais acertou")
+	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	UiArt.outlined(caption, 26, UiArt.CREAM, 6)
+	v.add_child(caption)
+	var golpe := make_label("")
+	golpe.name = "Golpe"
+	golpe.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	UiArt.outlined(golpe, 30, UiArt.GOLD, 7)
+	golpe.custom_minimum_size = Vector2(CARD_W - 36, 0)
+	v.add_child(golpe)
+	stat_cards[pid] = {"card": card, "who": who, "fighter": fighter, "dano": dano, "kos": kos, "golpe": golpe}
+	return card
+
+
+func _stat_row(parent: Control, caption: String) -> Label:
+	var row := HBoxContainer.new()
+	parent.add_child(row)
+	var l := make_label(caption)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	UiArt.outlined(l, 26, UiArt.CREAM, 6)
+	row.add_child(l)
+	var value := make_label("")
+	value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	UiArt.outlined(value, 32, UiArt.GOLD, 7)
+	row.add_child(value)
+	return value
+
+
+func _card_style(pid: String, won: bool) -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(0.07, 0.05, 0.08, 0.9)
+	s.border_color = UiArt.GOLD if won else (Game.PLAYER_COLORS[pid] as Color).darkened(0.2)
+	s.set_border_width_all(5 if won else 3)
+	s.set_corner_radius_all(14)
+	s.content_margin_left = 18
+	s.content_margin_right = 18
+	s.content_margin_top = 14
+	s.content_margin_bottom = 14
+	return s
+
+
 func _face(pid: String) -> Control:
 	var frame := Panel.new()
-	frame.custom_minimum_size = Vector2(120, 120)
+	frame.custom_minimum_size = Vector2(100, 100)
 	frame.clip_contents = true
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var s := StyleBoxFlat.new()
@@ -159,11 +236,21 @@ func show_result(result: Dictionary) -> void:
 	var kos: Dictionary = result["kos"]
 	var labels: Dictionary = result["labels"]
 	kos_label.text = "%s  %d   x   %d  %s" % [labels["p1"], kos["p1"], kos["p2"], labels["p2"]]
+	var stats: Dictionary = result.get("stats", {})
 	for pid in PLAYERS:
 		var i := _char_index(result, pid)
 		var pic: TextureRect = _faces[pid]
 		pic.texture = UiArt.portrait(String(Game.CHARACTERS[i].get("id", ""))) if i >= 0 else null
 		(pic.get_parent() as Control).modulate = Color.WHITE if pid == winner else Color(0.45, 0.45, 0.5)
+		var c: Dictionary = stat_cards[pid]
+		(c["card"] as PanelContainer).add_theme_stylebox_override("panel", _card_style(pid, pid == winner))
+		(c["who"] as Label).text = String(labels[pid])
+		(c["fighter"] as Label).text = String(result["characters"][pid])
+		var st: Dictionary = stats.get(pid, {})
+		(c["dano"] as Label).text = "%d%%" % int(st.get("dano", 0))
+		(c["kos"] as Label).text = str(int(st.get("kos", kos.get(pid, 0))))
+		var top := String(st.get("golpe_top_nome", ""))
+		(c["golpe"] as Label).text = "%s  ×%d" % [top, int(st.get("golpe_top_acertos", 0))] if top != "" else "nenhum acerto"
 	_show_art(_char_index(result, winner))
 	visible = true
 	_confetti.restart()
@@ -190,13 +277,19 @@ func _show_art(idx: int) -> void:
 	_art.visible = t != null
 	if t == null:
 		return
-	var w := ART_H * t.get_width() / t.get_height()
-	_art.size = Vector2(w, ART_H)
-	var end := Vector2(maxf(40.0, (COLUMN_X - w) * 0.5), 1080 - ART_H - 10)
+	# Cabe à esquerda da coluna dos números (nunca por baixo deles)
+	var max_w := COLUMN_X - 70.0
+	var h := ART_H
+	var w := h * t.get_width() / t.get_height()
+	if w > max_w:
+		w = max_w
+		h = w * t.get_height() / t.get_width()
+	_art.size = Vector2(w, h)
+	var end := Vector2(maxf(30.0, (COLUMN_X - 40.0 - w) * 0.5), 1080 - h - 10)
 	_art.position = end - Vector2(320, 0)
 	_art.modulate.a = 0.0
 	_art.scale = Vector2.ONE
-	_art.pivot_offset = Vector2(w * 0.5, ART_H)
+	_art.pivot_offset = Vector2(w * 0.5, h)
 	_art_tween = _art.create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	_art_tween.tween_property(_art, "position", end, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	_art_tween.parallel().tween_property(_art, "modulate:a", 1.0, 0.25)
