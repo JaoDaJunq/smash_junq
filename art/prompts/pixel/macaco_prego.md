@@ -1,6 +1,6 @@
 ﻿# Preguinho — paleta e altura
 
-Altura medida no `base.png`: aproximadamente 51 px em escala lógica 64x64 (pedido: ~46 px). A imagem saiu em 1254x1254, não 1024x1024.
+Altura final: 46 px lógicos (de 64) em `base.png`; sprite em 1024x1024 (ampliação 16x). `parado.png`: 1536x1024, quatro quadros de 46 px lógicos com a mesma linha dos pés; células 5 e 6 vazias.
 
 Paleta documentada (até 16 cores, incluindo contorno e fundo; tons aproximados da arte gerada):
 
@@ -15,4 +15,4 @@ Paleta documentada (até 16 cores, incluindo contorno e fundo; tons aproximados 
 | Contorno | — | #2A0F12 | — |
 | Fundo | — | #FF00FF | — |
 
-A folha `parado.png` saiu em 1536x1024. A respiração e as pequenas mudanças de cauda são discretas; visualmente a pose está estável.
+A folha anterior `parado.png` saiu em 1536x1024. A respiração da nova folha continua discreta; visualmente a pose estável.

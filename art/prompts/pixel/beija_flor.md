@@ -1,6 +1,6 @@
 ﻿# Paleta e escala — beija_flor
 
-Altura medida no candidato: aproximadamente 40 px, alvo ~40 px.
+Altura final: 40 px lógicos (de 64) em `base.png`; sprite em 1024x1024 (ampliação 16x). `parado.png`: 1536x1024, quatro quadros de 40 px lógicos com a mesma linha dos pés; células 5 e 6 vazias.
 
 | Material | Luz | Base | Sombra |
 |---|---|---|---|
@@ -11,4 +11,4 @@ Altura medida no candidato: aproximadamente 40 px, alvo ~40 px.
 | Roupa e skate | #FFD02C | #ECA91C | #8A5B18 |
 | Fundo | — | #FF00FF | — |
 
-Cores estimadas visualmente do conceito aprovado e do candidato. O candidato ainda precisa de revisão: detalhe fino, paleta extensa e pose/altura exata não verificadas.
+Cores estimadas visualmente do conceito aprovado e do candidato anterior; a paleta deve continuar sendo usada nos sprites finais.
